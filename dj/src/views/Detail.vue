@@ -1,0 +1,423 @@
+<template>
+    <div class="detail">
+        <cpNav />
+        <div class="container">
+            <div class="user-about clearfix">
+                <div class="pic-wrap fl">
+                    <img src="../assets/img/public/wh.jpg" class="pic" />
+                    <div class="online">
+                        <span>在线</span>
+                    </div>
+                </div>
+                <div class="status fl">
+                    <div class="name">
+                        <span>沈梦溪</span>
+                        <img src="../assets/img/icon-girl.png" class="icon" />
+                    </div>
+                    <p>ID：334422</p>
+                    <p class="tag">TA的标签：</p>
+                </div>
+            </div>
+            <div class="user-content clearfix">
+                <div class="img-wrap fl">
+                    <img src="../assets/img/public/wh.jpg" class="img" />
+                    <!-- <swiper ref="mySwiper" :options="swiperOptions">
+                        <swiper-slide>
+                            <img src="../assets/img/public/bj.jpg" class="user-img" />
+                        </swiper-slide>
+                        <swiper-slide>
+                            <img src="../assets/img/public/bj-2.jpg" class="user-img" />
+                        </swiper-slide>
+                        <swiper-slide>
+                            <img src="../assets/img/public/bj-3.jpg" class="user-img" />
+                        </swiper-slide>
+                        <swiper-slide>
+                            <img src="../assets/img/public/bj-3.jpg" class="user-img" />
+                        </swiper-slide>
+                        <swiper-slide>
+                            <img src="../assets/img/public/bj-3.jpg" class="user-img" />
+                        </swiper-slide>
+                        <div class="swiper-button-prev" slot="button-prev"></div>
+                        <div class="swiper-button-next" slot="button-next"></div>
+                    </swiper>-->
+                </div>
+                <div class="gamms lr">
+                    <div class="nav">
+                        <div class="nav-item" :class="{active:type==1}" @click="type=1">
+                            <span>英雄联盟</span>
+                        </div>
+                        <div class="nav-item" :class="{active:type==2}" @click="type=2">
+                            <span>云顶之弈</span>
+                        </div>
+                    </div>
+                    <div class="game-content">
+                        <div class="game-info clearfix">
+                            <img src="../assets/img/public/bj-2.jpg" class="game-pic fl" />
+                            <div class="info fl">
+                                <p>
+                                    <span>¥</span>
+                                    <span class="num">34</span>
+                                    <span>/局</span>
+                                </p>
+                                <div class="times">接单数量：488次</div>
+                                <div class="voice">
+                                    <img src="../assets/img/icon-voice-2.png" class="voice" />
+                                </div>
+                            </div>
+                            <div class="interaction lr unselect">
+                                <div class="talk">聊一聊</div>
+                                <div class="order" @click="$router.openPage('/order')">立即下单</div>
+                            </div>
+                        </div>
+                        <div class="skilled">
+                            <p>
+                                <span class>主玩英雄:</span>
+                            </p>
+                            <p>
+                                <span class>擅长位置:</span>
+                            </p>
+                        </div>
+                        <div class="introduce">
+                            <span>自我介绍/</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comment">
+                <div class="title clearfix">
+                    <span class="fl">老板评论</span>
+                    <span class="lr">共2条评论</span>
+                </div>
+                <div class="info clearfix" v-for="n in 10">
+                    <img src="../assets/img/public/wh.jpg" class="head fl" />
+                    <div class="user fl">
+                        <p>用户123</p>
+                        <p class="time">2020-01-16</p>
+                        <div class="mes">玩的挺好。玩的挺好。玩的挺好。玩的挺好。玩的挺好。玩的挺好。玩的挺好。</div>
+                    </div>
+                    <Rate :value="4" disabled class="lr start" />
+                </div>
+                <div class="pages">
+                    <Page :total="30" />
+                </div>
+            </div>
+        </div>
+        <quickBtn/>
+        <foot/>
+    </div>
+</template>
+
+<script>
+import cpNav from "../components/cp-nav";
+import quickBtn from "../components/quickBtn";
+import foot from "../components/foot";
+
+export default {
+    components: { cpNav ,quickBtn,foot},
+    name: "detail",
+    data() {
+        return {
+            swiperOptions: {
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+                observer: true, //修改swiper自己或子元素时，自动初始化swiper
+                observeParents: true, //修改swiper的父元素时，自动初始化swiper
+                autoplay: {
+                    delay: 2000,
+                    //当用户滑动图片后继续自动轮播
+                    disableOnInteraction: false,
+                },
+                //开启循环模式
+                loop: true,
+            },
+            link: "",
+            type: 1,
+        };
+    },
+    computed: {
+        swiper() {
+            return this.$refs.mySwiper.$swiper;
+        },
+    },
+    created() {},
+    mounted() {},
+    methods: {},
+};
+</script>
+<style lang='scss' scoped>
+.detail {
+    position: relative;
+    width: 100%;
+    background-attachment: fixed;
+    background-image: url("../assets/img/public/bj-3.jpg");
+    background-size: 100% 100%;
+    .container {
+        width: 1200px;
+        margin: 50px auto 0;
+        .user-about {
+            width: 1200px;
+            height: 110px;
+            padding: 6px 0;
+            background-color: #fff;
+            .pic-wrap {
+                width: 120px;
+                height: 98px;
+                .pic {
+                    display: block;
+                    width: 75px;
+                    height: 75px;
+                    margin: auto;
+                    border-radius: 50%;
+                }
+                .online {
+                    font-size: 14px;
+                    text-align: center;
+                    color: rgba(74, 183, 143, 1);
+                    span {
+                        position: relative;
+                        padding-left: 8px;
+                    }
+                    span::after {
+                        content: "";
+                        position: absolute;
+                        top: 50%;
+                        margin-top: -2px;
+                        left: 0;
+                        width: 4px;
+                        height: 4px;
+                        background-color: #4ab78f;
+                        border-radius: 50%;
+                    }
+                }
+            }
+            .status {
+                width: 98px;
+                height: 98px;
+                font-size: 12px;
+                color: rgba(102, 102, 102, 1);
+                .name {
+                    font-size: 14px;
+                    color: rgba(51, 51, 51, 1);
+                    margin-bottom: 15px;
+                    .icon {
+                        display: inline-block;
+                        width: 19px;
+                        height: 19px;
+                        transform: translateY(3px);
+                    }
+                }
+                .tag {
+                    margin-top: 15px;
+                }
+            }
+        }
+        .user-content {
+            width: 1200px;
+            margin: 50px auto 0;
+            .img-wrap {
+                width: 471px;
+                height: 456px;
+                background: rgba(255, 255, 255, 1);
+                font-size: 0;
+                .img {
+                    width: 471px;
+                    height: 365px;
+                }
+                /deep/ .swiper-container {
+                    width: 100%;
+                    height: 60px;
+                    padding: 0 40px;
+                    margin: 15px auto 0;
+                }
+                /deep/ .swiper-slide {
+                    width: 60px !important;
+                    height: 60px !important;
+                    margin-right: 20px;
+                }
+                .user-img {
+                    width: 60px;
+                    height: 60px;
+                }
+            }
+            .gamms {
+                width: 687px;
+                height: 456px;
+                background: rgba(255, 255, 255, 1);
+                .nav {
+                    padding: 0 40px;
+                    font-size: 14px;
+                    color: rgba(153, 153, 153, 1);
+                    .nav-item {
+                        display: inline-block;
+                        height: 77px;
+                        line-height: 77px;
+                        margin-right: 30px;
+                        cursor: pointer;
+                        span {
+                            position: relative;
+                            padding: 3px;
+                        }
+                    }
+                    .active {
+                        font-size: 18px;
+                        color: rgba(254, 149, 4, 1);
+                    }
+                    .active span::after {
+                        content: "";
+                        position: absolute;
+                        bottom: 0;
+                        left: 50%;
+                        margin-left: -25px;
+                        width: 50px;
+                        height: 2px;
+                        background: rgba(254, 149, 4, 1);
+                    }
+                }
+                .game-content {
+                    .game-info {
+                        padding: 0 40px 25px 40px;
+                        border-bottom: 1px solid #e0e0e0;
+                        .game-pic {
+                            width: 164px;
+                            height: 142px;
+                            border-radius: 4px;
+                            margin-right: 20px;
+                        }
+                        .info {
+                            padding-top: 20px;
+                            p {
+                                font-size: 12px;
+                                color: rgba(153, 153, 153, 1);
+                                margin-bottom: 15px;
+                                .num {
+                                    font-size: 21px;
+                                    color: #f96c9a;
+                                }
+                            }
+                            .times {
+                                padding-left: 20px;
+                                font-size: 12px;
+                                color: rgba(153, 152, 153, 1);
+                                background: url("../assets/img/icon-list.png")
+                                    center left no-repeat;
+                                background-size: 12px 14px;
+                            }
+                            .voice {
+                                cursor: pointer;
+                                width: 65px;
+                                height: 21px;
+                                margin-top: 10px;
+                                > img {
+                                    width: 65px;
+                                    height: 21px;
+                                }
+                            }
+                        }
+                        .interaction {
+                            margin-top: 19px;
+                            .talk,
+                            .order {
+                                cursor: pointer;
+                                width: 130px;
+                                height: 45px;
+                                line-height: 45px;
+                                border-radius: 6px;
+                                font-size: 18px;
+                                text-align: center;
+                                color: #fe9504;
+                                border: 1px solid rgba(253, 149, 5, 1);
+                            }
+                            .order {
+                                background: linear-gradient(
+                                    180deg,
+                                    rgba(241, 181, 50, 1) 0%,
+                                    rgba(254, 148, 3, 1) 100%
+                                );
+                                color: #fff;
+                                margin-top: 14px;
+                            }
+                        }
+                    }
+                    .skilled {
+                        padding: 10px 40px;
+                        border-bottom: 1px solid #e0e0e0;
+                        p {
+                            margin-bottom: 10px;
+                        }
+                        span {
+                            font-size: 16px;
+                            color: rgba(51, 51, 51, 1);
+                            margin-right: 20px;
+                        }
+                    }
+                    .introduce {
+                        padding: 10px 40px;
+                        span {
+                            font-size: 18px;
+                            color: rgba(51, 51, 51, 1);
+                        }
+                    }
+                }
+            }
+        }
+        .comment {
+            width: 1200px;
+            margin: 40px auto 0;
+            background-color: #fff;
+            .title {
+                width: 100%;
+                height: 80px;
+                line-height: 80px;
+                font-size: 18px;
+                color: rgba(51, 51, 51, 1);
+                padding: 0 40px;
+                border-bottom: 1px solid #e0e0e0;
+            }
+            .info {
+                width: 100%;
+                min-height: 80px;
+                padding: 10px 40px;
+                border-bottom: 1px solid #e0e0e0;
+                .head {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    margin-right: 15px;
+                }
+                .user {
+                    width: 70%;
+                    font-size: 14px;
+                    color: rgba(102, 102, 102, 1);
+                    .time {
+                        font-size: 12px;
+                        color: rgba(153, 153, 153, 1);
+                    }
+                    .mes {
+                        font-size: 14px;
+                        color: rgba(102, 102, 102, 1);
+                    }
+                }
+                .start {
+                    font-size: 40px;
+                }
+            }
+            .pages {
+                height: 60px;
+                text-align: center;
+                /deep/ .ivu-page{
+                  margin-top: 20px;
+                }
+            }
+        }
+    }
+}
+.fl {
+    float: left;
+}
+.lr {
+    float: right;
+}
+</style>
