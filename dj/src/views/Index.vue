@@ -52,11 +52,14 @@
                             </Select>
                         </li>
                     </ul>
-                    <div class="start unselect" @click="start">开始陪玩</div>
+                    <div class="start unselect" @click="start">开始陪玩
+                    </div>
+
                 </div>
             </div>
         </div>
-        <matching :showMatch="showMatch" @closed="closed"/>
+        
+        <matching :showMatch="showMatch" @closed="closed" />
     </div>
 </template>
 
@@ -64,9 +67,9 @@
 import cpNav from "../components/cp-nav";
 import floatTip from "../components/floatTip";
 import matching from "../components/matching";
-
+import { getMessageList } from "../common/api/index";
 export default {
-    components: { cpNav, floatTip ,matching},
+    components: { cpNav, floatTip, matching },
     name: "Index",
     data() {
         return {
@@ -81,19 +84,32 @@ export default {
                 },
             ],
             model1: "",
-            showMatch:false,
+            showMatch: false,
+            list:[]
         };
     },
     computed: {},
     created() {},
-    mounted() {},
+    mounted() {
+        this.getList();
+    },
     methods: {
-        start(){
-            this.showMatch=true;
+        start() {
+            this.showMatch = true;
         },
-        closed(){
-            this.showMatch=false;
-        }
+        closed() {
+            this.showMatch = false;
+        },
+        async getList() {
+            try {
+                let res = await getMessageList({
+                    customerId: "",
+                    provinceId: 1,
+                });
+                console.log(res.data)
+                this.list=res.data.list
+            } catch (error) {}
+        },
     },
 };
 </script>
@@ -103,7 +119,7 @@ export default {
     width: 100%;
     height: 100vh;
     overflow: hidden;
-     background-attachment: fixed;
+    background-attachment: fixed;
     background-image: url("../assets/img/public/bj.jpg");
     background-size: 100% 100%;
     .bj {

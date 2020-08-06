@@ -8,10 +8,12 @@ module.exports = {
             less: {
                 // 这里的选项会传递给 postcss-loader
                 importLoaders: 1,
-            }
+            },
+         
         }
     },
+    productionSourceMap: false,
     configureWebpack: config => {
         config.entry.app = ["babel-polyfill", "./src/main.js"];
-     }
+    }
 };
