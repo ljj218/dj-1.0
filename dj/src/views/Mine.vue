@@ -8,7 +8,7 @@
                 <div class="item" :class="{active:type==3}" @click="type=3">编辑资料卡</div>
             </div>
             <div class="content lr">
-                <main v-if="type==1" />
+                <setInfo v-if="type==2" />
             </div>
         </div>
         <quickBtn />
@@ -20,10 +20,10 @@
 import cpNav from "../components/cp-nav";
 import quickBtn from "../components/quickBtn";
 import foot from "../components/foot";
-import main from "../components/main";
+import setInfo from "../components/setInfo";
 
 export default {
-    components: { cpNav, quickBtn, foot, main },
+    components: { cpNav, quickBtn, foot, setInfo },
     name: "mine",
     data() {
         return {
@@ -45,11 +45,12 @@ export default {
     background-size: 100% 100%;
     .container {
         width: 1200px;
-        height: 670px;
+        min-height: 670px;
         margin: 50px auto 0;
         background-color: #fff;
         .nav {
             width: 205px;
+            min-height: 670px;
             height: 100%;
             background-color: #f2f2f2;
             .item {
@@ -66,7 +67,7 @@ export default {
             }
         }
         .content {
-            width: 996px;
+            width: 995px;
             height: 100%;
         }
     }
