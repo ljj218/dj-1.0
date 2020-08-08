@@ -53,7 +53,7 @@
             </div>
             <div class="hint clearfix unselect" v-if="type==1">
                 <Checkbox v-model="saveInfo" class="fl">记住我</Checkbox>
-                <span class="lr find">忘记密码</span>
+                <span class="lr find" @click="$router.openPage('/findpass')">忘记密码</span>
             </div>
             <div class="hint read unselect" v-if="type==2">
                 <Checkbox v-model="single">阅读并同意</Checkbox>

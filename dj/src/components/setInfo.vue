@@ -70,6 +70,8 @@
         <modifyPass :showPss="showPss" @close="showPss=false" />
         <!-- 提现 -->
         <getMoney :showGet="showGet" @close="showGet=false" />
+            <!-- 修改信息 -->
+        <modifyInfo :showInfo="showInfo" @close="showInfo=false" />
     </div>
 </template>
 
@@ -77,8 +79,9 @@
 import bindPhone from "./bindPhone";
 import modifyPass from "./modifyPass";
 import getMoney from "./getMoney";
+import modifyInfo from "./modifyInfo";
 export default {
-    components: { bindPhone, modifyPass, getMoney },
+    components: { bindPhone, modifyPass, getMoney, modifyInfo },
     name: "setInfo",
     data() {
         return {
@@ -88,6 +91,7 @@ export default {
             show: false, //修改手机号码
             showPss: false, //修改密码
             showGet: false, //提现
+            showInfo:false,
             word: "获取验证码",
             sendTimer: null,
             time: 60,

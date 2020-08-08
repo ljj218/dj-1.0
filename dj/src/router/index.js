@@ -60,6 +60,16 @@ const routes = [{
     path: '/mine',
     name: 'mine',
     component: () => import('../views/Mine.vue')
+  },
+  {
+    path: '/recharge',
+    name: 'recharge',
+    component: () => import('../views/Recharge.vue')
+  },
+  {
+    path: '/findpass',
+    name: 'findpass',
+    component: () => import('../views/FindPass.vue')
   }
 ]
 

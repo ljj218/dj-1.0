@@ -10,6 +10,7 @@
             <div class="content lr">
                 <switchs v-if="type==1" />
                 <setInfo v-if="type==2" />
+                <editorInfo v-if="type==3"/>
             </div>
         </div>
         <quickBtn />
@@ -22,10 +23,11 @@ import cpNav from "../components/cp-nav";
 import quickBtn from "../components/quickBtn";
 import foot from "../components/foot";
 import setInfo from "../components/setInfo";
+import editorInfo from "../components/editorInfo";
 import switchs from "../components/switchs";
 
 export default {
-    components: { cpNav, quickBtn, foot, setInfo,switchs },
+    components: { cpNav, quickBtn, foot, setInfo,switchs,editorInfo },
     name: "mine",
     data() {
         return {

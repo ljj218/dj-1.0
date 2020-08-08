@@ -80,7 +80,7 @@
                     <div class="deposit-wrap clearfix">
                         <div class="money fl">余额：50.0</div>
                         <i class="fl"></i>
-                        <div class="btn btnclick fl unselect">充值</div>
+                        <div class="btn btnclick fl unselect" @click="$router.openPage('/recharge')">充值</div>
                     </div>
                 </div>
             </div>
