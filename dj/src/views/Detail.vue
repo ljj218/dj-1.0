@@ -20,26 +20,41 @@
             </div>
             <div class="user-content clearfix">
                 <div class="img-wrap fl">
-                    <img src="../assets/img/public/wh.jpg" class="img" />
-                    <!-- <swiper ref="mySwiper" :options="swiperOptions">
-                        <swiper-slide>
-                            <img src="../assets/img/public/bj.jpg" class="user-img" />
-                        </swiper-slide>
-                        <swiper-slide>
-                            <img src="../assets/img/public/bj-2.jpg" class="user-img" />
-                        </swiper-slide>
-                        <swiper-slide>
-                            <img src="../assets/img/public/bj-3.jpg" class="user-img" />
-                        </swiper-slide>
-                        <swiper-slide>
-                            <img src="../assets/img/public/bj-3.jpg" class="user-img" />
-                        </swiper-slide>
-                        <swiper-slide>
-                            <img src="../assets/img/public/bj-3.jpg" class="user-img" />
-                        </swiper-slide>
-                        <div class="swiper-button-prev" slot="button-prev"></div>
-                        <div class="swiper-button-next" slot="button-next"></div>
-                    </swiper>-->
+                    <el-image
+                        style="width: 471px; height: 365px"
+                        :src="imgSrc"
+                        :preview-src-list="imgList"
+                    ></el-image>
+                    <div class="img-zoom-wrap">
+                        <Icon
+                            type="ios-arrow-back"
+                            size="40"
+                            @click="moveLeft"
+                            :class="{opacity:imgList.length<5}"
+                        />
+                        <div class="list-img-content" ref="content">
+                            <div
+                                class="list-img-wrap"
+                                ref="imgWrap"
+                                :style="mathWidth(imgList.length)"
+                            >
+                                <img
+                                    :src="n"
+                                    class="img-zoom"
+                                    :data-index="index"
+                                    :class="{active:num==index}"
+                                    @mouseenter="imgEnter"
+                                    v-for="(n,index) in imgList"
+                                />
+                            </div>
+                        </div>
+                        <Icon
+                            type="ios-arrow-forward"
+                            size="40"
+                            @click="moveRight"
+                            :class="{opacity:imgList.length<5}"
+                        />
+                    </div>
                 </div>
                 <div class="gamms lr">
                     <div class="nav">
@@ -103,8 +118,8 @@
                 </div>
             </div>
         </div>
-        <quickBtn/>
-        <foot/>
+        <quickBtn />
+        <foot />
     </div>
 </template>
 
@@ -114,37 +129,49 @@ import quickBtn from "../components/quickBtn";
 import foot from "../components/foot";
 
 export default {
-    components: { cpNav ,quickBtn,foot},
+    components: { cpNav, quickBtn, foot },
     name: "detail",
     data() {
         return {
-            swiperOptions: {
-                navigation: {
-                    nextEl: ".swiper-button-next",
-                    prevEl: ".swiper-button-prev",
-                },
-                observer: true, //修改swiper自己或子元素时，自动初始化swiper
-                observeParents: true, //修改swiper的父元素时，自动初始化swiper
-                autoplay: {
-                    delay: 2000,
-                    //当用户滑动图片后继续自动轮播
-                    disableOnInteraction: false,
-                },
-                //开启循环模式
-                loop: true,
-            },
-            link: "",
+            imgList: [
+                "https://img1.daofengdj.com//uploads/avatar/20200725/ct6ymmun31oxcby7hjvg05yoqdmtcejd.jpg!daofengdj/sq/216",
+                "https://img1.daofengdj.com/uploads/avatar/20200805/j6aiqeu0jftu58rx6h8o9364b92i3iao.jpeg!daofengdj/sq/216",
+                "https://img1.daofengdj.com//uploads/avatar/20200712/mck7pub9ye8aoo5r9bd62u0n0cwlovl0.jpg!daofengdj/sq/216",
+                "https://img1.daofengdj.com/uploads/avatar/20200804/aircgneeqnysqodkb60sm4rkjwqjpfj9.jpeg!daofengdj/sq/216",
+            ],
             type: 1,
+            num: 0,
+            imgSrc:
+                "https://img1.daofengdj.com//uploads/avatar/20200725/ct6ymmun31oxcby7hjvg05yoqdmtcejd.jpg!daofengdj/sq/216",
+            showPrev: true,
         };
     },
-    computed: {
-        swiper() {
-            return this.$refs.mySwiper.$swiper;
-        },
-    },
+    computed: {},
     created() {},
     mounted() {},
-    methods: {},
+    methods: {
+        mathWidth(num) {
+            return `width:${num * 80}px`;
+        },
+        moveLeft() {
+            let node = this.$refs.content;
+            let clientWidth = this.$refs.imgWrap.clientWidth;
+            if (node.scrollLeft > 0) {
+                node.scrollLeft = node.scrollLeft - 390;
+            }
+        },
+        moveRight() {
+            let node = this.$refs.content;
+            let clientWidth = this.$refs.imgWrap.clientWidth;
+            if (node.scrollLeft + 390 < clientWidth) {
+                node.scrollLeft = node.scrollLeft + 390;
+            }
+        },
+        imgEnter(e) {
+            this.num = e.target.dataset.index;
+            this.imgSrc = e.target.currentSrc;
+        },
+    },
 };
 </script>
 <style lang='scss' scoped>
@@ -218,13 +245,70 @@ export default {
             width: 1200px;
             margin: 50px auto 0;
             .img-wrap {
+                position: relative;
                 width: 471px;
                 height: 456px;
                 background: rgba(255, 255, 255, 1);
                 font-size: 0;
+                .md-search {
+                    position: absolute;
+                    z-index: 5;
+                    right: 0;
+                    top: 346px !important;
+                    font-size: 25px;
+                    color: #fff;
+                    padding: 5px;
+                    width: 25px;
+                    height: 25px;
+                    background: rgba(0, 0, 0, 0.3);
+                    /deep/ .el-image {
+                        left: 0;
+                        top: 0;
+                        opacity: 0;
+                    }
+                }
+                .opacity {
+                    opacity: 0.2;
+                }
+                .ivu-icon {
+                    position: absolute;
+                    z-index: 3;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    cursor: pointer;
+                }
+                .ivu-icon-ios-arrow-back {
+                    left: 0;
+                }
+                .ivu-icon-ios-arrow-forward {
+                    right: 0;
+                }
                 .img {
                     width: 471px;
                     height: 365px;
+                }
+
+                .list-img-content {
+                    width: 385px;
+                    margin: auto;
+                    overflow: hidden;
+                }
+                .img-zoom-wrap {
+                    position: relative;
+                    width: 100%;
+                    height: 92px;
+                    padding: 16px 40px;
+                    overflow: hidden;
+                    transition: all 0.5s;
+                    .active {
+                        border: 1px solid #333;
+                    }
+                    .img-zoom {
+                        display: inline-block;
+                        width: 60px;
+                        height: 60px;
+                        margin-right: 20px;
+                    }
                 }
                 /deep/ .swiper-container {
                     width: 100%;
@@ -407,8 +491,8 @@ export default {
             .pages {
                 height: 60px;
                 text-align: center;
-                /deep/ .ivu-page{
-                  margin-top: 20px;
+                /deep/ .ivu-page {
+                    margin-top: 20px;
                 }
             }
         }
@@ -419,5 +503,8 @@ export default {
 }
 .lr {
     float: right;
+}
+ /deep/  [class^=el-icon-]{
+    color: #fff;
 }
 </style>

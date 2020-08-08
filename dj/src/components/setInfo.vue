@@ -11,7 +11,7 @@
                     <p class="num">小熊电竞ID:22332112</p>
                     <div class="get-money flex">
                         <span>我的收益¥: 212元</span>
-                        <div class="btn btnclick unselect">去提现</div>
+                        <div class="btn btnclick unselect" @click="showGet=true">去提现</div>
                     </div>
                 </div>
             </div>
@@ -48,39 +48,74 @@
                             <span class="red">188******24</span>
                         </p>
                     </div>
-                    <img src="../assets/img/icon-md-phone.png" class="img" />
+                    <img src="../assets/img/icon-md-phone.png" @click="show=true" class="img" />
                 </div>
                 <div class="item passw fl">
                     <div class="info">
                         <p class="name">修改密码</p>
                         <p class="sub">建议修改密码，保证账号安全</p>
                     </div>
-                    <img src="../assets/img/icon-md-passw.png.png" class="img" />
+                    <img
+                        src="../assets/img/icon-md-passw.png.png"
+                        class="img"
+                        @click="showPss=true"
+                    />
                 </div>
             </div>
         </div>
+
+        <!-- 绑定手机 -->
+        <bindPhone :show="show" @close="show=false" />
+        <!-- 修改密码 -->
+        <modifyPass :showPss="showPss" @close="showPss=false" />
+        <!-- 提现 -->
+        <getMoney :showGet="showGet" @close="showGet=false" />
     </div>
 </template>
 
 <script>
+import bindPhone from "./bindPhone";
+import modifyPass from "./modifyPass";
+import getMoney from "./getMoney";
 export default {
-    components: {},
+    components: { bindPhone, modifyPass, getMoney },
     name: "setInfo",
     data() {
-        return {};
+        return {
+            step: 1,
+            phone: "",
+            code: "",
+            show: false, //修改手机号码
+            showPss: false, //修改密码
+            showGet: false, //提现
+            word: "获取验证码",
+            sendTimer: null,
+            time: 60,
+            sendMsgDisabled: false,
+        };
     },
     computed: {},
     created() {},
     mounted() {},
     methods: {},
+    watch: {
+        show(val) {
+            if (val) {
+                this.step = 1;
+            }
+        },
+        showPss(val) {},
+    },
 };
 </script>
 <style lang='scss' scoped>
 .setInfo {
+    position: relative;
     width: 994px;
     height: auto;
     padding: 40px;
     padding-right: 0;
+    overflow: hidden;
     .head {
         width: 92px;
         height: 92px;
@@ -92,6 +127,7 @@ export default {
         height: 92px;
         display: table;
         .info-box {
+            width: 60%;
             display: table-cell;
             vertical-align: middle;
         }
@@ -243,8 +279,8 @@ export default {
                     .sub {
                         font-size: 12px;
                         color: rgba(153, 153, 153, 1);
-                        .red{
-                            color: #FF7F7F;
+                        .red {
+                            color: #ff7f7f;
                         }
                     }
                 }
@@ -259,6 +295,26 @@ export default {
                     no-repeat;
                 background-size: 41px 50px;
             }
+        }
+    }
+    .move {
+        transform: translateX(100%);
+    }
+
+    .setpass {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+        width: 994px;
+        min-height: 626px;
+        background-color: #fff;
+        padding: 40px;
+        transition: transform 0.5s ease;
+        .md-title {
+            cursor: pointer;
+            font-size: 16px;
+            color: rgba(51, 51, 51, 1);
         }
     }
 }

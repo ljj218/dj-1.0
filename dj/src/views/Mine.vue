@@ -8,6 +8,7 @@
                 <div class="item" :class="{active:type==3}" @click="type=3">编辑资料卡</div>
             </div>
             <div class="content lr">
+                <switchs v-if="type==1" />
                 <setInfo v-if="type==2" />
             </div>
         </div>
@@ -21,9 +22,10 @@ import cpNav from "../components/cp-nav";
 import quickBtn from "../components/quickBtn";
 import foot from "../components/foot";
 import setInfo from "../components/setInfo";
+import switchs from "../components/switchs";
 
 export default {
-    components: { cpNav, quickBtn, foot, setInfo },
+    components: { cpNav, quickBtn, foot, setInfo,switchs },
     name: "mine",
     data() {
         return {

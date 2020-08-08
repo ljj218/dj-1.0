@@ -9,11 +9,13 @@ Vue.prototype.cookies = Cookies;
 import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
 import "./assets/css/animate.css"
-import VueAwesomeSwiper from 'vue-awesome-swiper'
-// import 'swiper/swiper-bundle.css'
-// import 'babel-polyfill';
-Vue.use(VueAwesomeSwiper, /* { default options with global component } */)
+import 'swiper/swiper-bundle.css'
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+
+Vue.use(ElementUI);
 Vue.use(ViewUI);
+
 if (Number.parseInt === undefined) Number.parseInt = window.parseInt;
 if (Number.parseFloat === undefined) Number.parseFloat = window.parseFloat;
 

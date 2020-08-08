@@ -7,5 +7,6 @@ module.exports = {
       //   'es6.symbol'
       // ]
     }]
-  ]
+  ],
+
 }

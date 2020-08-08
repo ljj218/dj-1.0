@@ -49,7 +49,7 @@
             </div>
             <div class="input-wrap clearfix" v-if="type==2">
                 <img src="../assets/img/icon-lock.png" class="icon icon2" />
-                <input type="text" placeholder="请设置您的登录密码" class="passw input" v-model="passw" />
+                <input type="text" placeholder="请设置6-20位至少两种字符组合密码" class="passw input" v-model="passw" />
             </div>
             <div class="hint clearfix unselect" v-if="type==1">
                 <Checkbox v-model="saveInfo" class="fl">记住我</Checkbox>
@@ -125,7 +125,8 @@ export default {
                 this.$Message.warning("请正确填写手机号码");
                 return;
             }
-            if (this.type == 2) {//注册登录
+            if (this.type == 2) {
+                //注册登录
                 var reg = /^bai[0-9a-zA-Z]+$/;
                 if (this.code == "" || !validateMessageCode(this.code)) {
                     this.$Message.warning("请正确填写手机验证码");
@@ -136,10 +137,11 @@ export default {
                     return;
                 }
                 if (this.CheckPassWord(this.passw)) {
-                    this.$Message.warning("密码必须是数字或者字母");
+                    this.$Message.warning("请设置6-20位至少两种字符组合密码");
                     return;
                 }
-            } else {//登录
+            } else {
+                //登录
                 if (this.loginType == 1) {
                     if (this.code == "" || !validateMessageCode(this.code)) {
                         this.$Message.warning("请正确填写手机验证码");
@@ -161,40 +163,37 @@ export default {
             if (this.sendMsgDisabled) {
                 return false;
             }
-            if (userNum) {
-                try {
-                    that.sendMsgDisabled = true;
-                    let res = await smsCode(data);
-                    if (res.resultCode == "9999") {
-                        that.word = "获取验证码";
-                        clearInterval(that.sendTimer);
-                        that.time = 60;
-                        that.sendMsgDisabled = false;
-                    } else {
-                        that.sendTimer = setInterval(() => {
-                            that.sendMsgDisabled = true;
-                            that.time--;
-                            that.word = that.time;
-                            if (that.time <= 0) {
-                                that.sendMsgDisabled = false;
-                                clearInterval(that.sendTimer);
-                                that.word = "获取验证码";
-                                that.time = 60;
-                            }
-                        }, 1000);
-                    }
-                    this.$Message.warning(res.message);
-                } catch (err) {
-                    console.log(err);
+
+            try {
+                this.sendMsgDisabled = true;
+                let res = await smsCode(data);
+                if (res.resultCode == "9999") {
+                    this.word = "获取验证码";
+                    clearInterval(this.sendTimer);
+                    this.time = 60;
+                    this.sendMsgDisabled = false;
+                } else {
+                    this.sendTimer = setInterval(() => {
+                        this.sendMsgDisabled = true;
+                        this.time--;
+                        this.word = this.time;
+                        if (this.time <= 0) {
+                            this.sendMsgDisabled = false;
+                            clearInterval(this.sendTimer);
+                            this.word = "获取验证码";
+                            this.time = 60;
+                        }
+                    }, 1000);
                 }
-            } else {
-                this.$Message.warning("请输入有效的手机号码！");
+                this.$Message.warning(res.message);
+            } catch (err) {
+                console.log(err);
             }
         },
         CheckPassWord(password) {
-            //必须为字母加数字且长度不小于8位
+            //必须为字母加数字且长度不小于20位
             var str = password;
-            if (str == null || str.length < 8) {
+            if (str == '' || str.length > 20) {
                 return false;
             }
             var reg1 = new RegExp(/^[0-9A-Za-z]+$/);
