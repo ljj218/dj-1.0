@@ -6,7 +6,7 @@
                 <div class="info-box">
                     <div class="nike-name flex align-items">
                         <span>萨达达</span>
-                        <img src="../assets/img/icon-editor.png" class="icon" />
+                        <img src="../assets/img/icon-editor.png" class="icon" @click="$router.openPage('/modifyUserInfo')"/>
                     </div>
                     <p class="num">小熊电竞ID:22332112</p>
                     <div class="get-money flex">
@@ -20,7 +20,7 @@
             <div class="title-wrap">
                 <span class="title">基础信息</span>
                 <i class="line"></i>
-                <div class="editor unselect">
+                <div class="editor unselect" @click="$router.openPage('/modifyUserInfo')">
                     <img src="../assets/img/icon-editor.png" class="icon" />
                     <span>编辑信息</span>
                 </div>
@@ -71,7 +71,7 @@
         <!-- 提现 -->
         <getMoney :showGet="showGet" @close="showGet=false" />
             <!-- 修改信息 -->
-        <modifyInfo :showInfo="showInfo" @close="showInfo=false" />
+
     </div>
 </template>
 
@@ -79,9 +79,9 @@
 import bindPhone from "./bindPhone";
 import modifyPass from "./modifyPass";
 import getMoney from "./getMoney";
-import modifyInfo from "./modifyInfo";
+
 export default {
-    components: { bindPhone, modifyPass, getMoney, modifyInfo },
+    components: { bindPhone, modifyPass, getMoney, },
     name: "setInfo",
     data() {
         return {

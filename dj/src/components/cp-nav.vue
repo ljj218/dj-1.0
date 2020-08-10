@@ -21,7 +21,7 @@
                 >我的订单</li>
             </ul>
             <div class="lf clearfix">
-                <div class="input-wrap fl clearfix">
+                <div class="input-wrap fl clearfix flex align-items">
                     <input type="text" class="search fl" placeholder="陪玩昵称 ID " />
                     <img src="../assets/img/public/icon-search.png" class="icon-search fl" />
                 </div>
@@ -330,7 +330,7 @@ export default {
         height: 28px;
         background: rgba(255, 255, 255, 1);
         border-radius: 8px;
-        padding-top: 6px;
+        // padding-top: 6px;
         padding-left: 12px;
         .search {
             width: 75%;

@@ -74,7 +74,7 @@ export default {
     props: {
         showLogin: {
             type: Boolean,
-            default: true,
+            default: false,
         },
     },
     name: "login",

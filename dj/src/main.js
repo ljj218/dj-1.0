@@ -12,6 +12,14 @@ import "./assets/css/animate.css"
 import 'swiper/swiper-bundle.css'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import './assets/icon/iconfont.css'
+import './assets/icon/tim.css'
+// import tim from 'tim'
+// import TIM from 'tim-js-sdk'
+// window.tim = tim
+// window.TIM = TIM
+// Vue.prototype.tim = tim
+// Vue.prototype.TIM = TIM
 
 Vue.use(ElementUI);
 Vue.use(ViewUI);

@@ -1,36 +1,53 @@
 <template>
-    <ul class="floatTip">
-        <li class="item">
-            <img src="../assets/img/public/icon-menber.png" class="icon" />
-            <p>申请</p>
-            <p>入驻</p>
-        </li>
-        <li class="item">
-            <img src="../assets/img/public/icon-mes.png" class="icon" />
-            <p>消息</p>
-        </li>
-        <li class="item">
-            <img src="../assets/img/public/icon-order.png" class="icon" />
-            <p>订单</p>
-        </li>
-        <li class="item">
-            <img src="../assets/img/public/icon-server.png" class="icon" />
-            <p>客服</p>
-        </li>
-    </ul>
+    <div>
+        <ul class="floatTip">
+            <li class="item" @click="show=true">
+                <img src="../assets/img/public/icon-menber.png" class="icon" />
+                <p>申请</p>
+                <p>入驻</p>
+            </li>
+            <li class="item">
+                <img src="../assets/img/public/icon-mes.png" class="icon" />
+                <p>消息</p>
+            </li>
+            <li class="item">
+                <img src="../assets/img/public/icon-order.png" class="icon" />
+                <p>订单</p>
+            </li>
+            <li class="item">
+                <img src="../assets/img/public/icon-server.png" class="icon" />
+                <p>客服</p>
+            </li>
+        </ul>
+        <attestation :show="show" @closed="closed" />
+        <applyPlayer :showApply="showApply" @closed="closedApply" />
+    </div>
 </template>
 
 <script>
+import attestation from "./attestation";
+import applyPlayer from "./applyPlayer";
+
 export default {
-    components: {},
+    components: { attestation, applyPlayer },
     name: "floatTip",
     data() {
-        return {};
+        return {
+            show: false,
+            showApply: false,
+        };
     },
     computed: {},
     created() {},
     mounted() {},
-    methods: {},
+    methods: {
+        closed() {
+            this.show = false;
+        },
+        closedApply(){
+            this.showApply=false;
+        }
+    },
 };
 </script>
 <style lang='scss' scoped>
@@ -51,7 +68,7 @@ export default {
         display: block;
         margin: 0 auto 8px;
     }
-    .item{
+    .item {
         cursor: pointer;
         width: 100%;
         height: 25%;

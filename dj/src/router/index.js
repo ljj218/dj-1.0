@@ -70,6 +70,10 @@ const routes = [{
     path: '/findpass',
     name: 'findpass',
     component: () => import('../views/FindPass.vue')
+  }, {
+    path: '/modifyUserInfo',
+    name: 'modifyUserInfo',
+    component: () => import('../views/ModifyUserInfo.vue')
   }
 ]
 

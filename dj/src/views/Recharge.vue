@@ -11,13 +11,19 @@
             <div class="row flex align-items">
                 <div class="name">充值金额：</div>
                 <ul class="list flex align-items">
-                    <li class="item" :class="{active:type==50}" @click="changeType(50)">50元</li>
-                    <li class="item" :class="{active:type==100}" @click="changeType(100)">100元</li>
-                    <li class="item" :class="{active:type==500}" @click="changeType(500)">500元</li>
-                    <li class="item" :class="{active:type==1000}" @click="changeType(1000)">1000元</li>
-                    <li class="item" :class="{active:type==6666}" @click="changeType(6666)">6666元</li>
+                    <li class="item" :class="{active:type==50}" @click="changeType(50)">50元
+                        <img src="../assets/img/icon-select.png" class="icon">
+                    </li>
+                    <li class="item" :class="{active:type==100}" @click="changeType(100)">100元
+                        <img src="../assets/img/icon-select.png" class="icon">
+                    </li>
+                    <li class="item" :class="{active:type==500}" @click="changeType(500)">500元
+                        <img src="../assets/img/icon-select.png" class="icon">
+                    </li>
+                    <li class="item" :class="{active:type==1000}" @click="changeType(1000)">1000元<img src="../assets/img/icon-select.png" class="icon"></li>
+                    <li class="item" :class="{active:type==6666}" @click="changeType(6666)">6666元<img src="../assets/img/icon-select.png" class="icon"></li>
                 </ul>
-                <input type="text" class="money" placeholder="输入充值金额" />
+                <input type="text" class="money" v-model="money" placeholder="输入充值金额" />
             </div>
             <div class="row flex align-items">
                 <div class="name">充值货币：</div>
@@ -31,8 +37,9 @@
                         :class="{select:paymethods==1}"
                         @click="changePayMethods(1)"
                     >
-                        <img src="../assets/img/icon-wechat.png" class="icon" />
+                        <img src="../assets/img/icon-wechat-pay.png" class="icon" />
                         微信支付
+                        <img src="../assets/img/icon-select.png" class="icon-r">
                     </div>
                     <div
                         class="item flex align-items justify-content"
@@ -40,7 +47,8 @@
                         @click="changePayMethods(2)"
                     >
                         <img src="../assets/img/icon-alipay.png" class="icon" />
-                        微信支付
+                        支付宝支付
+                        <img src="../assets/img/icon-select.png" class="icon-r">
                     </div>
                 </div>
             </div>
@@ -141,9 +149,19 @@ export default {
                     margin-right: 10px;
                     color: rgba(153, 153, 153, 1);
                     border: 1px solid rgba(216, 216, 216, 1);
+                    .icon{
+                        display: none;
+                        position: absolute;
+                        bottom: 0;
+                        right: -1px;
+                        width: 15px;
+                    }
                 }
                 .active {
                     border: 1px solid rgba(9, 187, 7, 1);
+                    .icon{
+                        display: block;
+                    }
                 }
             }
             .money {
@@ -163,8 +181,9 @@ export default {
                 .item {
                     cursor: pointer;
                     position: relative;
-                    width: 93px;
+                    min-width: 93px;
                     height: 30px;
+                    padding: 0 10px;
                     line-height: 30px;
                     text-align: center;
                     margin-right: 15px;
@@ -175,9 +194,20 @@ export default {
                         height: 21px;
                         margin-right: 5px;
                     }
+                    .icon-r{
+                        position: absolute;
+                        display: none;
+                        right: -1px;
+                        bottom: 0;
+                        width: 15px;
+                        height: 15px;
+                    }
                 }
                 .select {
                     border: 1px solid rgba(9, 187, 7, 1);
+                    .icon-r{
+                        display: block;
+                    }
                 }
                 
             }

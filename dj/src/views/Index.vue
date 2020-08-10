@@ -52,13 +52,11 @@
                             </Select>
                         </li>
                     </ul>
-                    <div class="start unselect" @click="start">开始陪玩
-                    </div>
-
+                    <div class="start unselect" @click="start">开始陪玩</div>
                 </div>
             </div>
         </div>
-        
+
         <matching :showMatch="showMatch" @closed="closed" />
     </div>
 </template>
@@ -85,7 +83,7 @@ export default {
             ],
             model1: "",
             showMatch: false,
-            list:[]
+            list: [],
         };
     },
     computed: {},
@@ -106,8 +104,8 @@ export default {
                     customerId: "",
                     provinceId: 1,
                 });
-                console.log(res.data)
-                this.list=res.data.list
+                console.log(res.data);
+                this.list = res.data.list;
             } catch (error) {}
         },
     },
@@ -148,7 +146,7 @@ export default {
         left: 53px;
         top: 26px;
         height: 28px;
-        width: 95px * 2;
+        width: 190px;
         line-height: 28px;
         border: 1px solid rgba(254, 149, 4, 1);
         font-size: 18px;
@@ -156,7 +154,7 @@ export default {
         box-sizing: border-box;
         z-index: 2;
         .tab-item {
-            width: 94px;
+            width: 50%;
             float: left;
             text-align: center;
             cursor: pointer;

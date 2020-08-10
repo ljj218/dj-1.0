@@ -2,15 +2,15 @@
     <div class="detail">
         <cpNav />
         <div class="container clearfix">
-            <div class="nav fl">
+            <div class="nav fl" :style="{height:clientHeight+'px'}">
                 <div class="item" :class="{active:type==1}" @click="type=1">陪玩管理</div>
                 <div class="item" :class="{active:type==2}" @click="type=2">个人中心</div>
                 <div class="item" :class="{active:type==3}" @click="type=3">编辑资料卡</div>
             </div>
-            <div class="content lr">
+            <div class="content lr" ref="content">
                 <switchs v-if="type==1" />
                 <setInfo v-if="type==2" />
-                <editorInfo v-if="type==3"/>
+                <editorInfo v-if="type==3" />
             </div>
         </div>
         <quickBtn />
@@ -27,17 +27,33 @@ import editorInfo from "../components/editorInfo";
 import switchs from "../components/switchs";
 
 export default {
-    components: { cpNav, quickBtn, foot, setInfo,switchs,editorInfo },
+    components: { cpNav, quickBtn, foot, setInfo, switchs, editorInfo },
     name: "mine",
     data() {
         return {
             type: 2,
+            clientHeight: "",
         };
     },
-    computed: {},
+    computed: {
+        content() {
+            if (this.$refs.content) {
+                return this.$refs.content.clientHeight;
+            }
+        },
+    },
     created() {},
     mounted() {},
     methods: {},
+    watch: {
+        type() {
+            this.$nextTick(() => {
+                if (this.$refs.content) {
+                    this.clientHeight = this.$refs.content.clientHeight;
+                }
+            });
+        },
+    },
 };
 </script>
 <style lang='scss' scoped>
