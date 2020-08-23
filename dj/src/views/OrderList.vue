@@ -1,0 +1,328 @@
+<template>
+  <div class="orderList">
+    <cpNav />
+    <div class="container">
+      <div class="page-title">我的订单</div>
+      <div class="content">
+        <div class="thead clearfix">全部订单</div>
+        <div class="table">
+          <div class="tbodys" v-for="(item,index) in list " :key="index">
+            <div class="td">
+              <div class="order-info">
+                <span>{{item.createTime}}</span>
+                <span>订单编号：{{item.orderId}}</span>
+              </div>
+              <div class="detail clearfix">
+                <div class="host fl">
+                  <img src="../assets/img/public/wh.jpg" class="head fl" />
+                  <div class="about fl">
+                    <p>陪玩昵称:{{item.nickName}}</p>
+                    <p>服务名称:{{item.orderType==1?'英雄联盟':'云顶之弈'}}</p>
+                  </div>
+                </div>
+                <div class="num fl">{{(item.orderPrice/100).toFixed(2)}}元/局 x {{item.orderNum}}</div>
+                <div class="price fl">
+                  <div id="cell">
+                    <p v-if="item.orderStatus==1">待付款</p>
+                    <p v-if="item.orderStatus==2||item.orderStatus==3">已付款</p>
+                    <p>{{(item.orderMoney/100).toFixed(2)}}元</p>
+                  </div>
+                </div>
+                <div class="status fl">
+                  <span v-if="item.orderStatus==0">未服务</span>
+                  <span v-if="item.orderStatus==2">服务中</span>
+                  <span v-if="item.orderStatus==3||item.orderStatus==1">已完成</span>
+                </div>
+                <div class="do fl unselect">
+                  <div class="type type1">
+                    <div class="refund btn btnclick" v-if="item.orderStatus==1">去付款</div>
+                    <div class="refund btn btnclick" v-if="item.orderStatus==2" @click="tocomOrder(item.orderId)">完成订单</div>
+                    <div class="contact btn btnclick">联系陪玩</div>
+                    <div
+                      class="contact btn btnclick"
+                      v-if="item.orderStatus==2||item.orderStatus==3"
+                      @click="$router.openPage('/refund?orderId='+item.orderId)"
+                    >申请退款</div>
+
+                    <!-- <div class="contact btn btnclick" v-if="item.orderStatus==1||item.orderStatus==2">取消订单</div> -->
+                    <div
+                      class="contact btn btnclick"
+                      v-if="item.orderStatus==3"
+                      @click="$router.openPage('/comments?orderId='+item.orderId)"
+                    >立即评论</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <quickBtn />
+    <foot />
+  </div>
+</template>
+
+<script>
+import cpNav from "../components/cp-nav";
+import quickBtn from "../components/quickBtn";
+import foot from "../components/foot";
+import { orderList,comOrder } from "../common/api/index";
+import { mapMutations, mapGetters } from "vuex";
+
+export default {
+  components: { cpNav, quickBtn, foot },
+  name: "orderList",
+  data() {
+    return {
+      type: 1,
+      // list: [{ type: 1 }, { type: 2 }, { type: 3 }],
+      list:[]
+    };
+  },
+  computed: {
+    ...mapGetters(["userData"]),
+  },
+  created() {},
+  mounted() {
+      this.getOrderList();
+  },
+  methods: {
+    async getOrderList() {
+      if(!this.userData)return;
+      try {
+        let res = await orderList(this.userData.userId);
+        if(res.resultCode=="0000"){
+          this.list = res.data
+        }
+      } catch (error) {}
+    },
+    //完成订单
+    async tocomOrder(orderId){
+      try {
+        let res =await comOrder(orderId);
+        if(res.resultCode=="0000"){
+          this.$Message.success('操作成功');
+          this.getOrderList();
+        }else{
+          this.$Message.warning(res.message);
+        }
+      } catch (error) {
+        
+      }
+    }
+  },
+};
+</script>
+<style lang='scss' scoped>
+.orderList {
+  position: relative;
+  width: 100%;
+  background-attachment: fixed;
+  background-image: url("../assets/img/public/bj.jpg");
+  background-size: 100% 100%;
+  .container {
+    width: 1200px;
+    margin: auto;
+    padding-top: 50px;
+    .page-title {
+      width: 1200px;
+      height: 60px;
+      line-height: 60px;
+      padding: 0 40px;
+      font-size: 18px;
+      color: rgba(51, 51, 51, 1);
+      background: rgba(255, 255, 255, 1);
+    }
+    .content {
+      width: 1200px;
+      margin: 15px auto 0;
+      background-color: #fff;
+      .tab {
+        width: 100%;
+        height: 60px;
+        line-height: 60px;
+        padding: 0 40px;
+        margin-bottom: 15px;
+        .item {
+          float: left;
+          cursor: pointer;
+          margin-right: 100px;
+          display: inline-block;
+          span {
+            position: relative;
+            padding: 10px 0;
+            font-size: 16px;
+            color: rgba(51, 51, 51, 1);
+          }
+        }
+        .active {
+          span {
+            color: rgba(253, 151, 7, 1);
+          }
+        }
+        .active span::after {
+          content: "";
+          position: absolute;
+          left: 50%;
+          margin-left: -19px;
+          bottom: 0;
+          width: 38px;
+          height: 2px;
+          background: rgba(253, 151, 7, 1);
+        }
+      }
+      .thead {
+        width: 100%;
+        height: 60px;
+        line-height: 60px;
+        font-size: 16px;
+        color: rgba(51, 51, 51, 1);
+        background-color: #efefef;
+        text-align: center;
+        margin-bottom: 30px;
+        div {
+          display: inline-block;
+          width: 20%;
+        }
+      }
+      .table {
+        width: 1166px;
+        height: auto;
+        margin: auto;
+        padding-bottom: 25px;
+
+        .host {
+          width: 30% !important;
+        }
+        .num {
+          width: 15% !important;
+        }
+        .price {
+          width: 12.5% !important;
+        }
+        .status {
+          width: 12.5% !important;
+        }
+        .do {
+          width: 30% !important;
+        }
+
+        .tbodys {
+          width: 100%;
+          height: auto;
+          margin: auto;
+
+          .order-status {
+            width: 100%;
+            height: 62px;
+            line-height: 62px;
+            font-size: 16px;
+            padding: 0 25px;
+            color: rgba(51, 51, 51, 1);
+          }
+          .td {
+            width: 1166px;
+            height: 161px;
+            border: 1px solid rgba(255, 239, 121, 1);
+            margin-bottom: 62px;
+            .order-info {
+              width: 100%;
+              height: 41px;
+              line-height: 41px;
+              padding: 0 42px;
+              font-size: 14px;
+              color: rgba(51, 51, 51, 1);
+              background: rgba(255, 242, 153, 0.37);
+              span {
+                margin-right: 30px;
+              }
+            }
+            .detail {
+              width: 100%;
+              height: 120px;
+              .num,
+              .price,
+              .status,
+              .do {
+                line-height: 120px;
+              }
+              .price {
+                display: table;
+                #cell {
+                  display: table-cell;
+                  vertical-align: middle;
+                  line-height: 20px;
+                }
+              }
+              div {
+                display: inline-block;
+                height: 120px;
+                text-align: center;
+              }
+              .host {
+                text-align: center;
+                .head {
+                  width: 80px;
+                  height: 80px;
+                  border-radius: 50%;
+                  transform: translateY(18px);
+                  margin-right: 20px;
+                  margin-left: 40px;
+                }
+                .about {
+                  display: inline-block;
+                  width: 200px;
+                  height: 120px;
+                  padding-top: 30px;
+                  text-align: left;
+                  p:first-child {
+                    margin-bottom: 15px;
+                  }
+                }
+              }
+            }
+            .do {
+              .type1 {
+                width: 295px !important;
+              }
+              .type {
+                .btn {
+                  display: inline-block;
+                  width: 85px;
+                  height: 35px;
+                  line-height: 35px;
+                  text-align: center;
+                  border-radius: 15px;
+                  cursor: pointer;
+                }
+                .btn:not(:last-child) {
+                  margin-right: 20px;
+                }
+                .refund {
+                  background: linear-gradient(
+                    180deg,
+                    rgba(240, 182, 52, 1) 0%,
+                    rgba(254, 146, 1, 1) 100%
+                  );
+                  color: #fff;
+                }
+                .contact {
+                  border: 1px solid rgba(250, 157, 17, 1);
+                  color: #fa9d11;
+                }
+                .mr {
+                  margin-right: 20px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.fl {
+  float: left;
+}
+</style>
