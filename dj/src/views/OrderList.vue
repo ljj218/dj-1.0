@@ -1,6 +1,7 @@
 <template>
   <div class="orderList">
     <cpNav />
+    <floatTip />
     <div class="container">
       <div class="page-title">我的订单</div>
       <div class="content">
@@ -69,9 +70,10 @@ import quickBtn from "../components/quickBtn";
 import foot from "../components/foot";
 import { orderList,comOrder } from "../common/api/index";
 import { mapMutations, mapGetters } from "vuex";
+import floatTip from "../components/floatTip";
 
 export default {
-  components: { cpNav, quickBtn, foot },
+  components: { cpNav, quickBtn, foot ,floatTip},
   name: "orderList",
   data() {
     return {

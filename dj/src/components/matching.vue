@@ -4,6 +4,7 @@
       :value="showMatch"
       width="593"
       class="matching"
+      class-name="vertical-center-modal"
       :closable="false"
       @on-ok="sure"
       @on-cancel="cancel"
@@ -266,4 +267,13 @@ export default {
 .mb {
   margin-bottom: 21px;
 }
+/deep/ .vertical-center-modal{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .ivu-modal{
+            top: 0;
+        }
+    }
 </style>

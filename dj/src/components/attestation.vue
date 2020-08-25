@@ -22,7 +22,7 @@
         </div>
         <div class="row flex align-items">
           <div class="name">身份证号</div>
-          <input type="text" placeholder="二代身份证号" class="input" v-model="idCard" />
+          <input type="text" placeholder="二代身份证号" maxlength="18" class="input" v-model="idCard" />
         </div>
         <div class="row flex align-items">
           <div class="name">身份证正面</div>
@@ -221,11 +221,13 @@ export default {
         axios
           .post(config.baseUrl + "user/auth", data, configs)
           .then((res) => {
-            console.log(res);
+           this.loading = false;
             if (res.resultCode == "0000") {
-              this.loading = false;
               this.submitInfo();
+            }else{
+               this.$Message.warning(res.message);
             }
+            
           })
           .catch((error) => {
             console.log(error);
@@ -315,7 +317,6 @@ export default {
       }
       if (!pass) {
         this.$Message.warning(tip);
-        return;
       }
       return pass;
     },

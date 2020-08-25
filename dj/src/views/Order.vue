@@ -38,7 +38,7 @@
                     :class="{opacity:num<=1}"
                     @click="subtract"
                   />
-                  <input type="text" v-model="num" />
+                  <input type="text" v-model="num" maxlength="2" />
                   <img src="../assets/img/icon-add.png" class="icon" @click="add" />
                 </div>
               </td>
@@ -75,7 +75,7 @@
             <span class="price" v-else>{{ ((info.tacticsPrice/100)*num).toFixed(2)}}</span>
           </span>
         </p>
-        <button class="btnclick"  type="default" :loading="loading" @click="toOrder">提交订单</button>
+        <button class="btnclick" type="default" :loading="loading" @click="toOrder">提交订单</button>
       </div>
     </div>
     <quickBtn />
@@ -102,7 +102,7 @@ export default {
       type: "",
       id: "",
       remark: "",
-      loading:false
+      loading: false,
     };
   },
   computed: {
@@ -138,7 +138,7 @@ export default {
         return;
       }
       try {
-        this.loading=true;
+        this.loading = true;
         let orderMoney = this.num * price;
         let res = await order({
           orderMoney: orderMoney, //
@@ -147,13 +147,13 @@ export default {
           price: price, //
           toUserId: this.id, //
           userId: this.userData.userId, //
-          source:'', //
-          remark:this.remark
+          source: "", //
+          remark: this.remark,
         });
-        if(res.resultCode=="0000"){
+        if (res.resultCode == "0000") {
           this.$Message.success("下单成功");
-          this.$router.openPage('/orderList')
-        }else{
+          this.$router.openPage("/orderList");
+        } else {
           this.$Message.warning(res.message);
         }
       } catch (error) {}
@@ -170,6 +170,11 @@ export default {
       } catch (error) {}
     },
   },
+  watch: {
+    num(val) {
+      this.num = val.replace(/[^\d]/g, "");
+    },
+  },
 };
 </script>
 <style lang='scss' scoped>
@@ -178,7 +183,7 @@ export default {
   width: 100%;
   background-attachment: fixed;
   background-image: url("../assets/img/public/bj.jpg");
-   background-repeat: no-repeat;
+  background-repeat: no-repeat;
   background-size: cover;
   .container {
     width: 1200px;

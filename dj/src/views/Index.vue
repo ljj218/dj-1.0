@@ -10,7 +10,7 @@
         </ul>
         <div class="content">
           <div class="icon">
-            <img src="../assets/img/public/log-1.png" class="img" />
+            <img src="../assets/img/public/log-1.png" class="img" alt="小熊陪玩"/>
             <p>小熊陪玩</p>
           </div>
           <ul class="list" :class="{iswidth:type==2}">
@@ -312,6 +312,7 @@ export default {
       border-radius: 47px;
       font-size: 48px;
       color: rgba(255, 255, 255, 1);
+      border: 0;
     }
     .start:hover {
       box-shadow: 0 0 10px rgba(254, 146, 1, 1);

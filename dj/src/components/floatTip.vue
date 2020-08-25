@@ -49,8 +49,12 @@ export default {
       setUserData: "user/SET_USER_DATA",
     }),
     join(){
+      if(this.userInfo.isPlayer==1){
+         this.$Message.warning("已经是陪玩");
+         return
+      }
       if (this.userData) {
-        this.show = false;
+        this.show = true;
       } else {
         this.setLoginFlag(true);
       }

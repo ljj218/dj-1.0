@@ -6,7 +6,8 @@
       <div class="info">
         <div class="info-box">
           <div class="nike-name flex align-items">
-            <span>{{info.nickName||userData.phone|phone}}</span>
+            <span v-if="info.nickName">{{info.nickName}}</span>
+            <span v-else>{{userData.phone|phone}}</span>
             <img
               src="../assets/img/icon-editor.png"
               class="icon"
@@ -22,10 +23,10 @@
       </div>
     </div>
     <div class="base-info-wrap">
-      <div class="title-wrap">
+      <div class="title-wrap flex align-items">
         <span class="title">基础信息</span>
         <i class="line"></i>
-        <div class="editor unselect" @click="$router.openPage('/modifyUserInfo')">
+        <div class="editor unselect flex align-items" @click="$router.openPage('/modifyUserInfo')">
           <img src="../assets/img/icon-editor.png" class="icon" />
           <span>编辑信息</span>
         </div>
@@ -47,7 +48,7 @@
       </div>
     </div>
     <div class="base-info-wrap set">
-      <div class="title-wrap">
+      <div class="title-wrap flex align-items">
         <span class="title">基础信息</span>
         <i class="line"></i>
       </div>
@@ -208,7 +209,6 @@ export default {
     .title-wrap {
       height: 21px;
       width: 100%;
-      display: table;
       margin-bottom: 40px;
       .title {
         width: 80px;
@@ -218,30 +218,15 @@ export default {
         color: rgba(102, 102, 102, 1);
       }
       .line {
-        position: relative;
-        display: table-cell;
-        vertical-align: middle;
+        display: inline-block;
         width: 624px;
         height: 2px;
-        background-color: rgba(0, 0, 0, 0);
-        margin: 0 20px;
-        // opacity: 0;
+        background-color:  #e0e0e0;
       }
-      .line::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 50%;
-        margin-top: -1px;
-        width: 624px;
-        height: 2px;
-        background-color: #e0e0e0;
-        z-index: 2;
-      }
+
       .editor {
         cursor: pointer;
-        display: table-cell;
-        vertical-align: middle;
+        display: inline-block;
         padding-left: 20px;
         .icon {
           width: 12px;
@@ -272,20 +257,10 @@ export default {
     margin-top: 0 !important;
     padding-top: 0 !important;
     .line {
-      // width: 700px !important;
       width: 92% !important;
+      margin: 0  !important;
     }
-    .line::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 50%;
-      margin-top: -1px;
-      width: 100% !important;
-      height: 2px;
-      background-color: #e0e0e0;
-      z-index: 2;
-    }
+  
     .set-about {
       .item {
         position: relative;

@@ -3,6 +3,9 @@
     <cpNav />
     <div class="container clearfix">
       <div class="user-base-info clearfix">
+        <div class="temp" v-if="flag">
+          <Icon class="shak" type="md-cloud-upload" color="#ffffff" />
+        </div>
         <img :src="src" class="head fl" v-if="src" />
         <img src="../assets/img/public/icon-main2.png" class="head fl" v-else />
         <div class="upload-wrap fl">
@@ -71,6 +74,7 @@ export default {
       date: "",
       info: "",
       headImg: "",
+      flag: false,
     };
   },
   computed: {
@@ -92,16 +96,19 @@ export default {
         return;
       }
       if (file) {
+        this.flag = true;
         let reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
-            console.log(reader.result);
           this.src = reader.result;
           this.toupload(file).then((res) => {
-            this.headImg = res.data;
+            if (res.resultCode == "0000") {
+              this.headImg = res.data;
+              this.gotUserInfo();
+            }
+            this.flag = false;
           });
           this.$forceUpdate();
-          // updata();
         };
       }
     },
@@ -164,7 +171,6 @@ export default {
             this.loading = false;
           })
           .catch((error) => {
-            console.log(error);
             this.$Message.warning("提交失败");
             this.loading = false;
           });
@@ -190,7 +196,7 @@ export default {
   width: 100%;
   background-attachment: fixed;
   background-image: url("../assets/img/public/bj.jpg");
-   background-repeat: no-repeat;
+  background-repeat: no-repeat;
   background-size: cover;
   .container {
     width: 1200px;
@@ -199,16 +205,46 @@ export default {
     padding: 87px 80px;
     background-color: #fff;
     .user-base-info {
+      position: relative;
       padding-bottom: 40px;
       padding-left: 23px;
       margin-bottom: 30px;
       border-bottom: 1px solid #dbdbdb;
       .head {
+        position: relative;
         width: 66px;
         height: 66px;
         border-radius: 50%;
         margin-right: 20px;
+        z-index: 0;
       }
+      .temp {
+        position: absolute;
+        top: 0;
+        width: 66px;
+        height: 66px;
+        line-height: 66px;
+        border-radius: 50%;
+        text-align: center;
+        z-index: 9;
+        font-size: 30px;
+        background-color: rgba(153, 153, 153, 0.5);
+        .shak {
+          animation: show 1s infinite linear;
+        }
+        @keyframes show {
+          0% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0;
+          }
+          100% {
+            opacity: 1;
+          }
+        }
+      }
+
       .upload-wrap {
         position: relative;
         p {

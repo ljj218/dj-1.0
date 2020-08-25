@@ -5,7 +5,7 @@
     :on-reach-bottom="handleReachBottom"
     :distance-to-edge="-100"
   >
-    <cpNav />
+    <cpNav @search="search"/>
     <div class="main">
       <div class="nav-wrap unselect">
         <div class="nav-item clearfix">
@@ -33,7 +33,7 @@
           <ul class="right-box fl clearfix">
             <li :class="{active:sex==''}" @click="changeSex('')">不限</li>
             <li :class="{active:sex==1}" @click="changeSex(1)">小哥哥</li>
-            <li :class="{active:sex==2}" @click="changeSex(1)">小姐姐</li>
+            <li :class="{active:sex==2}" @click="changeSex(2)">小姐姐</li>
           </ul>
         </div>
         <div class="nav-item clearfix">
@@ -45,12 +45,21 @@
           </ul>
         </div>
       </div>
-
+      <audio ref="audio" preload="load" class="audio">
+        您的浏览器不支持音频播放
+        <source :src="nowSrc" type="audio/mp3" />
+      </audio>
       <div class="list-boxs">
         <div class="frame_red" v-for="(item,index) in list" :key="index">
           <!-- <img :src="item.headImg" class="pic" /> -->
-          <el-image :src="item.headImg" lazy class="pic" @click="toDeail(item.userId)"></el-image>
-          <img src="../assets/img/icon-voice.png" class="voice" />
+          <el-image
+            :src="item.headImg"
+            lazy
+            class="pic"
+            @click="toDeail(item.userId)"
+            :alt="item.nickName"
+          ></el-image>
+          <img src="../assets/img/icon-voice-2.png" class="voice" @click="play(item.soundFile)" />
           <div class="info" @click="toDeail(item.userId)">
             <div class="user clearfix">
               <div class="name one-text" :title="item.nickName">{{item.nickName}}</div>
@@ -100,6 +109,7 @@ export default {
       list: [],
       name: "",
       isNew: 0, //是否新人
+      nowSrc: "",
     };
   },
   computed: {
@@ -113,7 +123,9 @@ export default {
     window.removeEventListener("resize", this.getHeight);
   },
   mounted() {
-    this.name = this.$route.query.name || "";
+    if (sessionStorage.getItem("_search")) {
+      this.name = sessionStorage.getItem("_search");
+    }
     this.RankList = config.level;
     this.querPlayer();
     this.gotUserInfo();
@@ -123,6 +135,12 @@ export default {
       setType: "user/SET_TYPE",
       setUserInfo: "user/SET_USER_INFO",
     }),
+    search(name){
+      this.name=name;
+      this.pageNo = 1;
+      this.list = [];
+      this.querPlayer();
+    },
     //新人 优惠
     changeNewProt() {
       if (this.isNew == 0) {
@@ -133,6 +151,39 @@ export default {
       this.pageNo = 1;
       this.list = [];
       this.querPlayer();
+    },
+    play(src) {
+      if (!this.nowSrc || this.nowSrc != src) {
+        this.nowSrc = src;
+        this.$refs.audio.src = this.nowSrc;
+        this.$nextTick(() => {
+          this.$refs.audio.load();
+          this.$refs.audio.play();
+          // playPromise = audio.play();
+          // if (playPromise) {
+          //     playPromise.then(() => {
+          //         // 音频加载成功
+          //         // 音频的播放需要耗时
+          //         setTimeout(() => {
+          //             // 后续操作
+          //             console.log("done.");
+          //         }, audio.duration * 1000); // audio.duration 为音频的时长单位为秒
+
+          //     }).catch((e) => {
+          //         // 音频加载失败
+          //     });
+          // }
+          this.ispalying = true;
+        });
+      }
+      if (!this.ispalying) {
+        this.$refs.audio.play();
+        this.ispalying = true;
+      } else {
+        this.$refs.audio.pause();
+        this.ispalying = false;
+      }
+      this.$forceUpdate();
     },
     async querPlayer() {
       this.loadFlag = false;
@@ -227,7 +278,7 @@ export default {
   // overflow-y: auto;
   background-attachment: fixed;
   background-image: url("../assets/img/public/bj-3.jpg");
-   background-repeat: no-repeat;
+  background-repeat: no-repeat;
   background-size: cover;
   // .bj {
   //     position: absolute;
@@ -236,6 +287,12 @@ export default {
   //     min-width: 1500px;
   //     z-index: 0;
   // }
+}
+.audio {
+  position: absolute;
+  left: -9999999;
+  top: 9999999;
+  opacity: 0;
 }
 .main {
   position: relative;

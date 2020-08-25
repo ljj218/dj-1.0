@@ -1,7 +1,7 @@
 <template>
   <div class="pos">
     <div class="nav clearfix">
-      <div class="page-title fl unselect">LOL速陪</div>
+      <div class="page-title fl unselect"  @click="$router.openPage('/')">小熊陪玩</div>
       <ul class="lf-list fl clearfix unselect">
         <li
           class="item quick"
@@ -18,12 +18,14 @@
       </ul>
       <div class="lf clearfix">
         <div class="input-wrap fl clearfix flex align-items">
+          <input type="password" name="password" class="" style="position: fixed;left: -9999px;opacity:0">
           <input
             type="text"
             class="search fl"
             placeholder="陪玩昵称 ID "
             v-model="name"
             @keyup.enter="search"
+            autocomplete="off"
           />
           <img src="../assets/img/public/icon-search.png" class="icon-search fl" @click="search" />
         </div>
@@ -88,7 +90,7 @@
               <span>订单</span>
             </div>
           </div>
-          <div class="level-wrap">
+          <div class="level-wrap" v-if="userInfo.isPlayer==1">
             <p class="hint">距离下次升级还需20单</p>
             <div class="slider-wrap clearfix">
               <div class="progress">
@@ -168,7 +170,13 @@ export default {
       });
     },
     search() {
-      this.$router.openPage("/playHall?search=" + this.name);
+      if(this.$route.name=='PlayHall'){
+        this.$emit('search',this.name)
+      }else{
+        this.$router.openPage("/playHall");
+      sessionStorage.setItem('_search', this.name);
+      }
+      
     },
   },
 };
@@ -184,7 +192,8 @@ export default {
     right: 30px;
     top: 94px;
     width: 208px;
-    height: 165px;
+    // min-height: 165px;
+    min-height: 100px;
     background: rgba(255, 255, 255, 1);
   }
 }
@@ -199,7 +208,7 @@ export default {
   z-index: 2;
   background: rgba(0, 0, 0, 0.2);
   .page-title {
-    // cursor: pointer;
+    cursor: pointer;
     height: 94px;
     line-height: 94px;
     font-size: 30px;

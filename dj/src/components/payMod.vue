@@ -17,7 +17,7 @@
           需充值：{{needMoney()}}
         </p>
       </div>
-      <div class="top-up flex align-items unselect" @click="payFlag=!payFlag">
+      <!-- <div class="top-up flex align-items unselect" @click="payFlag=!payFlag">
         充值
         <Icon type="md-arrow-dropup" size="25" />
       </div>
@@ -55,11 +55,11 @@
             <qriously :value="payInfo.qrCode" :size="220" class="_qriously"/>
           </div>
         </div>
-      </div>
-      <!-- <div class="btn-wrap clearfix unselect">
+      </div> -->
+      <div class="btn-wrap clearfix unselect">
         <div class="btn fl btnclick">取消</div>
         <div class="btn paym lr btnclick">付款</div>
-      </div> -->
+      </div>
     </div>
     <div slot="footer"></div>
   </Modal>

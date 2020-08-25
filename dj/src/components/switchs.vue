@@ -7,6 +7,7 @@
         v-model="switch1"
         false-color="#BEBEBE"
         true-color="#5DE376"
+        :disabled="userInfo.isPlayer==0"
         class="animated fadeIn"
         @on-change="changeSpeed"
       />
@@ -18,7 +19,8 @@
         v-model="switch2"
         false-color="#BEBEBE"
         true-color="#5DE376"
-         class="animated fadeIn"
+        :disabled="userInfo.isPlayer==0"
+        class="animated fadeIn"
         @on-change="changePlay"
       />
     </div>
@@ -29,7 +31,8 @@
         v-model="switch3"
         false-color="#BEBEBE"
         true-color="#5DE376"
-         class="animated fadeIn"
+        :disabled="userInfo.isPlayer==0"
+        class="animated fadeIn"
         @on-change="changeNew"
       />
     </div>
@@ -49,7 +52,7 @@ export default {
       switch3: false,
     };
   },
-  computed: { ...mapGetters(["userData"]) },
+  computed: { ...mapGetters(["userData", "userInfo"]) },
   created() {},
   mounted() {
     this.togetPlayerSet();
@@ -84,14 +87,14 @@ export default {
     },
     async togetPlayerSet() {
       if (!this.userData) return;
+      if (this.userInfo.isPlayer == 0) return;
       try {
         let res = await getPlayerSet(this.userData.userId);
-        if(res.resultCode=="0000"){
-            this.switch1=res.data.openSpeed==1?true:false;
-            this.switch2=res.data.openPlay==1?true:false;
-            this.switch3=res.data.openNew==1?true:false;
+        if (res.resultCode == "0000") {
+          this.switch1 = res.data.openSpeed == 1 ? true : false;
+          this.switch2 = res.data.openPlay == 1 ? true : false;
+          this.switch3 = res.data.openNew == 1 ? true : false;
         }
-
       } catch (error) {}
     },
   },

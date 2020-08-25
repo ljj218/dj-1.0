@@ -205,7 +205,7 @@
 import ImgCutter from "vue-img-cutter";
 import { validateMobilePhone, validateMessageCode } from "../common/util/tools";
 import { soundList } from "../common/api/common";
-import { upload } from "../common/api/user";
+import { upload, getUserInfo } from "../common/api/user";
 import { config } from "../common/config";
 import axios from "axios";
 import { mapMutations, mapGetters } from "vuex";
@@ -268,6 +268,9 @@ export default {
     this.getsoundList();
   },
   methods: {
+     ...mapMutations({
+      setUserInfo: "user/SET_USER_INFO",
+    }),
     async getsoundList() {
       if (localStorage.getItem("haveSoundList")) {
         this.haveSoundList = JSON.parse(localStorage.getItem("haveSoundList"));
@@ -289,6 +292,10 @@ export default {
       if (index > -1) {
         this.playPosition.splice(index, 1);
       } else {
+        if(this.playPosition.length>=2){
+          this.$Message.warning("只能添加两个位置");
+          return
+        }
         this.playPosition.push(num);
       }
     },
@@ -490,6 +497,7 @@ export default {
           .then((res) => {
             if (res.resultCode == "0000") {
               this.$Message.success("提交成功");
+              this.gotUserInfo();
               this.cancel();
             } else {
               this.$Message.warning("提交失败");
@@ -501,6 +509,17 @@ export default {
             this.$Message.warning("提交失败");
             this.loading = false;
           });
+      } catch (error) {}
+    },
+    async gotUserInfo() {
+      if (!this.userData) return;
+      try {
+        let res = await getUserInfo({
+          userId: this.userData.userId || "",
+        });
+        if (res.resultCode == "0000") {
+          this.setUserInfo(res.data);
+        }
       } catch (error) {}
     },
     async send() {

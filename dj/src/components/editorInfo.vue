@@ -48,7 +48,7 @@
           <li
             class="item"
             :class="{active:item.value==sound}"
-            v-for="(item,index) in haveSoundList[0].soundList"
+            v-for="(item,index) in haveSoundList[1].soundList"
             :key="index"
             @click="changeSound(item.value)"
           >
@@ -61,7 +61,7 @@
           <li
             class="item"
             :class="{active:item.value==sound}"
-            v-for="(item,index) in haveSoundList[1].soundList"
+            v-for="(item,index) in haveSoundList[0].soundList"
             :key="index"
             @click="changeSound(item.value)"
           >
@@ -355,6 +355,10 @@ export default {
       if (index > -1) {
         this.playPosition.splice(index, 1);
       } else {
+        if(this.playPosition.length>=2){
+          this.$Message.warning("只能添加两个位置");
+          return
+        }
         this.playPosition.push(num);
       }
     },
