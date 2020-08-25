@@ -3,7 +3,6 @@
     <div class="container">
       <cpNav />
       <floatTip />
-
       <div class="main">
         <ul class="tab clearfix unselect">
           <li class="tab-item" :class="{active:type==1}" @click="setType(1)">英雄联盟</li>
@@ -12,7 +11,7 @@
         <div class="content">
           <div class="icon">
             <img src="../assets/img/public/log-1.png" class="img" />
-            <p>小熊电竞</p>
+            <p>小熊陪玩</p>
           </div>
           <ul class="list" :class="{iswidth:type==2}">
             <li class="item">
@@ -203,7 +202,9 @@ export default {
   overflow: hidden;
   background-attachment: fixed;
   background-image: url("../assets/img/public/bj.jpg");
-  background-size: 100% 100%;
+  // background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-size: cover;
   .bj {
     position: absolute;
     width: 100%;

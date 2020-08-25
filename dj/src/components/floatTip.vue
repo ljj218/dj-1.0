@@ -1,7 +1,7 @@
 <template>
   <div>
     <ul class="floatTip">
-      <li class="item" @click="show=true">
+      <li class="item" @click="join">
         <img src="../assets/img/public/icon-menber.png" class="icon" />
         <p>申请</p>
         <p>入驻</p>
@@ -48,15 +48,18 @@ export default {
       setLoginFlag: "user/SET_LOGIN_FLAG",
       setUserData: "user/SET_USER_DATA",
     }),
+    join(){
+      if (this.userData) {
+        this.show = false;
+      } else {
+        this.setLoginFlag(true);
+      }
+    },
     closed() {
       this.show = false;
     },
     closedApply() {
-      if (this.userData) {
-        this.showApply = false;
-      } else {
-        this.setLoginFlag(true);
-      }
+      this.showApply = false;
     },
     toOrder() {
       if (this.userData) {

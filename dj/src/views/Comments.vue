@@ -134,7 +134,9 @@ export default {
   width: 100%;
   background-attachment: fixed;
   background-image: url("../assets/img/public/bj.jpg");
-  background-size: 100% 100%;
+  // background-size: 100% 100%;
+   background-repeat: no-repeat;
+  background-size: cover;
   .container {
     width: 1200px;
     // height: 529px;

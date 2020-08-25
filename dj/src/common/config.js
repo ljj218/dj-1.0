@@ -37,3 +37,15 @@ export const config = {
     { value: "5", label: "辅助" }
   ],
 };
+export let tgCode =()=>{
+  let tgCode=localStorage.getItem('tgCode')||'';
+  return tgCode;
+};
+export let ghCode =()=>{
+  let ghCode=localStorage.getItem('ghCode')||'';
+  return ghCode;
+};
+export let hzCode =()=>{
+  let hzCode=localStorage.getItem('hzCode')||'';
+  return hzCode;
+};

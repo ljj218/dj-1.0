@@ -1,4 +1,5 @@
 import fetch from '../axios'
+import { tgCode,ghCode,hzCode} from "../config"
 
 //绑定手机
 export const bindPhone = (params) => {
@@ -68,7 +69,8 @@ export const order = (params) => {
     toUserId: params.toUserId,//
     userId: params.userId,//
     source: params.source || '',//
-    remark:params.remark||''
+    remark:params.remark||'',
+    hzCode:hzCode()||'',
   }
   return fetch.get('consum/order', data)
 };

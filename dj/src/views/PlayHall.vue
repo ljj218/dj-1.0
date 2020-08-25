@@ -227,7 +227,8 @@ export default {
   // overflow-y: auto;
   background-attachment: fixed;
   background-image: url("../assets/img/public/bj-3.jpg");
-  background-size: 100% 100%;
+   background-repeat: no-repeat;
+  background-size: cover;
   // .bj {
   //     position: absolute;
   //     width: 100%;

@@ -1,5 +1,5 @@
 import fetch from '../axios'
-
+import { tgCode,ghCode,hzCode} from "../config"
 //登录
 export const login = (params) => {
   let data = {
@@ -16,7 +16,10 @@ export const register = (params) => {
   let data = {
     phone: params.phone,//用户账号（手机号）
     code: params.code,
-    password: params.password
+    password: params.password,
+    tgCode: tgCode(),
+    ghCode: ghCode(),
+    hzCode: hzCode(),
 
   }
   return fetch.get('user/register', data)
