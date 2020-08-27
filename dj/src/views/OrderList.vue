@@ -30,18 +30,18 @@
                   </div>
                 </div>
                 <div class="status fl">
-                  <span v-if="item.orderStatus==0">未服务</span>
-                  <span v-if="item.orderStatus==2">服务中</span>
-                  <span v-if="item.orderStatus==3||item.orderStatus==1">已完成</span>
+                  <span v-if="item.serviceStatus==0">待服务</span>
+                  <span v-if="item.serviceStatus==1">服务中</span>
+                  <span v-if="item.serviceStatus==2">已完成</span>
                 </div>
                 <div class="do fl unselect">
                   <div class="type type1">
-                    <div class="refund btn btnclick" v-if="item.orderStatus==1">去付款</div>
-                    <div class="refund btn btnclick" v-if="item.orderStatus==2" @click="tocomOrder(item.orderId)">完成订单</div>
+                    <div class="refund btn btnclick" v-if="item.orderStatus==0">去付款</div>
+                    <div class="refund btn btnclick" v-if="item.serviceStatus==2&&item.serviceStatus==1" @click="tocomOrder(item.orderId)">完成订单</div>
                     <div class="contact btn btnclick">联系陪玩</div>
                     <div
                       class="contact btn btnclick"
-                      v-if="item.orderStatus==2||item.orderStatus==3"
+                      v-if="item.serviceStatus==2&&item.serviceStatus==2"
                       @click="$router.openPage('/refund?orderId='+item.orderId)"
                     >申请退款</div>
 
