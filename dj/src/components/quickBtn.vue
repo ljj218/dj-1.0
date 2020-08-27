@@ -34,11 +34,13 @@ export default {
 </script>
 <style lang='scss' scoped>
 .quickBtn {
+    position: relative;
     width: 1200px;
     text-align: center;
     padding: 100px 0 50px;
     color: #fff;
     margin: auto;
+    z-index: 9;
     .btn-wrap {
         cursor: pointer;
         display: inline-block;

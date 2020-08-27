@@ -38,9 +38,10 @@ import { validateMobilePhone, validateMessageCode } from "../common/util/tools";
 import { forgotPwd } from "../common/api/user";
 import { smsCode } from "../common/api/common";
 import { mapMutations, mapGetters, mapActions } from "vuex";
+import bjImage from "../components/bjImage";
 
 export default {
-  components: { cpNav, quickBtn, foot },
+  components: { cpNav, quickBtn, foot ,bjImage},
   name: "findpass",
   data() {
     return {

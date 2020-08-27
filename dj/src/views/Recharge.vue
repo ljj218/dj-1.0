@@ -80,9 +80,10 @@ import quickBtn from "../components/quickBtn";
 import foot from "../components/foot";
 import { recharge, paySuccess } from "../common/api/user";
 import { mapMutations, mapGetters, mapActions } from "vuex";
+import bjImage from "../components/bjImage";
 
 export default {
-  components: { cpNav, quickBtn, foot },
+  components: { cpNav, quickBtn, foot, bjImage },
   name: "recharge",
   data() {
     return {
@@ -101,6 +102,12 @@ export default {
   created() {},
   mounted() {
     this.toRecharge();
+    if (sessionStorage.getItem("_ref")) {
+      setTimeout(() => {
+        this.$router.openPage(sessionStorage.getItem("_ref"));
+        sessionStorage.removeItem("_ref");
+      }, 5000);
+    }
   },
   methods: {
     ...mapActions({
@@ -141,9 +148,14 @@ export default {
           this.$Message.success("充值成功");
           this.toRecharge();
           this.getBalance(this.userData.userId);
+          if (sessionStorage.getItem("_ref")) {
+            setTimeout(() => {
+              this.$router.openPage(sessionStorage.getItem("_ref"));
+              sessionStorage.removeItem("_ref");
+            }, 500);
+          }
           clearInterval(this.timer);
         }
-        console.log(res);
       } catch (error) {
         // clearInterval(this.timer);
       }
@@ -169,7 +181,7 @@ export default {
   width: 100%;
   background-attachment: fixed;
   background-image: url("../assets/img/public/bj-3.jpg");
-   background-repeat: no-repeat;
+  background-repeat: no-repeat;
   background-size: cover;
   .container {
     width: 1200px;

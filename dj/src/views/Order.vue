@@ -1,6 +1,9 @@
 <template>
   <div class="detail">
     <cpNav />
+    <bjImage >
+        <img src="../assets/img/public/3.jpeg" alt="">
+      </bjImage>
     <div class="container">
       <div class="tab">我的订单</div>
       <div class="order-info">
@@ -90,9 +93,10 @@ import foot from "../components/foot";
 import { mapMutations, mapGetters } from "vuex";
 import { order } from "../common/api/index";
 import { getUserInfo } from "../common/api/user";
+import bjImage from "../components/bjImage";
 
 export default {
-  components: { cpNav, quickBtn, foot },
+  components: { cpNav, quickBtn, foot ,bjImage},
   name: "Order",
   data() {
     return {
@@ -181,13 +185,15 @@ export default {
 .detail {
   position: relative;
   width: 100%;
-  background-attachment: fixed;
-  background-image: url("../assets/img/public/bj.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
+  // background-attachment: fixed;
+  // background-image: url("../assets/img/public/bj.jpg");
+  // background-repeat: no-repeat;
+  // background-size: cover;
   .container {
+    position: relative;
     width: 1200px;
     margin: 50px auto 0;
+    z-index: 9;
     .tab {
       width: 1200px;
       height: 60px;

@@ -81,7 +81,7 @@
             </div>
           </div>
           <div class="quick-btn-wrap clearfix unselect">
-            <div class="btn-wrap mr fl" @click="$router.openPage('/mine')">
+            <div class="btn-wrap mr fl" @click="$router.openPage('/modifyUserInfo')">
               <img src="../assets/img/icon-zl.png" class="icon1" />
               <span>资料</span>
             </div>
@@ -130,6 +130,9 @@ export default {
   created() {},
   mounted() {
     this.pathName = this.$route.name;
+    if (sessionStorage.getItem("_search")) {
+      this.name = sessionStorage.getItem("_search");
+    }
   },
   methods: {
     ...mapMutations({
@@ -179,6 +182,10 @@ export default {
       
     },
   },
+  beforeRouteLeave (to, from, next) {
+    sessionStorage.removeItem('_search')
+    next()
+  }
 };
 </script>
 <style lang='scss' scoped>
@@ -186,7 +193,7 @@ export default {
   position: relative;
   height: 94px;
   width: 100%;
-  z-index: 3;
+  z-index: 10;
   .user-info-wrap {
     position: absolute;
     right: 30px;
@@ -205,7 +212,7 @@ export default {
   min-width: 1200px;
   width: 100%;
   height: 94px;
-  z-index: 2;
+  z-index: 10;
   background: rgba(0, 0, 0, 0.2);
   .page-title {
     cursor: pointer;

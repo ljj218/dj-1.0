@@ -3,6 +3,9 @@
     <div class="container">
       <cpNav />
       <floatTip />
+      <bjImage>
+        <img src="../assets/img/public/3.jpeg" alt />
+      </bjImage>
       <div class="main">
         <ul class="tab clearfix unselect">
           <li class="tab-item" :class="{active:type==1}" @click="setType(1)">英雄联盟</li>
@@ -10,18 +13,37 @@
         </ul>
         <div class="content">
           <div class="icon">
-            <img src="../assets/img/public/log-1.png" class="img" alt="小熊陪玩"/>
+            <img src="../assets/img/public/log-1.png" class="img" alt="小熊陪玩" />
             <p>小熊陪玩</p>
           </div>
           <ul class="list" :class="{iswidth:type==2}">
-            <li class="item">
-              <Select v-model="sound" style="width:103px" placeholder="陪玩音色">
-                <Option
-                  v-for="item in newSoundList"
-                  :value="item.value"
-                  :key="item.value"
-                >{{ item.name }}</Option>
-              </Select>
+            <li class="item unselect">
+              <Dropdown trigger="click" @on-visible-change="rotate=!rotate">
+                <a href="javascript:void(0)" class="select flex align-items justify-content one-text">
+                  <span>{{soundName}}</span>
+                  <Icon type="ios-arrow-down" class="ios-arrow-down-user" :class="{rotate:rotate}"></Icon>
+                </a>
+                <DropdownMenu slot="list" class="flex" v-if="haveSoundList.length>0">
+                  <ul class="dropList">
+                    <DropdownItem
+                      v-for="(item,index) in haveSoundList[0].soundList"
+                      :key="index"
+                      :class="{active:sound==item.value}"
+                      @click.native="select(item.value,item.name)"
+                    >{{item.name}}</DropdownItem>
+                    <DropdownItem @click.native="select('','不限')">不限</DropdownItem>
+                  </ul>
+                  <ul class="dropList">
+                    <DropdownItem
+                      v-for="(item,index) in haveSoundList[1].soundList"
+                      :key="index"
+                      :class="{active:sound==item.value}"
+                      @click.native="select(item.value,item.name)"
+                    >{{item.name}}</DropdownItem>
+                    <DropdownItem @click.native="select('','不限')">不限</DropdownItem>
+                  </ul>
+                </DropdownMenu>
+              </Dropdown>
             </li>
             <li class="item">
               <Select v-model="rank" style="width:103px" placeholder="陪玩段位">
@@ -54,10 +76,11 @@
           <!-- <div class="start unselect" @click="start">开始陪玩</div> -->
           <Button class="start" type="default" :loading="loading" @click="toQuerPlayerSpeed">开始陪玩</Button>
         </div>
+        <quickBtn class="links"/>
       </div>
     </div>
 
-    <matching :showMatch="showMatch" @closed="closed" @load="load" :info="info" />
+    <matching :showMatch="showMatch" @closed="closed" @load="load" :info="info" :pageNo="pageNo" />
   </div>
 </template>
 
@@ -65,13 +88,15 @@
 import cpNav from "../components/cp-nav";
 import floatTip from "../components/floatTip";
 import matching from "../components/matching";
+import bjImage from "../components/bjImage";
 import { mapMutations, mapGetters } from "vuex";
 import { config } from "../common/config";
 import { soundList } from "../common/api/common";
 import { querPlayerSpeed } from "../common/api/index";
+import quickBtn from "../components/quickBtn";
 
 export default {
-  components: { cpNav, floatTip, matching },
+  components: { cpNav, floatTip, matching, bjImage, quickBtn },
   name: "Index",
   data() {
     return {
@@ -106,8 +131,11 @@ export default {
       sound: "",
       haveSoundList: [],
       loading: false,
-      info: {},
+      info: [],
+      pageNo: 1,
       loadflag: true,
+      rotate: false,
+      soundName: "陪玩音色",
     };
   },
   computed: {
@@ -128,6 +156,10 @@ export default {
   mounted() {
     this.getsoundList();
     this.rankList = config.level;
+    if (sessionStorage.getItem("_info")) {
+      this.info.push(JSON.parse(sessionStorage.getItem("_info")));
+      this.toQuerPlayerSpeed();
+    }
   },
   methods: {
     ...mapMutations({
@@ -138,6 +170,12 @@ export default {
     },
     closed() {
       this.showMatch = false;
+      this.pageNo = 1;
+    },
+    select(val, name) {
+      console.log(val);
+      this.sound = val;
+      this.soundName = name;
     },
     async getsoundList() {
       if (localStorage.getItem("haveSoundList")) {
@@ -158,7 +196,7 @@ export default {
     async toQuerPlayerSpeed() {
       let data = {
         type: this.type,
-        pageNo: 1,
+        pageNo: this.pageNo,
         pageSize: 100,
         position: this.position,
         priceOrderBy: this.priceOrderBy, //价格排序 1 从高到低 2 从低到高
@@ -167,22 +205,25 @@ export default {
       };
       try {
         this.loading = true;
-        this.loadflag=false;
+        this.loadflag = false;
         let res = await querPlayerSpeed(data);
         if (res.resultCode == "0000") {
-          this.info = res.data;
-          if(res.data.length>0){
-              this.showMatch = true;
-          }else{
+          if (this.pageNo > 1 && res.data.length == 0) {
+            //  this.$Message.warning("");
+            this.pageNo--;
+          }
+          this.info = [...this.info, ...res.data];
+          if (res.data.length > 0) {
+            this.showMatch = true;
+          } else {
             this.$Message.warning("没有匹配到合适陪玩");
           }
-         
         }
         this.loading = false;
-        this.loadflag=true;
+        this.loadflag = true;
       } catch (error) {
         this.loading = false;
-        this.loadflag=true;
+        this.loadflag = true;
       }
     },
     load() {
@@ -200,11 +241,11 @@ export default {
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  background-attachment: fixed;
-  background-image: url("../assets/img/public/bj.jpg");
-  // background-size: 100% auto;
-  background-repeat: no-repeat;
-  background-size: cover;
+  // background-attachment: fixed;
+  // background-image: url("../assets/img/public/bj.jpg");
+  // // background-size: 100% auto;
+  // background-repeat: no-repeat;
+  // background-size: cover;
   .bj {
     position: absolute;
     width: 100%;
@@ -224,6 +265,7 @@ export default {
     min-height: 766px;
     height: 100%;
     margin: auto;
+    z-index: 9;
     // overflow: hidden;
   }
   .tab {
@@ -275,6 +317,7 @@ export default {
     .list {
       margin: 60px auto 0;
       .item {
+        position: relative;
         display: inline-block;
         /deep/ .ivu-select-placeholder {
           font-size: 16px;
@@ -290,6 +333,59 @@ export default {
         }
         /deep/ .ivu-select-item-selected {
           color: rgba(251, 153, 10, 1);
+        }
+
+        .select {
+          // display: block;
+          width: 101px;
+          height: 30px;
+          cursor: pointer;
+          position: relative;
+          background-color: #fff;
+          border-radius: 4px;
+          border: 1px solid #dcdee2;
+          transition: all 0.2s ease-in-out;
+          font-size: 20px;
+          color: #7f7f7f;
+          .ios-arrow-down-user {
+            transition: transform 0.2s ease-in-out;
+          }
+          span {
+            font-size: 16px;
+          }
+          .rotate {
+            transform: rotate(180deg);
+          }
+        }
+        .options {
+          position: absolute;
+          top: 32px;
+          left: 0px;
+          max-height: 200px;
+          overflow: auto;
+          margin: 5px 0;
+          padding: 5px 0;
+          background-color: #fff;
+          box-sizing: border-box;
+          border-radius: 4px;
+          box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+          transform-origin: center top;
+          width: 101px;
+          height: auto;
+          background-color: #fff;
+        }
+        /deep/ .ivu-dropdown-menu {
+          align-items: flex-start;
+        }
+        .dropList {
+          width: 50px;
+          height: inherit;
+          text-align: center;
+          /deep/ .ivu-dropdown-item {
+            padding: 0 !important;
+            height: 30px;
+            line-height: 30px;
+          }
         }
       }
       .item:not(:last-child) {
@@ -318,5 +414,13 @@ export default {
       box-shadow: 0 0 10px rgba(254, 146, 1, 1);
     }
   }
+}
+.links{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 14%;
+  padding: 0;
+  
 }
 </style>

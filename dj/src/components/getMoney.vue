@@ -5,7 +5,7 @@
             <span>提现金额</span>
         </div>
         <ul class="list flex flex-wrap space-between">
-            <li class="item" v-for="(item,index) in 9">{{item*100}}</li>
+            <li class="item" v-for="(item,index) in 9" :key="index">{{item*100}}</li>
             <li class="item space"></li>
             <li class="item space"></li>
             <li class="item space"></li>
@@ -13,11 +13,17 @@
             <li class="item space"></li>
         </ul>
         <input type="text" placeholder="输入金额" class="money" v-model="money" />
-        <div class="btn btnclick unselect">提交</div>
+        <!-- <div class="btn btnclick unselect">提交</div> -->
+        <div class="wrap">
+            <p>打开微信扫码提现</p>
+            <qriously :value="link" :size="180" v-if="link"/>
+        </div>
     </div>
 </template>
 
 <script>
+import { mapMutations, mapGetters } from "vuex";
+
 export default {
     props: {
         showGet: {
@@ -30,11 +36,16 @@ export default {
         return {
             num: 0,
             money: "",
+            link:''
         };
     },
-    computed: {},
+    computed: {
+         ...mapGetters(["userInfo"]),
+    },
     created() {},
-    mounted() {},
+    mounted() {
+        this.link=location.origin+'/wechatGetM?userId='+this.userInfo.userId
+    },
     methods: {
         back() {
             this.$emit("close");

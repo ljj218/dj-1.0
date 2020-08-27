@@ -41,7 +41,12 @@
             <span>擅长英雄:</span>
             {{nowInfo.playHero||''}}
           </p>
+          <div class="wechat-wrap clearfix">
+            <div class="name fl">微信</div>
+            <img :src="nowInfo.wechatImg" alt="微信号码" class="code fl" v-if="nowInfo.wechatImg" />
+          </div>
         </div>
+
         <div class="btn-wrap clearfix unselect" :class="{top:type==2}">
           <div class="btn fl btnclick" @click="next">继续匹配</div>
           <div class="btn talk lr btnclick">聊一聊</div>
@@ -49,7 +54,7 @@
       </div>
       <div slot="footer"></div>
     </Modal>
-    <payMod :showPayMod="showPayMod" :info="nowInfo" @closed="closed" />
+    <payMod :showPayMod="showPayMod" :info="nowInfo" @closed="closed" :pageNo="pageNo"/>
   </div>
 </template>
 
@@ -67,6 +72,9 @@ export default {
     info: {
       type: [Object, Array],
     },
+    pageNo:{
+      type: [Number],
+    }
   },
   name: "matching",
   data() {
@@ -113,7 +121,6 @@ export default {
       if (this.index >= this.info.length) {
         this.index = 0;
         this.$emit("load");
-        
       }
       this.nowInfo = Object.assign({}, this.info[this.index]);
     },
@@ -139,13 +146,19 @@ export default {
         this.nowInfo = val[0];
       }
     },
+    showMatch(val){
+      if(val&&sessionStorage.getItem("_info")){
+        this.showPayMod=true;
+        sessionStorage.removeItem('_info')
+      }
+    }
   },
 };
 </script>
 <style lang='scss' scoped>
 .content {
   padding: 20px;
-  height: 394px;
+  min-height: 394px;
   .head {
     display: inline-block;
     width: 108px;
@@ -219,10 +232,20 @@ export default {
   }
   .specialty {
     width: 100%;
-    height: 146px;
+    // height: 146px;
     padding: 36px 0 45px 29px;
     font-size: 16px;
     color: rgba(51, 51, 51, 1);
+  }
+  .wechat-wrap {
+    margin-top: 20px;
+    .name {
+    }
+    img {
+      width: 100px;
+      height: 100px;
+      margin-left: 40px;
+    }
   }
   .btn-wrap {
     width: 322px;
@@ -267,13 +290,13 @@ export default {
 .mb {
   margin-bottom: 21px;
 }
-/deep/ .vertical-center-modal{
-        display: flex;
-        align-items: center;
-        justify-content: center;
+/deep/ .vertical-center-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-        .ivu-modal{
-            top: 0;
-        }
-    }
+  .ivu-modal {
+    top: 0;
+  }
+}
 </style>

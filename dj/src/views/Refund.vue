@@ -1,6 +1,9 @@
 <template>
   <div class="orderList">
     <cpNav />
+     <bjImage >
+        <img src="../assets/img/public/1.jpeg" alt="">
+      </bjImage>
     <div class="container">
       <div class="page-title">
         <span>退款</span>
@@ -59,9 +62,10 @@ import { orderRefund, getLabelList } from "../common/api/index";
 import { mapMutations, mapGetters } from "vuex";
 import axios from "axios";
 import { config } from "../common/config";
+import bjImage from "../components/bjImage";
 
 export default {
-  components: { cpNav, quickBtn, foot },
+  components: { cpNav, quickBtn, foot ,bjImage},
   name: "orderAbout",
   data() {
     return {
@@ -171,15 +175,17 @@ export default {
 .orderList {
   position: relative;
   width: 100%;
-  background-attachment: fixed;
-  background-image: url("../assets/img/public/bj.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
+  // background-attachment: fixed;
+  // background-image: url("../assets/img/public/bj.jpg");
+  // background-repeat: no-repeat;
+  // background-size: cover;
   .container {
+    position: relative;
     width: 1200px;
     // height: 529px;
     margin: auto;
     padding-top: 40px;
+    z-index: 9;
     .page-title {
       width: 1200px;
       height: 60px;

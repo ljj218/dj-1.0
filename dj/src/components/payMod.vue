@@ -1,5 +1,12 @@
 <template>
-  <Modal :value="showPayMod" width="589" class="pay" @on-ok="sure" @on-cancel="cancel">
+  <Modal
+    :value="showPayMod"
+    width="589"
+    class="pay"
+    @on-ok="sure"
+    @on-cancel="cancel"
+    class-name="vertical-center-modal"
+  >
     <div slot="header"></div>
     <div class="content clearfix">
       <div class="line"></div>
@@ -55,10 +62,10 @@
             <qriously :value="payInfo.qrCode" :size="220" class="_qriously"/>
           </div>
         </div>
-      </div> -->
+      </div>-->
       <div class="btn-wrap clearfix unselect">
         <div class="btn fl btnclick">取消</div>
-        <div class="btn paym lr btnclick">付款</div>
+        <div class="btn paym lr btnclick" @click="isPayEnd">付款</div>
       </div>
     </div>
     <div slot="footer"></div>
@@ -77,8 +84,11 @@ export default {
       default: false,
     },
     info: {
-      type: [Object,String],
+      type: [Object, String],
     },
+     pageNo:{
+      type: [Number],
+    }
   },
   name: "matching",
   data() {
@@ -113,32 +123,40 @@ export default {
         }
       } catch (error) {}
     },
-    async isPay() {
-      try {
-        let res = await paySuccess({
-          orderId: "",
-          productId: this.payInfo.productId,
-          userId: this.userData.userId,
-        });
-        if (res.resultCode == "0000") {
-          this.$Message.success("充值成功");
-          this.toRecharge();
-          this.getBalance(this.userData.userId);
-          clearInterval(this.timer);
-          this.isPayEnd();
-        }
-        console.log(res);
-      } catch (error) {
-        // clearInterval(this.timer);
+    // async isPay() {
+    //   try {
+    //     let res = await paySuccess({
+    //       orderId: "",
+    //       productId: this.payInfo.productId,
+    //       userId: this.userData.userId,
+    //     });
+    //     if (res.resultCode == "0000") {
+    //       this.$Message.success("充值成功");
+    //       this.toRecharge();
+    //       this.getBalance(this.userData.userId);
+    //       clearInterval(this.timer);
+    //       this.isPayEnd();
+    //     }
+    //     console.log(res);
+    //   } catch (error) {
+    //     // clearInterval(this.timer);
+    //   }
+    // },
+    isPayEnd() {
+      let price = this.type == 1 ? this.info.riftPrice : this.info.tacticsPrice;
+      if (this.balance >= price) {
+        sessionStorage.setItem("_info", JSON.stringify(this.info));
+        this.$router.openPage(
+          "/order??type=" + this.type + "&id=" + this.info.userId
+        );
+      } else {
+        sessionStorage.setItem("_info", JSON.stringify(this.info));
+        sessionStorage.setItem("_ref", "/");
+        this.$Message.success("账户余额不足，请充值");
+        setTimeout(() => {
+          this.$router.openPage("/recharge");
+        }, 500);
       }
-    },
-    isPayEnd(){
-        let price= this.type==1?this.info.riftPrice:this.info.tacticsPrice;
-        if(this.balance>=price){
-            this.$router.openPage('/order??type='+this.type+'&id='+this.info.userId)
-        }else{
-            this.$Message.success("账户余额不足");
-        }
     },
     sure() {
       console.log("ssss");
@@ -148,11 +166,11 @@ export default {
     },
     setNum() {
       let scoreZz = /^[0-9]+$/;
-    //   if (!scoreZz.test(this.inputMoney)) {
-    //     this.$Message.info(`请输入数值！`);
-    //     this.inputMoney = "";
-    //     return;
-    //   }
+      //   if (!scoreZz.test(this.inputMoney)) {
+      //     this.$Message.info(`请输入数值！`);
+      //     this.inputMoney = "";
+      //     return;
+      //   }
       this.toRecharge();
     },
     changeMoney(num) {
@@ -177,9 +195,9 @@ export default {
     },
     showPayMod(val) {
       if (val) {
-        this.toRecharge();
+        // this.toRecharge();
       } else {
-        clearInterval(this.timer);
+        // clearInterval(this.timer);
       }
     },
   },
@@ -343,8 +361,8 @@ export default {
     }
   }
 }
-._qriously{
-    margin: auto;
+._qriously {
+  margin: auto;
 }
 /deep/ .ivu-modal-header,
 /deep/ .ivu-modal-footer {
@@ -366,5 +384,14 @@ export default {
 }
 .mb {
   margin-bottom: 21px;
+}
+/deep/ .vertical-center-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .ivu-modal {
+    top: 0;
+  }
 }
 </style>

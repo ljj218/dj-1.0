@@ -22,11 +22,13 @@ export default {
 </script>
 <style lang='scss' scoped>
 .foot {
+    position: relative;
     width: 1200px;
     margin: auto;
     text-align: center;
     padding-bottom: 30px;
     color: rgba(255, 255, 255, 1);
+    z-index: 9;
     .intor {
         font-size: 12px;
         color: rgba(255, 255, 255, 1);

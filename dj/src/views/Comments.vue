@@ -1,6 +1,10 @@
 <template>
   <div class="orderList">
-    <cpNav />
+     <cpNav />
+     <bjImage >
+        <img src="../assets/img/public/1.jpeg" alt="">
+      </bjImage>
+   
     <div class="container">
       <div class="page-title">
         <span>评论</span>
@@ -50,10 +54,11 @@ import quickBtn from "../components/quickBtn";
 import foot from "../components/foot";
 import { mapMutations, mapGetters } from "vuex";
 import { orderComment, getLabelList } from "../common/api/index";
+import bjImage from "../components/bjImage";
 
 export default {
-  components: { cpNav, quickBtn, foot },
-  name: "orderAbout",
+  components: { cpNav, quickBtn, foot ,bjImage},
+  name: "comments",
   data() {
     return {
       label: '',
@@ -132,16 +137,18 @@ export default {
 .orderList {
   position: relative;
   width: 100%;
-  background-attachment: fixed;
-  background-image: url("../assets/img/public/bj.jpg");
-  // background-size: 100% 100%;
-   background-repeat: no-repeat;
-  background-size: cover;
+  // background-attachment: fixed;
+  // background-image: url("../assets/img/public/bj.jpg");
+  // // background-size: 100% 100%;
+  //  background-repeat: no-repeat;
+  // background-size: cover;
   .container {
+    position: relative;
     width: 1200px;
     // height: 529px;
     margin: auto;
     padding-top: 40px;
+    z-index: 9;
     .page-title {
       width: 1200px;
       height: 60px;

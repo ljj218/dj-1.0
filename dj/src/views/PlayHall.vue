@@ -6,6 +6,9 @@
     :distance-to-edge="-100"
   >
     <cpNav @search="search"/>
+    <bjImage >
+        <img src="../assets/img/public/2.jpeg" alt="">
+      </bjImage>
     <div class="main">
       <div class="nav-wrap unselect">
         <div class="nav-item clearfix">
@@ -92,9 +95,10 @@ import { querPlayer } from "../common/api/index";
 import { config } from "../common/config";
 import { mapMutations, mapGetters } from "vuex";
 import { getUserInfo } from "../common/api/user";
+import bjImage from "../components/bjImage";
 
 export default {
-  components: { cpNav, quickBtn },
+  components: { cpNav, quickBtn ,bjImage},
   name: "playHall",
   data() {
     return {
@@ -128,7 +132,6 @@ export default {
     }
     this.RankList = config.level;
     this.querPlayer();
-    this.gotUserInfo();
   },
   methods: {
     ...mapMutations({
@@ -268,6 +271,10 @@ export default {
       this.querPlayer();
     },
   },
+  beforeRouteLeave (to, from, next) {
+    sessionStorage.removeItem('_search')
+    next()
+  }
 };
 </script>
 <style lang='scss' scoped>
@@ -276,10 +283,10 @@ export default {
   width: 100%;
   // height: 100vh;
   // overflow-y: auto;
-  background-attachment: fixed;
-  background-image: url("../assets/img/public/bj-3.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
+  // background-attachment: fixed;
+  // background-image: url("../assets/img/public/bj-3.jpg");
+  // background-repeat: no-repeat;
+  // background-size: cover;
   // .bj {
   //     position: absolute;
   //     width: 100%;
@@ -299,7 +306,7 @@ export default {
   width: 1200px;
   margin: auto;
   padding-top: 50px;
-  z-index: 2;
+  z-index: 9;
   .nav-wrap {
     width: 1200px;
     // height: 327px;

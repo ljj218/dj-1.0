@@ -21,6 +21,9 @@
           <div class="head-img-wrap flex align-items">
             <img :src="headSrc" class="head" v-if="headSrc" />
             <img src="../assets/img/loginu.png" class="head" v-else />
+            <div class="temp head" v-if="flag">
+              <Icon class="shak" type="md-cloud-upload" color="#111" />
+            </div>
             <div class="btn-upload-head">
               <input
                 type="file"
@@ -56,22 +59,37 @@
           <div class="img-list fl clearfix mart">
             <div class="img-box box1 br" :class="{zIndx:index==0}" @click="index=0">
               <img :src="imgList[0]" class="img" v-show="imgList[0]" />
+              <div class="temp" v-if="imgindexList.indexOf(0)>-1">
+                <Icon class="shak" type="md-cloud-upload" color="#111" />
+              </div>
               <ImgCutter rate="1:1" class="upImg" @cutDown="cutDown($event,0)"></ImgCutter>
             </div>
             <div class="img-box box2 pos1 br bb" :class="{zIndx:index==1}" @click="index=1">
               <img :src="imgList[1]" class="img" v-show="imgList[1]" />
+              <div class="temp" v-if="imgindexList.indexOf(1)>-1">
+                <Icon class="shak" type="md-cloud-upload" color="#111" />
+              </div>
               <ImgCutter rate="1:1" class="upImg" @cutDown="cutDown($event,1)"></ImgCutter>
             </div>
             <div class="img-box box2 pos2 bb" :class="{zIndx:index==2}" @click="index=2">
               <img :src="imgList[2]" class="img" v-show="imgList[2]" />
+              <div class="temp" v-if="imgindexList.indexOf(2)>-1">
+                <Icon class="shak" type="md-cloud-upload" color="#111" />
+              </div>
               <ImgCutter rate="1:1" class="upImg" @cutDown="cutDown($event,2)"></ImgCutter>
             </div>
             <div class="img-box box2 pos3 br" :class="{zIndx:index==3}" @click="index=3">
               <img :src="imgList[3]" class="img" v-show="imgList[3]" />
+              <div class="temp" v-if="imgindexList.indexOf(3)>-1">
+                <Icon class="shak" type="md-cloud-upload" color="#111" />
+              </div>
               <ImgCutter rate="1:1" class="upImg" @cutDown="cutDown($event,3)"></ImgCutter>
             </div>
             <div class="img-box box2 pos4" :class="{zIndx:index==4}" @click="index=4">
               <img :src="imgList[4]" class="img" v-show="imgList[4]" />
+              <div class="temp" v-if="imgindexList.indexOf(4)>-1">
+                <Icon class="shak" type="md-cloud-upload" color="#111" />
+              </div>
               <ImgCutter rate="1:1" class="upImg" @cutDown="cutDown($event,4)"></ImgCutter>
             </div>
           </div>
@@ -81,6 +99,9 @@
           <div class="wechat fl clearfix mart">
             <div class="upload">
               <img :src="wechatSrc" class="img" v-show="wechatSrc" />
+              <div class="temp" v-if="imgindexList.indexOf(5)>-1">
+                <Icon class="shak" type="md-cloud-upload" color="#111" />
+              </div>
               <input
                 type="file"
                 class="filepath"
@@ -132,6 +153,9 @@
               </Select>
               <div class="upload">
                 <img :src="lolImg" class="img" v-show="lolImg" />
+                <div class="temp" v-if="imgindexList.indexOf(6)>-1">
+                  <Icon class="shak" type="md-cloud-upload" color="#111" />
+                </div>
                 <input
                   type="file"
                   class="filepath"
@@ -148,6 +172,9 @@
               </Select>
               <div class="upload">
                 <img :src="ydzy" class="img" v-show="ydzy" />
+                <div class="temp" v-if="imgindexList.indexOf(7)>-1">
+                  <Icon class="shak" type="md-cloud-upload" color="#111" />
+                </div>
                 <input
                   type="file"
                   class="filepath"
@@ -189,7 +216,7 @@
               <Icon type="md-play" v-if="!ispalying" @click="play" />
               <Icon type="md-pause" v-else @click="stop" />
               <input type="file" class="reupload" @change="uploadVoice($event)" accept="mp3" />
-              <div class="temp">重新上传</div>
+              <div class="temps">重新上传</div>
             </div>
             <input type="file" class="upvoice" @change="uploadVoice($event)" accept="mp3" />
           </div>
@@ -256,6 +283,8 @@ export default {
       loading: false,
       wechatImg: "",
       wechatSrc: "",
+      imgindexList: [],
+      flag: false,
     };
   },
   computed: {
@@ -268,7 +297,7 @@ export default {
     this.getsoundList();
   },
   methods: {
-     ...mapMutations({
+    ...mapMutations({
       setUserInfo: "user/SET_USER_INFO",
     }),
     async getsoundList() {
@@ -292,9 +321,9 @@ export default {
       if (index > -1) {
         this.playPosition.splice(index, 1);
       } else {
-        if(this.playPosition.length>=2){
+        if (this.playPosition.length >= 2) {
           this.$Message.warning("只能添加两个位置");
-          return
+          return;
         }
         this.playPosition.push(num);
       }
@@ -318,11 +347,18 @@ export default {
       if (file) {
         let reader = new FileReader();
         reader.readAsDataURL(file);
+        this.flag = true;
         reader.onload = () => {
           this.headSrc = reader.result;
-          this.toupload(file).then((res) => {
-            this.headImg = res.data;
-          });
+          this.toupload(file)
+            .then((res) => {
+              this.headImg = res.data;
+              this.flag = false;
+            })
+            .catch((err) => {
+              this.headSrc = "";
+              this.flag = false;
+            });
           this.$forceUpdate();
         };
       }
@@ -339,7 +375,6 @@ export default {
     cutDown: function (res, index) {
       let that = this;
       this.toupload(res.file).then((res) => {
-        console.log(res);
         that.photos[index] = res.data;
       });
       this.imgList[index] = res.dataURL;
@@ -358,24 +393,53 @@ export default {
         reader.readAsDataURL(file);
         reader.onload = () => {
           if (name == "lolImg") {
-            this.toupload(file).then((res) => {
-              this.riftImg = res.data;
-            });
             this[name] = reader.result;
+            this.delIndex(6);
+            this.imgindexList.push(6);
+            this.toupload(file)
+              .then((res) => {
+                this.riftImg = res.data;
+                this.delIndex(6);
+              })
+              .catch((err) => {
+                this[name] = "";
+                this.delIndex(6);
+              });
           } else if (name == "ydzy") {
-            this.toupload(file).then((res) => {
-              this.tacticsImg = res.data;
-            });
             this[name] = reader.result;
+            this.delIndex(7);
+            this.imgindexList.push(7);
+            this.toupload(file)
+              .then((res) => {
+                this.tacticsImg = res.data;
+                this.delIndex(7);
+              })
+              .catch((err) => {
+                this[name] = "";
+                this.delIndex(7);
+              });
           } else if (name == "wechatSrc") {
-            this.toupload(file).then((res) => {
-              this.wechatImg = res.data;
-            });
             this[name] = reader.result;
+            this.delIndex(5);
+            this.imgindexList.push(5);
+            this.toupload(file)
+              .then((res) => {
+                this.wechatImg = res.data;
+                this.delIndex(5);
+              })
+              .catch((err) => {
+                this[name] = "";
+                this.delIndex(5);
+              });
           }
 
           this.$forceUpdate();
         };
+      }
+    },
+    delIndex(index) {
+      if (this.imgindexList.indexOf(index) > -1) {
+        this.imgindexList.splice(this.imgindexList.indexOf(index), 1);
       }
     },
     uploadVoice(event) {
@@ -465,7 +529,6 @@ export default {
       ) {
         for (let j = this.hint.length; j > -1; j--) {
           if (this.hint[j] == "riftRank") {
-            console.log(j);
             this.hint.splice(j, 1);
           }
         }
@@ -616,11 +679,19 @@ export default {
       color: rgba(51, 51, 51, 1);
     }
     .head-img-wrap {
+      position: relative;
       .head {
         width: 50px;
         height: 50px;
         border-radius: 50%;
         margin-right: 20px;
+      }
+      .temp {
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        font-size: 24px;
+        text-align: center;
       }
       .btn-upload-head {
         cursor: pointer;
@@ -677,6 +748,7 @@ export default {
       }
       .img-box {
         position: relative;
+        text-align: center;
         img {
           position: relative;
           width: 100%;
@@ -687,12 +759,16 @@ export default {
       .box1 {
         width: 170px;
         height: 148px;
+        line-height: 148px;
+        font-size: 35px;
       }
       .box2 {
         position: absolute;
         width: 80px;
         height: 74px;
+        line-height: 74px;
         z-index: 0;
+        font-size: 25px;
       }
       .pos1 {
         top: 0;
@@ -769,7 +845,10 @@ export default {
           position: relative;
           width: 173px;
           height: 110px;
+          line-height: 110px;
+          text-align: center;
           margin-top: 10px;
+          font-size: 26px;
           background: rgba(231, 231, 231, 1);
           cursor: pointer;
           .img {
@@ -793,6 +872,8 @@ export default {
             position: absolute;
             top: 50%;
             width: 100%;
+            font-size: 14px;
+            color: #999;
             text-align: center;
             transform: translateY(-50%);
             z-index: 1;
@@ -861,7 +942,7 @@ export default {
           opacity: 0;
           z-index: 3;
         }
-        .temp {
+        .temps {
           position: absolute;
           top: 0;
           right: 30px;
@@ -917,6 +998,7 @@ export default {
   line-height: 150px;
   background: #e7e7e7;
   text-align: center;
+  font-size: 30px;
   .filepath {
     cursor: pointer;
     position: absolute;
@@ -934,6 +1016,38 @@ export default {
     z-index: 0;
     width: 150px;
     height: 150px;
+  }
+  .text {
+    width: 100%;
+    position: absolute;
+    z-index: 8;
+    font-size: 14px;
+    color: #999;
+    text-align: center;
+  }
+}
+.temp {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: inherit;
+  // border-radius: 50%;
+  background-color: rgba(153, 153, 153, 0.5);
+  z-index: 4;
+  .shak {
+    animation: show 1s infinite linear;
+  }
+  @keyframes show {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
   }
 }
 /deep/ .ivu-modal-header,

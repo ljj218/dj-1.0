@@ -110,6 +110,13 @@ const routes = [{
       title: '聊天页面'
     },
     component: () => import('../views/Chat.vue')
+  },{
+    path: '/wechatGetM',
+    name: 'wechatGetM',
+    meta: {
+      title: '聊天页面'
+    },
+    component: () => import('../views/wechatGetM.vue')
   },
 
 ]

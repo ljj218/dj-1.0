@@ -1,6 +1,9 @@
 <template>
   <div class="detail">
     <cpNav />
+    <bjImage>
+      <img src="../assets/img/public/3.jpeg" alt />
+    </bjImage>
     <div class="container clearfix">
       <div class="user-base-info clearfix">
         <div class="temp" v-if="flag">
@@ -46,6 +49,12 @@
 
         <el-date-picker v-model="date" type="date" placeholder="选择日期" @change="slectYear"></el-date-picker>
       </div>
+      <div class="row flex align-items">
+        <Icon type="md-star" class="star" color="#FF8383" />
+        <div class="name date flex align-items space-between">个性签名：</div>
+
+        <textarea class="textarea" v-model="signature" placeholder="0/30"></textarea>
+      </div>
       <div class="btn unselect btnclick" @click="toAuth">确认提交</div>
     </div>
     <quickBtn />
@@ -61,9 +70,10 @@ import { mapGetters, mapMutations } from "vuex";
 import { getUserInfo } from "../common/api/user";
 import axios from "axios";
 import { config } from "../common/config";
+import bjImage from "../components/bjImage";
 
 export default {
-  components: { cpNav, quickBtn, foot },
+  components: { cpNav, quickBtn, foot, bjImage },
   name: "modifyUserInfo",
   data() {
     return {
@@ -75,6 +85,7 @@ export default {
       info: "",
       headImg: "",
       flag: false,
+      signature: "",
     };
   },
   computed: {
@@ -104,7 +115,7 @@ export default {
           this.toupload(file).then((res) => {
             if (res.resultCode == "0000") {
               this.headImg = res.data;
-              this.gotUserInfo();
+              // this.gotUserInfo();
             }
             this.flag = false;
           });
@@ -145,8 +156,12 @@ export default {
       } catch (error) {}
     },
     async toAuth() {
+      if(this.flag){
+        this.$Message.warning("图片正在上传，请稍等");
+        return
+      }
       try {
-        let must = ["sex", "birthDate", "nickName", "headImg"];
+        let must = ["sex", "birthDate", "nickName", "headImg", "signature"];
         this.loading = true;
         let data = new FormData();
         for (let i = 0; i < must.length; i++) {
@@ -187,23 +202,29 @@ export default {
       this.birthDate = `${time.getFullYear()}-${m}-${d}`;
     },
   },
-  watch: {},
+  watch: {
+    signature(val){
+      this.signature=val.slice(0,30)
+    }
+  },
 };
 </script>
 <style lang='scss' scoped>
 .detail {
   position: relative;
   width: 100%;
-  background-attachment: fixed;
-  background-image: url("../assets/img/public/bj.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
+  // background-attachment: fixed;
+  // background-image: url("../assets/img/public/bj.jpg");
+  // background-repeat: no-repeat;
+  // background-size: cover;
   .container {
+    position: relative;
     width: 1200px;
     min-height: 670px;
     margin: 50px auto 0;
     padding: 87px 80px;
     background-color: #fff;
+    z-index: 9;
     .user-base-info {
       position: relative;
       padding-bottom: 40px;
@@ -301,6 +322,15 @@ export default {
         padding: 0 10px;
         border-radius: 6px;
         border: 1px solid rgba(216, 216, 216, 1);
+        font-size: 14px;
+      }
+      .textarea {
+        width: 332px;
+        resize: none;
+        padding: 10px;
+        -webkit-border-radius: 6px;
+        border-radius: 6px;
+        border: 1px solid #d8d8d8;
         font-size: 14px;
       }
     }

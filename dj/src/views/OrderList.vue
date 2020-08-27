@@ -2,11 +2,14 @@
   <div class="orderList">
     <cpNav />
     <floatTip />
+    <bjImage >
+        <img src="../assets/img/public/1.jpeg" alt="">
+      </bjImage>
     <div class="container">
       <div class="page-title">我的订单</div>
       <div class="content">
-        <div class="thead clearfix">全部订单</div>
-        <div class="table">
+        <div class="thead clearfix" v-if="list.length>0">全部订单</div>
+        <div class="table" v-if="list.length>0">
           <div class="tbodys" v-for="(item,index) in list " :key="index">
             <div class="td">
               <div class="order-info">
@@ -57,6 +60,10 @@
             </div>
           </div>
         </div>
+        <div class="nothing animated fadeIn" v-else>
+          <img src="../assets/img/public/empty.jpg" class="empty">
+          <span>暂无订单</span>
+        </div>
       </div>
     </div>
     <quickBtn />
@@ -71,9 +78,10 @@ import foot from "../components/foot";
 import { orderList,comOrder } from "../common/api/index";
 import { mapMutations, mapGetters } from "vuex";
 import floatTip from "../components/floatTip";
+import bjImage from "../components/bjImage";
 
 export default {
-  components: { cpNav, quickBtn, foot ,floatTip},
+  components: { cpNav, quickBtn, foot ,floatTip,bjImage},
   name: "orderList",
   data() {
     return {
@@ -120,14 +128,16 @@ export default {
 .orderList {
   position: relative;
   width: 100%;
-  background-attachment: fixed;
-  background-image: url("../assets/img/public/bj.jpg");
-   background-repeat: no-repeat;
-  background-size: cover;
+  // background-attachment: fixed;
+  // background-image: url("../assets/img/public/bj.jpg");
+  //  background-repeat: no-repeat;
+  // background-size: cover;
   .container {
+    position: relative;
     width: 1200px;
     margin: auto;
     padding-top: 50px;
+    z-index: 9;
     .page-title {
       width: 1200px;
       height: 60px;
@@ -320,6 +330,19 @@ export default {
               }
             }
           }
+        }
+      }
+      .nothing{
+         width: 1166px;
+        height: 400px;
+        margin: auto;
+        overflow: hidden;
+        text-align: center;
+        font-size: 20px;
+        color: #999;
+        .empty{
+          display: block;
+          margin:60px auto 0;
         }
       }
     }

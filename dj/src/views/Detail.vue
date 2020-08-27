@@ -1,6 +1,9 @@
 <template>
   <div class="detail">
     <cpNav />
+      <bjImage >
+        <img src="../assets/img/public/2.jpeg" alt="">
+      </bjImage>
     <div class="container">
       <div class="user-about clearfix">
         <div class="pic-wrap fl">
@@ -15,7 +18,7 @@
             <img src="../assets/img/icon-girl.png" class="icon" />
           </div>
           <p>ID：334422</p>
-          <p class="tag">TA的标签：</p>
+          <p class="tag">TA的标签：{{info.signature}}</p>
         </div>
       </div>
       <div class="user-content clearfix">
@@ -133,9 +136,10 @@ import foot from "../components/foot";
 import { getUserInfo } from "../common/api/user";
 import { getComment } from "../common/api/index";
 import { mapMutations, mapGetters } from "vuex";
+import bjImage from "../components/bjImage";
 
 export default {
-  components: { cpNav, quickBtn, foot },
+  components: { cpNav, quickBtn, foot ,bjImage},
   name: "detail",
   data() {
     return {
@@ -242,13 +246,15 @@ export default {
 .detail {
   position: relative;
   width: 100%;
-  background-attachment: fixed;
-  background-image: url("../assets/img/public/bj-3.jpg");
-   background-repeat: no-repeat;
-  background-size: cover;
+  // background-attachment: fixed;
+  // background-image: url("../assets/img/public/bj-3.jpg");
+  //  background-repeat: no-repeat;
+  // background-size: cover;
   .container {
+    position: relative;
     width: 1200px;
     margin: 50px auto 0;
+    z-index: 9;
     .user-about {
       width: 1200px;
       height: 110px;
@@ -286,7 +292,7 @@ export default {
         }
       }
       .status {
-        width: 98px;
+        width: 80%;
         height: 98px;
         font-size: 12px;
         color: rgba(102, 102, 102, 1);
@@ -571,5 +577,8 @@ export default {
 }
 /deep/ [class^="el-icon-"] {
   color: #fff;
+}
+/deep/ .el-image-viewer__close{
+  top: 120px;
 }
 </style>

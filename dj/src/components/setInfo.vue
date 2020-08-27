@@ -42,7 +42,7 @@
         </div>
         <div class="fl genders">
           个性签名:
-          <span class="signature" v-if="info&&info.introduce">{{info.introduce}}</span>
+          <span class="signature" v-if="info&&info.signature">{{info.signature}}</span>
           <span class="signature" v-else>你还没编辑个性签名</span>
         </div>
       </div>
