@@ -62,13 +62,13 @@ export const orderList = (userId) => {
 export const order = (params) => {
 
   let data = {
-    orderMoney: params.orderMoney,//
-    orderNum: params.orderNum,//
-    orderType: params.orderType,//
-    price: params.price,//
-    toUserId: params.toUserId,//
-    userId: params.userId,//
-    source: params.source || '',//
+    orderMoney: params.orderMoney,
+    orderNum: params.orderNum,
+    orderType: params.orderType,
+    price: params.price,
+    toUserId: params.toUserId,
+    userId: params.userId,
+    source: params.source || '',
     remark:params.remark||'',
     hzCode:hzCode()||'',
   }
@@ -77,7 +77,7 @@ export const order = (params) => {
 //完成订单
 export const comOrder = (id) => {
   let data = {
-    orderId: id,//
+    orderId: id,
 
   }
   return fetch.get('consum/comOrder', data)

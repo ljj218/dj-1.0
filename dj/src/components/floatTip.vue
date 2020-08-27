@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="wrap">
     <ul class="floatTip">
       <li class="item" @click="join">
         <img src="../assets/img/public/icon-menber.png" class="icon" />
