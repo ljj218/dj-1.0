@@ -71,6 +71,7 @@ export const order = (params) => {
     source: params.source || '',
     remark:params.remark||'',
     hzCode:hzCode()||'',
+    isNew:params.isNew
   }
   return fetch.get('consum/order', data)
 };

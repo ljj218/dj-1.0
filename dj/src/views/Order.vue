@@ -110,7 +110,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["userData", "balance"]),
+    ...mapGetters(["userData", "balance","userInfo"]),
   },
   created() {},
   mounted() {
@@ -153,6 +153,7 @@ export default {
           userId: this.userData.userId, //
           source: "", //
           remark: this.remark,
+          isNew:this.userInfo.isNew||''
         });
         if (res.resultCode == "0000") {
           this.$Message.success("下单成功");
