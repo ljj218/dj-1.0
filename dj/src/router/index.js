@@ -114,7 +114,7 @@ const routes = [{
     path: '/wechatGetM',
     name: 'wechatGetM',
     meta: {
-      title: '聊天页面'
+      title: '取钱'
     },
     component: () => import('../views/wechatGetM.vue')
   },

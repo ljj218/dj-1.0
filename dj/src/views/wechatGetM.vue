@@ -1,6 +1,6 @@
 <template>
   <div class="wechat">
-   
+      
   </div>
 </template>
 

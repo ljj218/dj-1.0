@@ -53,7 +53,7 @@
           </div>
         </div>
         <div class="gamms lr">
-          <div class="nav">
+          <div class="nav unselect">
             <div class="nav-item" :class="{active:type==1}" @click="type=1">
               <span>英雄联盟</span>
             </div>

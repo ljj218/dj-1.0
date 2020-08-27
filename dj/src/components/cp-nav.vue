@@ -180,12 +180,9 @@ export default {
       sessionStorage.setItem('_search', this.name);
       }
       
-    },
-  },
-  beforeRouteLeave (to, from, next) {
-    sessionStorage.removeItem('_search')
-    next()
+    }
   }
+  
 };
 </script>
 <style lang='scss' scoped>
