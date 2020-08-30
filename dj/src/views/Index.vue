@@ -1,6 +1,5 @@
 <template>
   <div class="Index">
-    <div class="container">
       <cpNav  class="top-nav"/>
       <floatTip />
       <bjImage>
@@ -80,10 +79,10 @@
 
         </div>
       </div>
+          <matching :showMatch="showMatch" @closed="closed" @load="load" :info="info" :pageNo="pageNo" />
     </div>
 
-    <matching :showMatch="showMatch" @closed="closed" @load="load" :info="info" :pageNo="pageNo" />
-  </div>
+
 </template>
 
 <script>
@@ -242,12 +241,8 @@ export default {
   position: relative;
   width: 100%;
   height: 100vh;
-  overflow: hidden;
-  // background-attachment: fixed;
-  // background-image: url("../assets/img/public/bj.jpg");
-  // // background-size: 100% auto;
-  // background-repeat: no-repeat;
-  // background-size: cover;
+  padding-top: 96px;
+  overflow-y: auto;
   .bj {
     position: absolute;
     width: 100%;
@@ -255,12 +250,7 @@ export default {
     min-width: 1500px;
     z-index: 0;
   }
-  .container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-  }
+
   .top-nav{
     position: fixed;
     top: 0;
@@ -268,17 +258,14 @@ export default {
   .main {
     position: relative;
     width: 1200px;
-    // min-height: 766px;
     height: 100%;
     margin: auto;
-    padding-top: 96px;
     z-index: 9;
-    // overflow: hidden;
   }
   .tab {
     position: absolute;
     left: 53px;
-    top: 140px;
+    top: 60px;
     height: 28px;
     width: 190px;
     line-height: 28px;
@@ -304,7 +291,7 @@ export default {
     top: 50%;
     transform: translateY(-50%);
     width: 1200px;
-    height: 450px;
+    min-height: 450px;
     margin: auto;
     .icon {
       width: 108px;
