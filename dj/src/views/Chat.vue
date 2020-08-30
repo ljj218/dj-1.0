@@ -1,5 +1,8 @@
 <template>
     <div class="chat">
+         <bjImage>
+        <img src="../assets/img/public/3.jpeg" alt />
+      </bjImage>
         <div class="container flex align-items clearfix">
             <div class="nav-left fl">
                 <img src="../assets/img/public/wh.jpg" class="head" />
@@ -18,8 +21,10 @@
 </template>
 
 <script>
+import bjImage from "../components/bjImage";
+
 export default {
-    components: {},
+    components: {bjImage},
     name: "chat",
     data() {
         return {};

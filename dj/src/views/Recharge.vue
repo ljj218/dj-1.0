@@ -58,7 +58,7 @@
             <img src="../assets/img/icon-alipay.png" class="icon" />
             支付宝支付
             <img src="../assets/img/icon-select.png" class="icon-r" />
-          </div> -->
+          </div>-->
         </div>
       </div>
       <div class="row flex align-items">
@@ -164,6 +164,7 @@ export default {
   watch: {
     money(val) {
       this.type = "";
+      this.money = val.replace(/[^\d]/g, "");
       if (val) {
         this.toRecharge();
       }

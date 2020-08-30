@@ -1,4 +1,5 @@
 import fetch from '../axios'
+import { config } from './common';
 
 //实名认证
 export const auth = (params) => {
@@ -124,7 +125,7 @@ export const upload = (file) => {
   }
   return fetch.get('user/upload', data)
 };
-//文件上传
+//找密码
 export const forgotPwd = (params) => {
   let data = {
     phone:params.phone,
@@ -132,4 +133,31 @@ export const forgotPwd = (params) => {
     pwd:params.pwd,
   }
   return fetch.post('user/forgotPwd', data)
+};
+//提现申请
+export const withdraw = (params) => {
+  let data = {
+    userId:params.userId,
+    amount:params.amount,//分
+  }
+  return fetch.get('consum/withdraw', data)
+};
+//绑定微信
+export const bindWx = (params) => {
+  let data = {
+    userId:params.userId,
+    appId:config.appid,
+    openId:params.openId,
+    nickName:params.nickName,
+    headImg:params.headImg
+  }
+  return fetch.get('user/bindWx', data)
+};
+//getWxUserInfo
+export const wxUserInfo = (params) => {
+  let data = {
+    appId:config.appId,
+    code:params.code,
+  }
+  return fetch.get('consum/getWxUserInfo', data)
 };

@@ -16,7 +16,7 @@
             <img src="../assets/img/public/log-1.png" class="img" alt="小熊陪玩" />
             <p>小熊陪玩</p>
           </div>
-          <ul class="list" :class="{iswidth:type==2}">
+          <ul class="list flex justify-content" :class="{iswidth:type==2}">
             <li class="item unselect">
               <Dropdown trigger="click" @on-visible-change="rotate=!rotate">
                 <a href="javascript:void(0)" class="select flex align-items justify-content one-text">
@@ -75,8 +75,10 @@
           </ul>
           <!-- <div class="start unselect" @click="start">开始陪玩</div> -->
           <Button class="start" type="default" :loading="loading" @click="toQuerPlayerSpeed">开始陪玩</Button>
-        </div>
+
         <quickBtn class="links"/>
+
+        </div>
       </div>
     </div>
 
@@ -301,7 +303,7 @@ export default {
     position: relative;
     top: 50%;
     transform: translateY(-50%);
-    width: 568px;
+    width: 1200px;
     height: 450px;
     margin: auto;
     .icon {
@@ -425,7 +427,7 @@ export default {
   // left: 50%;
   // transform: translateX(-50%);
   // bottom: 14%;
-  margin: 11% auto 0 !important;
+  margin: 5% auto 0 !important;
   padding: 0;
   
 }

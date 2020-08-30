@@ -1,8 +1,8 @@
 import vue from 'vue'
 export const config = {
   baseUrl: "https://lol.xxpw.net/xxdj/", //公共URL
-  appid: 'wxf9d68c74c9b41eb9',
-  qqappid: '101772536',
+  appid: 'wx7a7a6431a88749ff',
+  // qqappid: '101772536',
   level: [
     {
       value: "4",
