@@ -17,7 +17,7 @@
             <span>{{info.nickName}}</span>
             <img src="../assets/img/icon-girl.png" class="icon" />
           </div>
-          <p>ID：334422</p>
+          <p>ID：{{info.userCode}}</p>
           <p class="tag">TA的标签：{{info.signature}}</p>
         </div>
       </div>
@@ -181,7 +181,7 @@ export default {
       this.$forceUpdate();
     },
     toOrder() {
-      sessionStorage.setItem("_info", JSON.stringify(this.info));
+      sessionStorage.setItem("_infos", JSON.stringify(this.info));
       if (this.userData) {
         this.$router.openPage("/order?type=" + this.type + "&id=" + this.id);
       } else {

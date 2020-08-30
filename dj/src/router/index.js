@@ -117,10 +117,9 @@ const routes = [{
       title: '取钱'
     },
     component: () => import('../views/wechatGetM.vue')
-  },
-
+  }
 ]
-
+// getMoney
 const router = new VueRouter({
   mode: 'history',
   // mode: 'hash',

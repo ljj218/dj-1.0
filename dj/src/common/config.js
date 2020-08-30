@@ -1,6 +1,6 @@
 import vue from 'vue'
 export const config = {
-  baseUrl: "https://www.xxpw.net/xxdj/", //公共URL
+  baseUrl: "https://lol.xxpw.net/xxdj/", //公共URL
   appid: 'wxf9d68c74c9b41eb9',
   qqappid: '101772536',
   level: [
@@ -27,6 +27,9 @@ export const config = {
     {
       value: "9",
       label: "王者"
+    },{
+      value: "",
+      label: "不限"
     }],
   posPlayer: [
     //1 上单 2 3中路 4.AD 5辅助

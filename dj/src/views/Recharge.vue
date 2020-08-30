@@ -50,7 +50,7 @@
             微信支付
             <img src="../assets/img/icon-select.png" class="icon-r" />
           </div>
-          <div
+          <!-- <div
             class="item flex align-items justify-content"
             :class="{select:paymethods==2}"
             @click="changePayMethods(2)"
@@ -58,7 +58,7 @@
             <img src="../assets/img/icon-alipay.png" class="icon" />
             支付宝支付
             <img src="../assets/img/icon-select.png" class="icon-r" />
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="row flex align-items">

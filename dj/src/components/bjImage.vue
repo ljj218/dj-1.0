@@ -1,6 +1,6 @@
 <template>
     <div id="bg"> 
-        <slot></slot>
+        <slot class="animated fadeIn"></slot>
     </div>
 </template>
 

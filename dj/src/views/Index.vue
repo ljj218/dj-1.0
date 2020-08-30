@@ -1,7 +1,7 @@
 <template>
   <div class="Index">
     <div class="container">
-      <cpNav />
+      <cpNav  class="top-nav"/>
       <floatTip />
       <bjImage>
         <img src="../assets/img/public/3.jpeg" alt />
@@ -259,19 +259,24 @@ export default {
     height: 100%;
     z-index: 1;
   }
+  .top-nav{
+    position: fixed;
+    top: 0;
+  }
   .main {
     position: relative;
     width: 1200px;
-    min-height: 766px;
+    // min-height: 766px;
     height: 100%;
     margin: auto;
+    padding-top: 96px;
     z-index: 9;
     // overflow: hidden;
   }
   .tab {
     position: absolute;
     left: 53px;
-    top: 26px;
+    top: 140px;
     height: 28px;
     width: 190px;
     line-height: 28px;
@@ -416,10 +421,11 @@ export default {
   }
 }
 .links{
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 14%;
+  // position: absolute;
+  // left: 50%;
+  // transform: translateX(-50%);
+  // bottom: 14%;
+  margin: 11% auto 0 !important;
   padding: 0;
   
 }

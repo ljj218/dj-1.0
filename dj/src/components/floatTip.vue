@@ -15,8 +15,10 @@
         <p>订单</p>
       </li>
       <li class="item">
+        <a class="link" href="https://cschat-ccs.aliyun.com/index.htm?tntInstId=_224tzb6&scene=SCE00008204" target="_blank">
         <img src="../assets/img/public/icon-server.png" class="icon" />
         <p>客服</p>
+        </a>
       </li>
     </ul>
     <attestation :show="show" @closed="closed" @submit="showApply=true" />
@@ -100,5 +102,8 @@ export default {
     box-sizing: border-box;
     padding-top: 10px;
   }
+}
+.link{
+  color: rgba(51, 51, 51, 1);
 }
 </style>

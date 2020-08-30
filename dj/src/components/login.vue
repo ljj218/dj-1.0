@@ -202,6 +202,9 @@ export default {
             this.getBalance(res.data.userId);
             this.gotUserInfo(res.data.userId);
             this.sure();
+            setTimeout(()=>{
+              this.$router.openPage('/');
+            },300)
           } else {
             this.$Message.warning(res.message);
           }
