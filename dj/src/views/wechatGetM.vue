@@ -1,15 +1,18 @@
 <template>
-  <div class="wechat">稍等</div>
+  <div class="wechat">
+    <div class="icon">
+      <img src="../assets/img/public/log-1.png" class="img" alt="小熊陪玩" />
+      <p>小熊陪玩</p>
+    </div>
+  </div>
 </template>
 
 <script>
-import { bindWx, wxUserInfo, getUserInfo } from "../common/api/user";
+import { bindWx, wxUserInfos, getUserInfo } from "../common/api/user";
 import { config } from "../common/config";
-import { mapMutations, mapGetters } from "vuex";
-
 export default {
   components: {},
-  name: "get",
+  name: "wechatGetM",
   data() {
     return {
       userId: "",
@@ -23,32 +26,30 @@ export default {
     this.userId = this.$route.query.userId || "";
     this.code = this.$route.query.code || "";
 
-    setTimeout(() => {
-      if (!this.code) {
-        console.log("ssss")
-        console.log(config.appid)
-        console.log(encodeURIComponent(window.location.href))
-        // window.location.href =
-        //   "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
-        //   config.appid +
-        //   "&redirect_uri=" +
-        //   encodeURIComponent(window.location.href) +
-        //   "&response_type=code&scope=snsapi_userinfo&state=getmoney#wechat_redirect";
-      } else {
-        this.gotUserInfo();
-      }
-    }, 500);
+    this.$nextTick(() => {
+      setTimeout(() => {
+        if (!this.code) {
+          // window.location.href =
+          //   "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
+          //   config.appid +
+          //   "&redirect_uri=" +
+          //   encodeURIComponent(window.location.href) +
+          //   "&response_type=code&scope=snsapi_userinfo&state=getmoney#wechat_redirect";
+        } else {
+          this.getWxUserInfo();
+        }
+      }, 1000);
+    });
   },
   methods: {
     //获取用户微信信息
     async getWxUserInfo() {
       try {
-        let res = await wxUserInfo({
-          appId: config.appid || "", //2、微信公众号支付；3、微信小程序支付；11、支付宝h5支付
+        let res = await wxUserInfos({
           code: this.code,
         });
         if (res.resultCode == "0000") {
-          this.bindConsumer();
+          this.bindConsumer(res.data);
         }
       } catch (error) {
         console.log(error);
@@ -57,32 +58,39 @@ export default {
     async bindConsumer(data) {
       try {
         let res = await bindWx({
-          userId: this.userInfo.userId,
-          appId: config.appid,
-          openId: data.openId,
-          nickName: data.nickName,
-          headImg: data.headImg,
+          userId: this.userId,
+          openId: data.openid,
+          nickName: data.nickname,
+          headImg: data.headimageurl,
         });
         if (res.resultCode == "0000") {
-          console.log(res);
+          this.$Message.success("绑定成功，请到提现页面提取盈利");
+        } else {
+          console.log(error);
+          this.$Message.erroe(res.message);
         }
       } catch (error) {
         console.log(error);
       }
     },
-    async gotUserInfo(userId) {
-      try {
-        let res = await getUserInfo({
-          userId: this.userId || "",
-        });
-        if (res.resultCode == "0000") {
-          this.userInfo = res.data;
-          this.getWxUserInfo();
-        }
-      } catch (error) {}
-    },
   },
 };
 </script>
 <style lang='scss' scoped>
+.wechat{
+  width: 100%;
+  height: 100vh;
+  background: url("../assets/img/public/phone-bj.jpeg") center no-repeat;
+  background-size: 100% 100%;
+  overflow: hidden;
+}
+.img{
+  display: block;
+  width: 80px;
+  margin:30% auto 10px;
+}
+p{
+  text-align: center;
+  font-size: 20px;
+}
 </style>

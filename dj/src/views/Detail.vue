@@ -246,10 +246,7 @@ export default {
 .detail {
   position: relative;
   width: 100%;
-  // background-attachment: fixed;
-  // background-image: url("../assets/img/public/bj-3.jpg");
-  //  background-repeat: no-repeat;
-  // background-size: cover;
+
   .container {
     position: relative;
     width: 1200px;

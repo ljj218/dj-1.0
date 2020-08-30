@@ -1,7 +1,9 @@
 <template>
   <div class="recharge">
     <cpNav />
-
+    <bjImage>
+      <img src="../assets/img/public/3.jpeg" alt />
+    </bjImage>
     <div class="container">
       <div class="title">找回密码</div>
       <div class="row flex align-items">
@@ -41,7 +43,7 @@ import { mapMutations, mapGetters, mapActions } from "vuex";
 import bjImage from "../components/bjImage";
 
 export default {
-  components: { cpNav, quickBtn, foot ,bjImage},
+  components: { cpNav, quickBtn, foot, bjImage },
   name: "findpass",
   data() {
     return {
@@ -168,16 +170,14 @@ export default {
 .recharge {
   position: relative;
   width: 100%;
-  background-attachment: fixed;
-  background-image: url("../assets/img/public/bj-3.jpg");
-   background-repeat: no-repeat;
-  background-size: cover;
   .container {
+    position: relative;
     width: 1200px;
     height: 568px;
     background: rgba(255, 255, 255, 1);
     margin: 70px auto 0;
     padding: 90px 70px 0;
+    z-index: 8;
     .title {
       width: 100%;
       height: 36px;

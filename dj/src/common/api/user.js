@@ -1,5 +1,5 @@
 import fetch from '../axios'
-import { config } from './common';
+import { config } from '../config';
 
 //实名认证
 export const auth = (params) => {
@@ -153,10 +153,11 @@ export const bindWx = (params) => {
   }
   return fetch.get('user/bindWx', data)
 };
-//getWxUserInfo
-export const wxUserInfo = (params) => {
+
+export const wxUserInfos = (params) => {
+  console.log('appid='+config);
   let data = {
-    appId:config.appId,
+    appId:config.appid,
     code:params.code,
   }
   return fetch.get('consum/getWxUserInfo', data)

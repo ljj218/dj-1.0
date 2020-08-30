@@ -152,7 +152,7 @@ export default {
       } else {
         sessionStorage.setItem("_info", JSON.stringify(this.info));
         sessionStorage.setItem("_ref", "/");
-        this.$Message.success("账户余额不足，请充值");
+        this.$Message.warning("账户余额不足，请充值");
         setTimeout(() => {
           this.$router.openPage("/recharge");
         }, 500);

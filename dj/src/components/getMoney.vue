@@ -41,7 +41,7 @@
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
-import { withdraw } from "../common/api/user";
+import { withdraw, getUserInfo } from "../common/api/user";
 
 export default {
   props: {
@@ -59,16 +59,18 @@ export default {
       link: "",
       val: "",
       show: false,
+      timer: null,
     };
   },
   computed: {
     ...mapGetters(["userInfo"]),
   },
   created() {},
-  mounted() {
-    this.link = location.origin + "/wechatGetM?userId=" + this.userInfo.userId;
-  },
+  mounted() {},
   methods: {
+    ...mapMutations({
+      setUserInfo: "user/SET_USER_INFO",
+    }),
     back() {
       this.$emit("close");
     },
@@ -91,7 +93,7 @@ export default {
       let money =
         (this.money ? Number(this.money) * 100 : "") ||
         (this.val ? Number(this.val) * 100 : "");
-      console.log(money);
+      if (money <= 0 || money > this.userInfo.income) return;
       if (this.userInfo.isPlayer == 1) {
         if (this.userInfo.openId) {
           try {
@@ -100,13 +102,39 @@ export default {
               amount: money, //分
             });
             console.log(res);
+            if (res.resultCode == "0000") {
+              this.$Message.success("提现成功，请耐心等待审核");
+            }
           } catch (error) {}
         } else {
+          this.link =
+            location.origin + "/wechatGetM?userId=" + this.userInfo.userId;
           this.show = true;
+          this.timer = setInterval(() => {
+            this.gotUserInfo();
+          }, 2000);
         }
       } else {
         this.$Message.warning("您没有提现权限！");
       }
+    },
+    async gotUserInfo() {
+      try {
+        let res = await getUserInfo({
+          userId: this.userInfo.userId || "",
+        });
+        if (res.resultCode == "0000") {
+          if (res.data.openId) {
+            this.setUserInfo(res.data);
+            this.show = false;
+            clearInterval(this.timer);
+            this.$Modal.success({
+              title: "提示",
+              content: "微信账号绑定成功！",
+            });
+          }
+        }
+      } catch (error) {}
     },
   },
   watch: {
@@ -124,6 +152,10 @@ export default {
       this.val = "";
       this.money = val.replace(/[^\d]/g, "");
     },
+  },
+  beforeRouteLeave(to, from, next) {
+    clearInterval(this.timer);
+    next();
   },
 };
 </script>
@@ -201,8 +233,8 @@ export default {
   background-color: #fff;
   font-size: 18px;
   text-align: center;
-  p{
-      margin-bottom: 20px;
+  p {
+    margin-bottom: 20px;
   }
 }
 

@@ -281,19 +281,6 @@ export default {
 .playHall {
   position: relative;
   width: 100%;
-  // height: 100vh;
-  // overflow-y: auto;
-  // background-attachment: fixed;
-  // background-image: url("../assets/img/public/bj-3.jpg");
-  // background-repeat: no-repeat;
-  // background-size: cover;
-  // .bj {
-  //     position: absolute;
-  //     width: 100%;
-  //     height: 100%;
-  //     min-width: 1500px;
-  //     z-index: 0;
-  // }
 }
 .audio {
   position: absolute;
