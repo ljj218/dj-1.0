@@ -150,12 +150,13 @@ export default {
           "/order??type=" + this.type + "&id=" + this.info.userId
         );
       } else {
+        this.cancel();
         sessionStorage.setItem("_info", JSON.stringify(this.info));
         sessionStorage.setItem("_ref", "/");
         this.$Message.warning("账户余额不足，请充值");
         setTimeout(() => {
           this.$router.openPage("/recharge");
-        }, 500);
+        }, 200);
       }
     },
     sure() {
@@ -388,8 +389,7 @@ export default {
 /deep/ .vertical-center-modal {
   display: flex;
   align-items: center;
-  justify-content: center;
-
+ -webkit-justify-content:center;
   .ivu-modal {
     top: 0;
   }

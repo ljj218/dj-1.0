@@ -444,8 +444,8 @@ export default {
     },
     uploadVoice(event) {
       let file = event.target.files[0];
-      if (file.size / 1024 > 10240) {
-        this.$Message.error("请选择小于5M");
+      if (file.size / 1024 > 2048) {
+        this.$Message.error("请选择小于2M");
         return;
       }
       if (file) {

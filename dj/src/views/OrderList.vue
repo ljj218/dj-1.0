@@ -39,7 +39,7 @@
                 </div>
                 <div class="do fl unselect">
                   <div class="type type1">
-                    <div class="refund btn btnclick" v-if="item.orderStatus==0">去付款</div>
+                    <!-- <div class="refund btn btnclick" v-if="item.orderStatus==0">去付款</div> -->
                     <div class="refund btn btnclick" v-if="item.serviceStatus==2&&item.serviceStatus==1" @click="tocomOrder(item.orderId)">完成订单</div>
                     <div class="contact btn btnclick">联系陪玩</div>
                     <div

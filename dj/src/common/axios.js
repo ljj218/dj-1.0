@@ -3,7 +3,7 @@ import qs from 'qs'
 import { config } from "./config"
 let baseURL = config.baseUrl;
 // axios实例
-axios.defaults.timeout =120000;
+axios.defaults.timeout =120*1000;
 
 /**
  * get 请求数据进行修改  默认以对象形式传参

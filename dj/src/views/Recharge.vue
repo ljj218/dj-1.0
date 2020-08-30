@@ -104,12 +104,6 @@ export default {
   created() {},
   mounted() {
     this.toRecharge();
-    if (sessionStorage.getItem("_ref")) {
-      setTimeout(() => {
-        this.$router.openPage(sessionStorage.getItem("_ref"));
-        sessionStorage.removeItem("_ref");
-      }, 5000);
-    }
   },
   methods: {
     ...mapActions({
@@ -173,6 +167,7 @@ export default {
     },
   },
   beforeRouteLeave(to, from, next) {
+    sessionStorage.removeItem("_ref");
     clearInterval(this.timer);
     next();
   },

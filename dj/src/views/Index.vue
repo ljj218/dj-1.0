@@ -291,7 +291,8 @@ export default {
     top: 50%;
     transform: translateY(-50%);
     width: 1200px;
-    min-height: 450px;
+    // min-height: 450px;
+    height: auto;
     margin: auto;
     .icon {
       width: 108px;

@@ -1,9 +1,9 @@
 <template>
   <div class="detail">
     <cpNav />
-      <bjImage >
-        <img src="../assets/img/public/2.jpeg" alt="">
-      </bjImage>
+    <bjImage>
+      <img src="../assets/img/public/2.jpeg" alt />
+    </bjImage>
     <div class="container">
       <div class="user-about clearfix">
         <div class="pic-wrap fl">
@@ -15,7 +15,8 @@
         <div class="status fl">
           <div class="name">
             <span>{{info.nickName}}</span>
-            <img src="../assets/img/icon-girl.png" class="icon" />
+            <img src="../assets/img/icon-girl.png" class="icon" v-if="info.sex==2"/>
+            <img src="../assets/img/boy.png" class="icon" v-if="info.sex==1" />
           </div>
           <p>ID：{{info.userCode}}</p>
           <p class="tag">TA的标签：{{info.signature}}</p>
@@ -33,15 +34,15 @@
             />
             <div class="list-img-content" ref="content">
               <div class="list-img-wrap" ref="imgWrap" :style="mathWidth(imgList.length)">
-                <img
-                  :src="n"
-                  class="img-zoom"
-                  :data-index="index"
-                  :class="{active:num==index}"
-                  :key="index"
-                  @mouseenter="imgEnter"
-                  v-for="(n,index) in imgList"
-                />
+                <div class="img-zoom" v-for="(n,index) in imgList" :key="index">
+                  <img
+                    :src="n"
+                    :data-index="index"
+                    :class="{active:num==index}"
+                    @mouseenter="imgEnter"
+                    v-if="n"
+                  />
+                </div>
               </div>
             </div>
             <Icon
@@ -120,7 +121,7 @@
           <Rate :value="item.level" disabled class="lr start" />
         </div>
         <div class="pages">
-          <Page :total="count"  @on-change="changePage"/>
+          <Page :total="count" @on-change="changePage" />
         </div>
       </div>
     </div>
@@ -139,7 +140,7 @@ import { mapMutations, mapGetters } from "vuex";
 import bjImage from "../components/bjImage";
 
 export default {
-  components: { cpNav, quickBtn, foot ,bjImage},
+  components: { cpNav, quickBtn, foot, bjImage },
   name: "detail",
   data() {
     return {
@@ -153,11 +154,11 @@ export default {
       pageNo: 1,
       commonList: [],
       ispalying: false,
-      count:0
+      count: 0,
     };
   },
   computed: {
-    ...mapGetters(["userData","userInfo"]),
+    ...mapGetters(["userData", "userInfo"]),
   },
   created() {
     this.id = this.$route.query.id || "";
@@ -197,12 +198,12 @@ export default {
         });
         if (res.resultCode == "0000") {
           this.commonList = res.data;
-          this.count=res.count;
+          this.count = res.count;
         }
       } catch (error) {}
     },
-    changePage(e){
-      this.pageNo=e;
+    changePage(e) {
+      this.pageNo = e;
       this.gotComment();
     },
     async gotUserInfo() {
@@ -368,6 +369,7 @@ export default {
           padding: 16px 40px;
           overflow: hidden;
           transition: all 0.5s;
+
           .active {
             border: 1px solid #333;
           }
@@ -376,6 +378,10 @@ export default {
             width: 60px;
             height: 60px;
             margin-right: 20px;
+            img {
+              width: 100%;
+              height: 60px;
+            }
           }
         }
         /deep/ .swiper-container {
@@ -575,7 +581,7 @@ export default {
 /deep/ [class^="el-icon-"] {
   color: #fff;
 }
-/deep/ .el-image-viewer__close{
+/deep/ .el-image-viewer__close {
   top: 120px;
 }
 </style>
