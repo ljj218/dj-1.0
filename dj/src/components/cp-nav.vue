@@ -13,7 +13,7 @@
           :class="{active:pathName=='PlayHall'}"
           @click="$router.openPage('/playHall')"
         >陪玩厅</li>
-        <li class="item">小程序</li>
+        <li class="item" @click="showMes">小程序</li>
         <li class="item" :class="{active:pathName=='orderList'}" @click="toOrder">我的订单</li>
       </ul>
       <div class="lf clearfix">
@@ -36,7 +36,6 @@
             @mouseenter="emterUserInfo"
             @mouseleave="leaveUserInfo"
             v-if="userInfo.headImg"
-            @click="$router.openPage('/mine')"
           />
           <img
             src="../assets/img/public/icon-main2.png"
@@ -44,13 +43,12 @@
             v-else
             @mouseenter="emterUserInfo"
             @mouseleave="leaveUserInfo"
-            @click="$router.openPage('/mine')"
           />
           <div
             class="name fl one-text"
             @mouseenter="emterUserInfo"
             @mouseleave="leaveUserInfo"
-            @click="$router.openPage('/mine')"
+            @click="tomine"
           >
             <span v-if="userInfo.nickName">{{userInfo.nickName}}</span>
             <span v-else>{{userData.phone|phone}}</span>
@@ -73,7 +71,7 @@
             <img :src="userInfo.headImg" class="head fl" v-if="userInfo.headImg" />
             <img src="../assets/img/public/icon-main2.png" class="head fl" v-else />
             <div class="info">
-              <p class="name">
+              <p class="name" @click="tomine">
                 <span v-if="userInfo.nickName">{{userInfo.nickName}}</span>
                 <span v-else>{{userData.phone|phone}}</span>
               </p>
@@ -81,7 +79,7 @@
             </div>
           </div>
           <div class="quick-btn-wrap clearfix unselect">
-            <div class="btn-wrap mr fl" @click="$router.openPage('/modifyUserInfo')">
+            <div class="btn-wrap mr fl" @click="tomine">
               <img src="../assets/img/icon-zl.png" class="icon1" />
               <span>资料</span>
             </div>
@@ -139,6 +137,14 @@ export default {
       setLoginFlag: "user/SET_LOGIN_FLAG",
       setUserData: "user/SET_USER_DATA",
     }),
+    tomine(){
+      if(this.userInfo.isPlayer==1){
+        this.$router.openPage('/mine')
+      }else{
+        this.$router.openPage('/modifyUserInfo')
+
+      }
+    },
     leaveUserInfo() {
       this.time = setTimeout(() => {
         this.showUserInfo = false;
@@ -154,6 +160,9 @@ export default {
       } else {
         this.setLoginFlag(true)
       }
+    },
+    showMes(){
+       this.$Message.warning("敬请期待");
     },
     loginOut() {
       this.$Modal.confirm({
@@ -274,6 +283,9 @@ export default {
         .info {
           font-size: 12px;
           color: rgba(153, 153, 153, 1);
+          .name{
+            cursor: pointer;
+          }
         }
       }
       .quick-btn-wrap {

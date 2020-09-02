@@ -1,6 +1,6 @@
 <template>
   <Modal
-    :value="loginFlag"
+    :value="isLogin"
     width="400"
     class="login"
     :closable="false"
@@ -43,7 +43,12 @@
       </div>
       <div class="input-wrap clearfix" v-if="type==2">
         <img src="../assets/img/icon-lock.png" class="icon icon2" />
-        <input type="password" placeholder="请设置6-20位至少两种字符组合密码" class="passw input" v-model="password" />
+        <input
+          type="password"
+          placeholder="请设置6-20位至少两种字符组合密码"
+          class="passw input"
+          v-model="password"
+        />
       </div>
       <div class="hint clearfix unselect" v-if="type==1">
         <Checkbox v-model="saveInfo" class="fl">记住我</Checkbox>
@@ -91,7 +96,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["loginFlag"]),
+    ...mapGetters(["isLogin"]),
   },
   created() {},
   mounted() {},
@@ -103,6 +108,7 @@ export default {
       setLoginFlag: "user/SET_LOGIN_FLAG",
       setUserData: "user/SET_USER_DATA",
       setUserInfo: "user/SET_USER_INFO",
+      startComputeCurrent: "user/startComputeCurrent",
     }),
     changeType(num) {
       this.type = num;
@@ -160,10 +166,9 @@ export default {
             password: this.password,
           });
           if (res.resultCode == "0000") {
-            this.$Message.success("注册成功！");
-            this.type = 2;
+              this.isLoginDo(res);
           } else {
-            this.$Message.warning("注册失败");
+            this.$Message.warning(res.message);
           }
           this.loading = false;
         } catch (error) {}
@@ -194,23 +199,59 @@ export default {
           this.loading = true;
           let res = await login(data);
           if (res.resultCode == "0000") {
-            this.$Message.success("登录成功！");
-            this.cookies.set("userData", res.data, {
-              expires: this.saveInfo ? 30 : 1,
-            });
-            this.setUserData(res.data);
-            this.getBalance(res.data.userId);
-            this.gotUserInfo(res.data.userId);
-            this.sure();
-            setTimeout(()=>{
-              this.$router.openPage('/');
-            },300)
+           this.isLoginDo(res);
           } else {
             this.$Message.warning(res.message);
           }
           this.loading = false;
         } catch (error) {}
       }
+    },
+    isLoginDo(res) {
+      // this.imLogin(res.data);
+      this.$Message.success("登录成功！");
+      this.cookies.set("userData", res.data, {
+        expires: this.saveInfo ? 30 : 1,
+      });
+      this.setUserData(res.data);
+      this.getBalance(res.data.userId);
+      this.gotUserInfo(res.data.userId);
+      this.sure();
+      setTimeout(() => {
+        this.$router.openPage("/");
+      }, 300);
+    },
+    imLogin(res) {
+      this.loading = true;
+      this.tim
+        .login({
+          userID: "xxpw" + res.userCode,
+          userSig: window.genTestUserSig("xxpw" + res.userCode).userSig,
+        })
+        .then(() => {
+          this.loading = false;
+          // this.$store.commit('toggleIsLogin', true)
+          this.startComputeCurrent();
+            this.GET_USER_INFO({
+             type: "GET_USER_INFO",
+            userID: "xxpw" + res.userCode,
+            userSig: window.genTestUserSig("xxpw" + res.userCode).userSig,
+            sdkAppID: window.genTestUserSig("").SDKAppID,
+          });
+          // this.$store.commit('showMessage', {
+          //   type: 'success',
+          //   message: 'IM登录成功'
+          // })
+          console.log("IM登录成功");
+        })
+        .catch((error) => {
+          this.loading = false;
+          // this.$store.commit('showMessage', {
+          //   message: 'IM登录失败：' + error.message,
+          //   type: 'error'
+          // })
+          console.log("IM登录失败");
+        });
     },
     async send() {
       if (!validateMobilePhone(this.phone)) {
@@ -427,6 +468,7 @@ export default {
     }
   }
   .read {
+    color: #333;
   }
   .btn-login {
     width: 333px;

@@ -1,8 +1,8 @@
 <template>
   <div class="wechat">
     <div class="icon">
-      <img src="../assets/img/public/log-1.png" class="img" alt="小熊陪玩" />
-      <p>小熊陪玩</p>
+      <img src="../assets/img/public/log-1.png" class="img" alt="海鸥科技" />
+      <p>海鸥科技</p>
     </div>
   </div>
 </template>

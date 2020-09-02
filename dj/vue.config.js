@@ -15,6 +15,7 @@ module.exports = {// 基本路径
          
         }
     },
+
     productionSourceMap: false,
     configureWebpack: config => {
         config.entry.app = ["babel-polyfill", "./src/main.js"];

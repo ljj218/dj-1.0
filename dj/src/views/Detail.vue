@@ -182,7 +182,7 @@ export default {
       this.$forceUpdate();
     },
     toOrder() {
-      sessionStorage.setItem("_infos", JSON.stringify(this.info));
+      sessionStorage.setItem("_playerInfos", JSON.stringify(this.info));
       if (this.userData) {
         this.$router.openPage("/order?type=" + this.type + "&id=" + this.id);
       } else {

@@ -13,6 +13,10 @@
       <div class="row flex align-items">
         <div class="name">充值金额：</div>
         <ul class="list flex align-items">
+          <li class="item" :class="{active:type==30}" @click="changeType(30)">
+            30元
+            <img src="../assets/img/icon-select.png" class="icon" />
+          </li>
           <li class="item" :class="{active:type==50}" @click="changeType(50)">
             50元
             <img src="../assets/img/icon-select.png" class="icon" />
@@ -90,9 +94,10 @@ export default {
   data() {
     return {
       money: "",
-      type: 50,
+      type: 30,
       paymethods: 1, //1微信 2 支付宝
       timer: null,
+      setTimer:null,
       payInfo: {
         qrCode: "",
       },
@@ -161,6 +166,15 @@ export default {
     money(val) {
       this.type = "";
       this.money = val.replace(/[^\d]/g, "");
+      clearTimeout(this.setTimer);
+     this.setTimer=setTimeout(() => {
+        if (this.money < 30) {
+          this.$Message.warning("最少充值30");
+          this.type = 30;
+          this.money = "";
+          return;
+        }
+      }, 1500);
       if (val) {
         this.toRecharge();
       }
@@ -169,6 +183,9 @@ export default {
   beforeRouteLeave(to, from, next) {
     sessionStorage.removeItem("_ref");
     clearInterval(this.timer);
+    if(to.name!='Index'){
+      sessionStorage.removeItem("_info");
+    }
     next();
   },
 };

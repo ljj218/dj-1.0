@@ -1,10 +1,15 @@
 <template>
   <div class="wrap">
     <ul class="floatTip">
-      <li class="item" @click="join">
+      <li class="item" v-if="userInfo.isPlayer==0" @click="join">
         <img src="../assets/img/public/icon-menber.png" class="icon" />
         <p>申请</p>
         <p>入驻</p>
+      </li>
+      <li class="item" v-if="userInfo.isPlayer==1" @click="join">
+        <img src="../assets/img/public/icon-menber.png" class="icon" />
+        <p>我是</p>
+        <p>陪玩</p>
       </li>
       <li class="item">
         <img src="../assets/img/public/icon-mes.png" class="icon" />
@@ -52,7 +57,7 @@ export default {
     }),
     join(){
       if(this.userInfo.isPlayer==1){
-         this.$Message.warning("已经是陪玩");
+         this.$router.openPage('/mine?type=1')
          return
       }
       if (this.userData) {
@@ -89,7 +94,7 @@ export default {
   font-size: 14px;
   color: rgba(51, 51, 51, 1);
   text-align: center;
-  z-index: 3;
+  z-index: 10;
   .icon {
     width: 45px;
     display: block;

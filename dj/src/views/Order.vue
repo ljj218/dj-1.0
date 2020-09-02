@@ -116,8 +116,8 @@ export default {
   mounted() {
     this.id = this.$route.query.id;
     this.type = this.$route.query.type;
-    this.info = sessionStorage.getItem("_infos")
-      ? JSON.parse(sessionStorage.getItem("_infos"))
+    this.info = sessionStorage.getItem("_playerInfos")
+      ? JSON.parse(sessionStorage.getItem("_playerInfos"))
       : "";
     if (!this.info) {
       this.gotUserInfo();

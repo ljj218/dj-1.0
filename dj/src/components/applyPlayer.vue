@@ -208,9 +208,13 @@
           <textarea class="textarea fl mart" v-model="playHero" placeholder="建议输入三个英雄"></textarea>
         </div>
         <div class="row flex align-items">
-          <div class="name fl mart" :class="{red:hint.indexOf('soundFiles')>-1}">上传语音条:</div>
+          <div class="name fl mart" :class="{red:hint.indexOf('soundFile')>-1}">上传语音条:</div>
           <div class="upload-voice fl">
-            <span v-if="!mp3Src">点击修改本地录音</span>
+            <div class="temp-voice flex align-items justify-content" v-if="voiceFlag">
+              <Icon type="ios-loading" size="18" class="demo-spin-icon-load"></Icon>
+              <span>正在上传...</span>
+            </div>
+            <span v-if="!mp3Src">点击上传本地录音</span>
             <audio :src="mp3Src" ref="audio" class="audio">您的浏览器不支持音频播放</audio>
             <div class="play-wrap flex align-items space-between" v-if="mp3Src">
               <Icon type="md-play" v-if="!ispalying" @click="play" />
@@ -279,12 +283,13 @@ export default {
       tacticsImg: "",
       playPosition: [],
       hint: [],
-      soundFiles: "",
+      soundFile: "",
       loading: false,
       wechatImg: "",
       wechatSrc: "",
       imgindexList: [],
       flag: false,
+      voiceFlag: false,
     };
   },
   computed: {
@@ -455,10 +460,18 @@ export default {
         }
         let reader = new FileReader();
         reader.readAsDataURL(file);
+        this.voiceFlag = true;
         reader.onload = () => {
-          this.toupload(file).then((res) => {
-            this.soundFiles = res.data;
-          });
+          this.toupload(file)
+            .then((res) => {
+              this.soundFile = res.data;
+              this.voiceFlag = false;
+            })
+            .catch((res) => {
+              this.$Message.warning("上传失败！");
+              this.voiceFlag = false;
+              this.soundFile = "";
+            });
           this.mp3Src = reader.result;
           this.$forceUpdate();
         };
@@ -479,6 +492,15 @@ export default {
       this.$forceUpdate();
     },
     async toAuth() {
+      if (this.imgindexList.length > 0) {
+        this.$Message.warning("图片正在上传，请稍等");
+        return;
+      }
+
+      if (this.voiceFlag) {
+        this.$Message.warning("音频正在上传，请稍等");
+        return;
+      }
       this.hint = [];
       let num = 0;
       let must = [
@@ -493,7 +515,7 @@ export default {
         "riftImg",
         "riftRank",
         "sound",
-        "soundFiles",
+        "soundFile",
         "tacticsImg",
         "tacticsRank",
         "wechatImg",
@@ -543,9 +565,12 @@ export default {
         let data = new FormData();
         for (let i = 0; i < must.length; i++) {
           if (must[i] == "photos") {
-            data.append("photo", must[i].join("@"));
+            console.log("s1")
+
+            data.append("photo", this[must[i]].join("@"));
           } else {
             data.append(must[i], this[must[i]]);
+            console.log("s2")
           }
         }
         data.append("userId", this.userData.userId);
@@ -555,6 +580,7 @@ export default {
             "Content-Type": "multipart/form-data",
           },
         };
+
         axios
           .post(config.baseUrl + "user/playerApply", data, configs)
           .then((res) => {
@@ -563,7 +589,7 @@ export default {
               this.gotUserInfo();
               this.cancel();
             } else {
-              this.$Message.warning("提交失败");
+              this.$Message.warning(res.message);
             }
             this.loading = false;
           })
@@ -911,6 +937,17 @@ export default {
       color: rgba(153, 153, 153, 1);
       background: rgba(232, 232, 232, 1);
       border-radius: 6px;
+      .temp-voice {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 148px;
+        height: 33px;
+        z-index: 999;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: #fff;
+        border-radius: 6px;
+      }
       .audio {
         opacity: 0;
         width: 1px;
@@ -1131,5 +1168,19 @@ export default {
 .z9 {
   position: relative;
   z-index: 19;
+}
+.demo-spin-icon-load {
+  animation: ani-demo-spin 1s linear infinite;
+}
+@keyframes ani-demo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

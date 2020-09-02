@@ -41,10 +41,10 @@
             <span>擅长英雄:</span>
             {{nowInfo.playHero||''}}
           </p>
-          <div class="wechat-wrap clearfix">
+          <!-- <div class="wechat-wrap clearfix">
             <div class="name fl">微信</div>
             <img :src="nowInfo.wechatImg" alt="微信号码" class="code fl" v-if="nowInfo.wechatImg" />
-          </div>
+          </div> -->
         </div>
 
         <div class="btn-wrap clearfix unselect" :class="{top:type==2}">

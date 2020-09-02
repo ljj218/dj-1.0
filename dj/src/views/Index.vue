@@ -75,7 +75,7 @@
           <!-- <div class="start unselect" @click="start">开始陪玩</div> -->
           <Button class="start" type="default" :loading="loading" @click="toQuerPlayerSpeed">开始陪玩</Button>
 
-        <quickBtn class="links"/>
+        <!-- <quickBtn class="links"/> -->
 
         </div>
       </div>

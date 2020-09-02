@@ -5,19 +5,19 @@
       <img src="../assets/img/loginu.png" class="head" v-else />
       <div class="info">
         <div class="info-box">
-          <div class="nike-name flex align-items">
+          <div class="nike-name flex align-items" @click="$router.openPage('/modifyUserInfo')">
             <span v-if="info.nickName">{{info.nickName}}</span>
             <span v-else>{{userData.phone|phone}}</span>
             <img
               src="../assets/img/icon-editor.png"
               class="icon"
-              @click="$router.openPage('/modifyUserInfo')"
             />
           </div>
-          <p class="num">小熊电竞ID:{{userData.userCode||''}}</p>
+          <p class="num">海鸥科技ID:{{userData.userCode||''}}</p>
           <div class="get-money flex" v-if="info.isPlayer==1">
             <span>我的收益¥: {{(info.income/100).toFixed(2)||0}}元</span>
-            <div class="btn btnclick unselect" @click="showGet=true" v-if="info.income>0">去提现</div>
+            <!-- <div class="btn btnclick unselect" @click="showGet=true" v-if="info.income>0">去提现</div> -->
+            <div class="btn btnclick unselect" @click="showGet=true" >去提现</div>
           </div>
         </div>
       </div>
@@ -167,13 +167,14 @@ export default {
       vertical-align: middle;
     }
     .nike-name {
+      cursor: pointer;
       font-size: 16px;
       color: rgba(51, 51, 51, 1);
       .icon {
         width: 12px;
         height: 12px;
         margin-left: 8px;
-        cursor: pointer;
+        
       }
     }
     .num {

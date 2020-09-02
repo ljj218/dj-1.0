@@ -168,7 +168,7 @@
                     <Icon type="ios-loading" size="18" class="demo-spin-icon-load"></Icon>
                     <span>正在上传...</span>
                 </div>
-                <span v-if="!mp3Src">点击修改本地录音</span>
+                <span v-if="!mp3Src">点击上传本地录音</span>
                 <audio :src="mp3Src" ref="audio" class="audio">您的浏览器不支持音频播放</audio>
                 <div class="play-wrap flex align-items space-between" v-if="mp3Src">
                     <Icon type="md-play" v-if="!ispalying" @click="play" />
@@ -347,7 +347,7 @@ export default {
         uploadVoice(event) {
             let file = event.target.files[0];
             if (file.size / 1024 > 2048) {
-                this.$Message.error("请选择小于2M");
+                this.$Message.warning("请选择小于2M");
                 return;
             }
             if (file) {
@@ -375,8 +375,13 @@ export default {
             }
         },
         async toAuth() {
-            if (this.imgindexList.length > 0 || this.voiceFlag) {
+            if (this.imgindexList.length > 0 ) {
                 this.$Message.warning("图片正在上传，请稍等");
+                return;
+            }
+            
+            if ( this.voiceFlag) {
+                this.$Message.warning("音频正在上传，请稍等");
                 return;
             }
             this.hint = [];

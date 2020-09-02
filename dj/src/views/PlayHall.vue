@@ -5,10 +5,10 @@
     :on-reach-bottom="handleReachBottom"
     :distance-to-edge="-100"
   >
-    <cpNav @search="search"/>
-    <bjImage >
-        <img src="../assets/img/public/2.jpeg" alt="">
-      </bjImage>
+    <cpNav @search="search" />
+    <bjImage>
+      <img src="../assets/img/public/2.jpeg" alt />
+    </bjImage>
     <div class="main">
       <div class="nav-wrap unselect">
         <div class="nav-item clearfix">
@@ -85,6 +85,7 @@
       </div>
     </div>
     <quickBtn />
+    <floatTip />
   </Scroll>
 </template>
 
@@ -96,9 +97,10 @@ import { config } from "../common/config";
 import { mapMutations, mapGetters } from "vuex";
 import { getUserInfo } from "../common/api/user";
 import bjImage from "../components/bjImage";
+import floatTip from "../components/floatTip";
 
 export default {
-  components: { cpNav, quickBtn ,bjImage},
+  components: { cpNav, quickBtn, bjImage ,floatTip},
   name: "playHall",
   data() {
     return {
@@ -138,8 +140,8 @@ export default {
       setType: "user/SET_TYPE",
       setUserInfo: "user/SET_USER_INFO",
     }),
-    search(name){
-      this.name=name;
+    search(name) {
+      this.name = name;
       this.pageNo = 1;
       this.list = [];
       this.querPlayer();
@@ -271,10 +273,10 @@ export default {
       this.querPlayer();
     },
   },
-  beforeRouteLeave (to, from, next) {
-    sessionStorage.removeItem('_search')
-    next()
-  }
+  beforeRouteLeave(to, from, next) {
+    sessionStorage.removeItem("_search");
+    next();
+  },
 };
 </script>
 <style lang='scss' scoped>

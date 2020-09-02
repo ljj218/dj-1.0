@@ -69,7 +69,7 @@
       </div>
       <!-- <div  @click="toAuth">确认提交</div> -->
       <Button class="btn-sure" type="default" :loading="loading" @click="toAuth">确认提交</Button>
-      <p class="hint">小熊电竞会严格保密您的信息</p>
+      <p class="hint">海鸥科技会严格保密您的信息</p>
     </div>
     <div slot="footer"></div>
   </Modal>

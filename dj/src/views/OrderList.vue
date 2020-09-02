@@ -2,9 +2,9 @@
   <div class="orderList">
     <cpNav />
     <floatTip />
-    <bjImage >
-        <img src="../assets/img/public/1.jpeg" alt="">
-      </bjImage>
+    <bjImage>
+      <img src="../assets/img/public/1.jpeg" alt />
+    </bjImage>
     <div class="container">
       <div class="page-title">我的订单</div>
       <div class="content">
@@ -40,8 +40,12 @@
                 <div class="do fl unselect">
                   <div class="type type1">
                     <!-- <div class="refund btn btnclick" v-if="item.orderStatus==0">去付款</div> -->
-                    <div class="refund btn btnclick" v-if="item.serviceStatus==2&&item.serviceStatus==1" @click="tocomOrder(item.orderId)">完成订单</div>
-                    <div class="contact btn btnclick">联系陪玩</div>
+                    <div
+                      class="refund btn btnclick"
+                      v-if="item.serviceStatus==2&&item.serviceStatus==1"
+                      @click="tocomOrder(item.orderId)"
+                    >完成订单</div>
+                    <div class="contact btn btnclick" @click="contact(item.wechatImg)">联系陪玩</div>
                     <div
                       class="contact btn btnclick"
                       v-if="item.serviceStatus==2&&item.serviceStatus==2"
@@ -61,13 +65,29 @@
           </div>
         </div>
         <div class="nothing animated fadeIn" v-else>
-          <img src="../assets/img/public/empty.jpg" class="empty">
+          <img src="../assets/img/public/empty.jpg" class="empty" />
           <span>暂无订单</span>
         </div>
       </div>
     </div>
     <quickBtn />
     <foot />
+
+    <Modal
+      v-model="showCode"
+      width="300"
+      class="login"
+      class-name="vertical-center-modal"
+      :closable="false"
+    >
+      <div slot="header"></div>
+      <div class="content clearfix">
+        
+        <img :src="wechatImg" alt="陪玩微信码" class="wechatImg">
+        <p>打开微信扫一扫，联系您的陪玩吧</p>
+      </div>
+      <div slot="footer"></div>
+    </Modal>
   </div>
 </template>
 
@@ -75,19 +95,21 @@
 import cpNav from "../components/cp-nav";
 import quickBtn from "../components/quickBtn";
 import foot from "../components/foot";
-import { orderList,comOrder } from "../common/api/index";
+import { orderList, comOrder } from "../common/api/index";
 import { mapMutations, mapGetters } from "vuex";
 import floatTip from "../components/floatTip";
 import bjImage from "../components/bjImage";
 
 export default {
-  components: { cpNav, quickBtn, foot ,floatTip,bjImage},
+  components: { cpNav, quickBtn, foot, floatTip, bjImage },
   name: "orderList",
   data() {
     return {
       type: 1,
       // list: [{ type: 1 }, { type: 2 }, { type: 3 }],
-      list:[]
+      list: [],
+      showCode: false,
+      wechatImg:''
     };
   },
   computed: {
@@ -95,32 +117,40 @@ export default {
   },
   created() {},
   mounted() {
-      this.getOrderList();
+    this.getOrderList();
   },
   methods: {
     async getOrderList() {
-      if(!this.userData)return;
+      if (!this.userData) return;
       try {
         let res = await orderList(this.userData.userId);
-        if(res.resultCode=="0000"){
-          this.list = res.data
+        if (res.resultCode == "0000") {
+          this.list = res.data;
         }
       } catch (error) {}
     },
+    sure() {
+      console.log("ssss");
+    },
+    cancel() {
+      // this.$emit("closed");
+    },
     //完成订单
-    async tocomOrder(orderId){
+    async tocomOrder(orderId) {
       try {
-        let res =await comOrder(orderId);
-        if(res.resultCode=="0000"){
-          this.$Message.success('操作成功');
+        let res = await comOrder(orderId);
+        if (res.resultCode == "0000") {
+          this.$Message.success("操作成功");
           this.getOrderList();
-        }else{
+        } else {
           this.$Message.warning(res.message);
         }
-      } catch (error) {
-        
-      }
-    }
+      } catch (error) {}
+    },
+    contact(src) {
+      this.wechatImg=src;
+      this.showCode = true;
+    },
   },
 };
 </script>
@@ -332,17 +362,17 @@ export default {
           }
         }
       }
-      .nothing{
-         width: 1166px;
+      .nothing {
+        width: 1166px;
         height: 400px;
         margin: auto;
         overflow: hidden;
         text-align: center;
         font-size: 20px;
         color: #999;
-        .empty{
+        .empty {
           display: block;
-          margin:60px auto 0;
+          margin: 60px auto 0;
         }
       }
     }
@@ -350,5 +380,48 @@ export default {
 }
 .fl {
   float: left;
+}
+/deep/ .ivu-modal-header,
+/deep/ .ivu-modal-footer {
+  height: 0;
+  padding: 0;
+  border: 0;
+}
+/deep/ .ivu-modal-content {
+  border-radius: 4px;
+}
+/deep/ .ivu-modal-body {
+  padding: 0;
+}
+/deep/ .ivu-modal-close {
+  right: 10px;
+  top: 20px;
+  font-size: 30px;
+}
+.login .content {
+  height: 300px;
+  padding: 20px;
+  border-radius: 6px;
+  background-color: #fff;
+  p{
+    text-align: center;
+    font-size: 14px;
+    margin-top: 10px;
+  }
+  .wechatImg{
+    display: block;
+    width: 220px;
+    height: 220px;
+    margin:10px auto 0;
+  }
+}
+/deep/ .vertical-center-modal {
+  display: flex;
+  align-items: center;
+  // justify-content: center;
+  -webkit-justify-content: center;
+  .ivu-modal {
+    top: 0;
+  }
 }
 </style>

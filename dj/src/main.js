@@ -15,20 +15,30 @@ import 'element-ui/lib/theme-chalk/index.css';
 import {config} from "./common/config"
 import VueQriously from 'vue-qriously'
 import TIM from 'tim-js-sdk';
-import COS from "cos-js-sdk-v5";
+import tim from './tim'
+import { MessageBox, Row, Col, Button, Input, Loading, Dialog, Dropdown, DropdownMenu, DropdownItem } from 'element-ui'
+import Avatar from './components/avatar.vue'
+import './assets/icon/iconfont.css'
+import './assets/icon/tim.css'
+window.tim = tim
+window.TIM = TIM
+window.store = store
+Vue.prototype.$bus = new Vue() // event Bus 用于无关系组件间的通信。
+Vue.prototype.tim = tim
+Vue.prototype.TIM = TIM
+Vue.prototype.$store = store
+Vue.prototype.$confirm = MessageBox.confirm
+Vue.use(Button)
+Vue.use(Row)
+Vue.use(Col)
+Vue.use(Input)
+Vue.use(Loading)
+Vue.use(Dialog)
+Vue.use(Dropdown)
+Vue.use(DropdownMenu)
+Vue.use(DropdownItem)
+Vue.component('avatar', Avatar)
 
-let options = {
-  SDKAppID: 1400408859 // 接入时需要将0替换为您的即时通信 IM 应用的 SDKAppID
-};
-// 创建 SDK 实例，`TIM.create()`方法对于同一个 `SDKAppID` 只会返回同一份实例
-let tim = TIM.create(options); // SDK 实例通常用 tim 表示
-
-// 设置 SDK 日志输出级别，详细分级请参见 setLogLevel 接口的说明
-tim.setLogLevel(0); // 普通级别，日志量较多，接入时建议使用
-// tim.setLogLevel(1); // release 级别，SDK 输出关键信息，生产环境时建议使用
-
-// 注册 COS SDK 插件
-tim.registerPlugin({'cos-js-sdk': COS});
 
 Vue.use(VueQriously)
 Vue.use(ElementUI);
