@@ -33,6 +33,7 @@ const user = {
       state.balance = num
     },
     SET_USER_INFO(state, info) {
+      console.log(info)
       state.userInfo = info
     },
     updateCurrentUserProfile(state, userProfile) {

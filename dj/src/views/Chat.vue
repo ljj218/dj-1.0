@@ -1,76 +1,129 @@
 <template>
-  <div class="chat">
-    <bjImage>
-      <img src="../assets/img/public/3.jpeg" alt />
-    </bjImage>
-    <div class="containers flex align-items clearfix">
-      <div class="nav-left fl">
-        <img src="../assets/img/public/wh.jpg" class="head" />
-        <div class="info">
-          <p>赵梦溪</p>
-          <p>性别：女</p>
-          <p>擅长位置：打野,打野,打野</p>
-          <p>主玩英雄：剑圣 盲僧</p>
-        </div>
+  <div class="container">
+  
+    <div
+      class="loading"
+      v-loading="showLoading"
+      element-loading-text="正在拼命初始化..."
+      element-loading-background="rgba(0, 0, 0, 0.8)"
+    >
+      <div class="chat-wrapper">
+        <el-row>
+          <el-col :xs="10" :sm="10" :md="8" :lg="8" :xl="7">
+            <side-bar />
+          </el-col>
+          <el-col :xs="14" :sm="14" :md="16" :lg="16" :xl="17">
+            <current-conversation />
+          </el-col>
+        </el-row>
       </div>
-      <div class="content-right fl"></div>
-      <div
-        class="loading"
-        v-loading="showLoading"
-        element-loading-text="正在拼命初始化..."
-        element-loading-background="rgba(0, 0, 0, 0.8)"
-      >
-        <div class="chat-wrapper">
-          <el-row>
-            <el-col :xs="10" :sm="10" :md="8" :lg="8" :xl="7">
-              <side-bar />
-            </el-col>
-            <el-col :xs="14" :sm="14" :md="16" :lg="16" :xl="17">
-              <current-conversation />
-            </el-col>
-          </el-row>
-        </div>
-
-        <image-previewer />
-      </div>
+      <image-previewer />
     </div>
+    <div class="bg"></div>
   </div>
 </template>
 
 <script>
-import bjImage from "../components/bjImage";
 import { Notification } from "element-ui";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import CurrentConversation from "../components/conversation/current-conversation";
 import SideBar from "../components/layout/side-bar";
 import ImagePreviewer from "../components/message/image-previewer.vue";
 import { translateGroupSystemNotice } from "../utils/common";
 import { ACTION } from "../utils/trtcCustomMessageMap";
 import MTA from "../utils/mta";
-import { mapGetters, mapMutations } from "vuex";
 
 export default {
-  components: { bjImage, SideBar, CurrentConversation, ImagePreviewer },
-  name: "chat",
+  title: "TIMSDK DEMO",
+  components: {
+    SideBar,
+    CurrentConversation,
+    ImagePreviewer,
+  },
   data() {
-    return {};
+    return {
+      playerId: "",
+    };
   },
   computed: {
-    ...mapGetters( ['currentUserProfile','currentConversation','isLogin','isSDKReady','isBusy','userID']),
+    ...mapGetters([
+      "currentUserProfile",
+      "currentConversation",
+      "isLogin",
+      "isSDKReady",
+      "isBusy",
+      "userID",
+      "userData",
+    ]),
     // 是否显示 Loading 状态
     showLoading() {
       return !this.isSDKReady;
     },
   },
-  created() {},
+
   mounted() {
+    this.tlakToPlayer = this.$route.query.playerId || "";
     // 初始化监听器
+    this.imLogin();
+
     this.initListener();
   },
+
+  watch: {
+    isLogin(next) {
+      if (next) {
+        MTA.clickStat("link_two", { show: "true" });
+      }
+    },
+  },
+
   methods: {
     ...mapMutations({
-      showMessage: "user/showMessage",
-      toggleIsSDKReady: "user/toggleIsSDKReady",
+      updateConversationList: "conversation/updateConversationList",
+      pushCurrentMessageList: "conversation/pushCurrentMessageList",
+      updateGroupList: "group/updateGroupList",
+      toggleIsLogin: "imInfo/toggleIsLogin",
+      showMessage: "imInfo/showMessage",
+      toggleIsSDKReady: "imInfo/toggleIsSDKReady",
+      updateCurrentUserProfile: "imInfo/updateCurrentUserProfile",
+      getUserInfo: "imInfo/GET_USER_INFO",
+      startComputeCurrent: "imInfo/startComputeCurrent",
     }),
+
+    ...mapActions({
+      getBlacklist: "blacklist/getBlacklist",
+      checkoutConversation: "conversation/checkoutConversation",
+    }),
+    imLogin() {
+      this.loading = true;
+      this.tim
+        .login({
+          userID: this.userData.userCode,
+          userSig: window.genTestUserSig(this.userData.userCode).userSig,
+        })
+        .then(() => {
+          this.loading = false;
+          // this.toggleIsLogin(true);
+          this.startComputeCurrent();
+          this.getUserInfo({
+            type: "GET_USER_INFO",
+            userID: this.userData.userCode,
+            userSig: window.genTestUserSig(this.userData.userCode).userSig,
+            sdkAppID: window.genTestUserSig("").SDKAppID,
+          });
+          // this.$store.commit('showMessage', {
+          //   type: 'success',
+          //   message: 'IM登录成功'
+          // })
+          //添加聊天对象
+          this.tlakToPlayer();
+          console.log("IM登录成功");
+        })
+        .catch((error) => {
+          this.loading = false;
+          console.log("IM登录失败");
+        });
+    },
     initListener() {
       // 登录成功后会触发 SDK_READY 事件，该事件触发后，可正常使用 SDK 接口
       this.tim.on(this.TIM.EVENT.SDK_READY, this.onReadyStateUpdate, this);
@@ -97,11 +150,31 @@ export default {
         this.onMessageReadByPeer
       );
     },
+    tlakToPlayer() {
+      if (this.playerId !== "@TIM#SYSTEM") {
+        this.checkoutConversation(`C2C${this.playerId}`)
+          .then(() => {
+            // this.showDialog = false;
+          })
+          .catch(() => {
+            this.showMessage({
+              message: "没有找到该用户",
+              type: "warning",
+            });
+          });
+      } else {
+        this.showMessage({
+          message: "没有找到该用户",
+          type: "warning",
+        });
+      }
+      // this.playerId = "";
+    },
     onReceiveMessage({ data: messageList }) {
-      // this.handleVideoMessage(messageList)
+      this.handleVideoMessage(messageList);
       this.handleAt(messageList);
-      // this.handleQuitGroupTip(messageList)
-      this.$store.commit("pushCurrentMessageList", messageList);
+      this.handleQuitGroupTip(messageList);
+      this.pushCurrentMessageList(messageList);
     },
     onError({ data }) {
       if (data.message !== "Network Error") {
@@ -120,15 +193,15 @@ export default {
         this.tim
           .getMyProfile()
           .then(({ data }) => {
-            this.$store.commit("updateCurrentUserProfile", data);
+            this.updateCurrentUserProfile(data);
           })
           .catch((error) => {
             this.showMessage({
-              message: error.message,
               type: "error",
+              message: error.message,
             });
           });
-        // this.$store.dispatch("getBlacklist");
+        this.getBlacklist();
       }
     },
     kickedOutReason(type) {
@@ -156,10 +229,6 @@ export default {
       }
     },
     onNetStateChange(event) {
-      // this.$store.commit(
-      //   "showMessage",
-      //   this.checkoutNetState(event.data.state)
-      // );
       this.showMessage(this.checkoutNetState(event.data.state));
     },
     onKickOut(event) {
@@ -167,14 +236,14 @@ export default {
         message: `${this.kickedOutReason(event.data.type)}被踢出，请重新登录。`,
         type: "error",
       });
-      // this.$store.commit("toggleIsLogin", false);
+      this.toggleIsLogin(false);
       this.$store.commit("reset");
     },
     onUpdateConversationList(event) {
-      this.$store.commit("updateConversationList", event.data);
+      this.updateConversationList(event.data);
     },
     onUpdateGroupList(event) {
-      this.$store.commit("updateGroupList", event.data);
+      this.updateGroupList(event.data);
     },
     onReceiveGroupSystemNotice(event) {
       const isKickedout = event.data.type === 4;
@@ -191,7 +260,7 @@ export default {
         duration: 3000,
         onClick: () => {
           const SystemConversationID = "@TIM#SYSTEM";
-          this.$store.dispatch("checkoutConversation", SystemConversationID);
+          this.checkoutConversation(SystemConversationID);
         },
       });
     },
@@ -231,7 +300,7 @@ export default {
     },
     selectConversation(conversationID) {
       if (conversationID !== this.currentConversation.conversationID) {
-        this.$store.dispatch("checkoutConversation", conversationID);
+        this.checkoutConversation(conversationID);
       }
     },
     isJsonStr(str) {
@@ -240,6 +309,47 @@ export default {
         return true;
       } catch {
         return false;
+      }
+    },
+    handleVideoMessage(messageList) {
+      const videoMessageList = messageList.filter(
+        (message) =>
+          message.type === this.TIM.TYPES.MSG_CUSTOM &&
+          this.isJsonStr(message.payload.data)
+      );
+      if (videoMessageList.length === 0) return;
+      const videoPayload = JSON.parse(videoMessageList[0].payload.data);
+      if (videoPayload.action === ACTION.VIDEO_CALL_ACTION_DIALING) {
+        if (this.isBusy) {
+          this.$bus.$emit("busy", videoPayload, videoMessageList[0]);
+          return;
+        }
+
+        this.selectConversation(videoMessageList[0].conversationID); // 切换当前会话页
+        if (videoMessageList[0].from !== this.userID) {
+          this.$bus.$emit("isCalled");
+        }
+      }
+      if (videoPayload.action === ACTION.VIDEO_CALL_ACTION_SPONSOR_CANCEL) {
+        this.$bus.$emit("missCall");
+      }
+      if (videoPayload.action === ACTION.VIDEO_CALL_ACTION_REJECT) {
+        this.$bus.$emit("isRefused");
+      }
+      if (videoPayload.action === ACTION.VIDEO_CALL_ACTION_SPONSOR_TIMEOUT) {
+        this.$bus.$emit("missCall");
+      }
+      if (videoPayload.action === ACTION.VIDEO_CALL_ACTION_ACCEPTED) {
+        this.$bus.$emit("isAccept");
+      }
+      if (videoPayload.action === ACTION.VIDEO_CALL_ACTION_HANGUP) {
+        this.$bus.$emit("isHungUp");
+      }
+      if (videoPayload.action === ACTION.VIDEO_CALL_ACTION_LINE_BUSY) {
+        this.$bus.$emit("isRefused");
+      }
+      if (videoPayload.action === ACTION.VIDEO_CALL_ACTION_ERROR) {
+        this.$bus.$emit("isRefused");
       }
     },
     /**
@@ -269,65 +379,48 @@ export default {
       });
       notification.onclick = () => {
         window.focus();
-        this.$store.dispatch("checkoutConversation", message.conversationID);
+        this.checkoutConversation(message.conversationID);
         notification.close();
       };
     },
     handleLinkClick() {
       MTA.clickStat("link_two", { click: "true" });
     },
-  },
-  watch: {
-    isLogin(next) {
-      if (next) {
-        MTA.clickStat("link_two", { show: "true" });
+    /**
+     * 收到有群成员退群/被踢出的groupTip时，需要将相关群成员从当前会话的群成员列表中移除
+     * @param {Message[]} messageList
+     */
+    handleQuitGroupTip(messageList) {
+      // 筛选出当前会话的退群/被踢群的 groupTip
+      const groupTips = messageList.filter((message) => {
+        return (
+          this.currentConversation.conversationID === message.conversationID &&
+          message.type === this.TIM.TYPES.MSG_GRP_TIP &&
+          (message.payload.operationType === this.TIM.TYPES.GRP_TIP_MBR_QUIT ||
+            message.payload.operationType ===
+              this.TIM.TYPES.GRP_TIP_MBR_KICKED_OUT)
+        );
+      });
+      // 清理当前会话的群成员列表
+      if (groupTips.length > 0) {
+        groupTips.forEach((groupTip) => {
+          if (
+            Array.isArray(groupTip.payload.userIDList) ||
+            groupTip.payload.userIDList.length > 0
+          ) {
+            this.$store.commit(
+              "deleteGroupMemberList",
+              groupTip.payload.userIDList
+            );
+          }
+        });
       }
     },
   },
 };
 </script>
-<style lang='scss' scoped>
-.chat {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-  .container {
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 1106px;
-    height: 585px;
-    margin: auto;
-    background: rgba(255, 255, 255, 1);
-    border: 1px solid #dddddd;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    .nav-left {
-      width: 261px;
-      height: 585px;
-      background: rgba(244, 194, 212, 1);
-      .head {
-        width: 100%;
-        height: 293px;
-      }
-      .info {
-        width: 100%;
-        height: 292px;
-        padding: 40px 40px 0 40px;
-        color: #fff;
-        font-size: 18px;
-        p {
-          margin-bottom: 10px;
-        }
-      }
-    }
-    .content-right {
-      width: 845px;
-      height: 585px;
-      background: #fff;
-    }
-  }
-}
+
+<style lang="stylus">
 #wrapper {
   display: flex;
   justify-content: center;
@@ -336,7 +429,12 @@ export default {
   padding-top: 100px;
 }
 
-.containers {
+.container {
+  position: relative;
+  height: 100vh;
+}
+
+.container {
   position: relative;
   height: 100vh;
 }
@@ -349,7 +447,7 @@ export default {
   top: 0;
   left: 0;
   z-index: -1;
-  background: url("~@/./assets/image/bg.jpg") no-repeat 0 0;
+  background: url('~@/./assets/image/bg.jpg') no-repeat 0 0;
   background-size: cover;
   // filter blur(67px)
 }
@@ -369,8 +467,8 @@ export default {
 
 .chat-wrapper {
   margin-top: 8vh;
-  width: 1000px;
-  height: 600px;
+  width: 80vw;
+  height: 80vh;
   max-width: 1280px;
   box-shadow: 0 11px 20px 0 rgba(0, 0, 0, 0.3);
 
@@ -402,4 +500,3 @@ export default {
   background: rgba(0, 0, 0, 0.1);
 }
 </style>
-

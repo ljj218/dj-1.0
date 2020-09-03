@@ -17,7 +17,7 @@
             <span class="name mr">{{nowInfo.nickName}}</span>
             <span class="charge">
               <span>¥</span>
-              <span class="price" v-if="type==1">{{(nowInfo.riftPrice/100).toFixed(2)}}</span>
+              <span class="price" v-if="gametype==1">{{(nowInfo.riftPrice/100).toFixed(2)}}</span>
               <span class="price" v-else>{{ (nowInfo.tacticsPrice/100).toFixed(2)}}</span>
               <span>/局</span>
             </span>
@@ -32,7 +32,7 @@
           </div>
           <div class="btn unselect btnclick" @click="buy">立即下单</div>
         </div>
-        <div class="specialty fl" v-if="type==1">
+        <div class="specialty fl" v-if="gametype==1">
           <p class="mb">
             <span>擅长位置:</span>
             {{nowInfo.playPosition|posplayer}}
@@ -47,7 +47,7 @@
           </div> -->
         </div>
 
-        <div class="btn-wrap clearfix unselect" :class="{top:type==2}">
+        <div class="btn-wrap clearfix unselect" :class="{top:gametype==2}">
           <div class="btn fl btnclick" @click="next">继续匹配</div>
           <div class="btn talk lr btnclick">聊一聊</div>
         </div>
@@ -86,7 +86,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["type", "userData", "balance"]),
+    ...mapGetters(["gametype", "userData", "balance"]),
   },
   created() {},
   mounted() {},
@@ -127,10 +127,10 @@ export default {
     buy() {
       if (this.userData) {
         let price =
-          this.type == 1 ? this.nowInfo.riftPrice : this.nowInfo.tacticsPrice;
+          this.gametype == 1 ? this.nowInfo.riftPrice : this.nowInfo.tacticsPrice;
         if (this.balance >= price) {
           this.$router.openPage(
-            "/order?type=" + this.type + "&id=" + this.nowInfo.userId
+            "/order?type=" + this.gametype + "&id=" + this.nowInfo.userId
           );
         } else {
           this.showPayMod = true;

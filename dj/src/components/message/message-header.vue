@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import { getFullDate } from '../../utils/date'
 export default {
   name: 'MessageHeader',
@@ -17,11 +17,9 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      currentConversation: state => state.conversation.currentConversation,
-      currentUserProfile: state => state.user.currentUserProfile,
-      currentMemberList: state => state.group.currentMemberList
-    }),
+
+    ...mapGetters(["currentMemberList", "currentConversation", "currentUserProfile"]),
+
     date() {
       return getFullDate(new Date(this.message.time * 1000))
     },
@@ -64,7 +62,7 @@ export default {
 }
 
 .base {
-  color: $secondary;
+  color: #a5b5c1;
   font-size: 12px;
 }
 

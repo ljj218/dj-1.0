@@ -14,8 +14,8 @@
         <div class="nav-item clearfix">
           <div class="head fl">游戏类型</div>
           <ul class="right-box fl clearfix">
-            <li :class="{active:type==1}" @click="setType(1)">英雄联盟</li>
-            <li :class="{active:type==2}" @click="setType(2)">云顶之弈</li>
+            <li :class="{active:gametype==1}" @click="setType(1)">英雄联盟</li>
+            <li :class="{active:gametype==2}" @click="setType(2)">云顶之弈</li>
           </ul>
           <div class="new unselect btnclick" v-if="userInfo.isNew==1" @click="changeNewProt">新人专享</div>
         </div>
@@ -71,7 +71,7 @@
             <div class="about clearfix">
               <div class="price">
                 <span>¥</span>
-                <span class="num" v-if="type==1">{{(item.riftPrice/100).toFixed(1)}}</span>
+                <span class="num" v-if="gametype==1">{{(item.riftPrice/100).toFixed(1)}}</span>
                 <span class="num" v-else>{{ (item.tacticsPrice/100).toFixed(1)}}</span>
                 <span>/局</span>
               </div>
@@ -119,7 +119,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["type", "userData", "userInfo"]),
+    ...mapGetters(["gametype", "userData", "userInfo"]),
   },
   created() {
     window.addEventListener("resize", this.getHeight);
@@ -194,7 +194,7 @@ export default {
       this.loadFlag = false;
       try {
         let res = await querPlayer({
-          type: this.type || "1",
+          type: this.gametype || "1",
           pageNo: this.pageNo,
           pageSize: this.pageSize,
           position: this.position || "",

@@ -61,7 +61,7 @@ export default {
 }
 
 .icon-male {
-  color: $primary;
+  color: #2d8cf0;
 }
 
 .icon-female {

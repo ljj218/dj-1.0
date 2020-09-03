@@ -1,8 +1,8 @@
 import tim from '../../tim'
 import TIM from 'tim-js-sdk'
 import store from '..'
-import { titleNotify } from '../../utils'
 const conversationModules = {
+  namespaced: true,
   state: {
     currentConversation: {},
     currentMessageList: [],
@@ -11,42 +11,7 @@ const conversationModules = {
     conversationList: []
   },
   getters: {
-    toAccount: state => {
-      if (!state.currentConversation || !state.currentConversation.conversationID) {
-        return ''
-      }
-      switch (state.currentConversation.type) {
-        case 'C2C':
-          return state.currentConversation.conversationID.replace('C2C', '')
-        case 'GROUP':
-          return state.currentConversation.conversationID.replace('GROUP', '')
-        default:
-          return state.currentConversation.conversationID
-      }
-    },
-    currentConversationType: state => {
-      if (!state.currentConversation || !state.currentConversation.type) {
-        return ''
-      }
-      return state.currentConversation.type
-    },
-    totalUnreadCount: state => {
-      const result = state.conversationList.reduce((count, conversation) => {
-        // 当前会话不计算总未读
-        if (!store.getters.hidden && state.currentConversation.conversationID === conversation.conversationID) {
-          return count
-        }
-        return count + conversation.unreadCount
-      }, 0)
-      titleNotify(result)
-      return result
-    },
-    // 用于当前会话的图片预览
-    imgUrlList: state => {
-      return state.currentMessageList
-        .filter(message => message.type === TIM.TYPES.MSG_IMAGE && !message.isRevoked) // 筛选出没有撤回并且类型是图片类型的消息
-        .map(message => message.payload.imageInfoArray[0].url)
-    }
+    
   },
   mutations: {
     /**
@@ -56,6 +21,7 @@ const conversationModules = {
      * @param {Conversation} conversation
      */
     updateCurrentConversation(state, conversation) {
+      console.log(conversation)
       state.currentConversation = conversation
       state.currentMessageList = []
       state.nextReqMessageID = ''
@@ -150,6 +116,7 @@ const conversationModules = {
      * @param {String} conversationID
      */
     checkoutConversation(context, conversationID) {
+      console.log(context)
       context.commit('resetCurrentMemberList')
       // 1.切换会话前，将切换前的会话进行已读上报
       if (context.state.currentConversation.conversationID) {

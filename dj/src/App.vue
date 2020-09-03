@@ -22,7 +22,7 @@ export default {
       ? JSON.parse(this.cookies.get("userData"))
       : "";
     this.setUserData(this.userData);
-    this.setType(sessionStorage.getItem("type") || 1);
+    this.setType(sessionStorage.getItem("gametype") || 1);
   },
   computed: {
     ...mapGetters({
@@ -43,7 +43,7 @@ export default {
         localStorage.setItem("hzCode", this.$route.query.hzCode);
       }
       if (this.userData) {
-        // this.imLogin();
+        this.imLogin();
       }
     }, 1000);
   },
@@ -59,7 +59,7 @@ export default {
       setType: "user/SET_TYPE",
       setUserInfo: "user/SET_USER_INFO",
       startComputeCurrent: "user/startComputeCurrent",
-      GET_USER_INFO: "user/GET_USER_INFO",
+      getuserInfo: "user/GET_USER_INFO",
     }),
     async gotUserInfo() {
       if (!this.userData) return;
@@ -76,18 +76,18 @@ export default {
       this.loading = true;
       this.tim
         .login({
-          userID: "xxpw" + this.userData.userCode,
-          userSig: window.genTestUserSig("xxpw" + this.userData.userCode).userSig,
+          userID:  this.userData.userCode,
+          userSig: window.genTestUserSig( this.userData.userCode).userSig,
         })
         .then(() => {
           this.loading = false;
           // this.$store.commit("toggleIsLogin", true);
           // this.toggleIsLogin(true);
           this.startComputeCurrent();
-          this.GET_USER_INFO({
+          this.getuserInfo({
             type: "GET_USER_INFO",
-            userID: "xxpw" + this.userData.userCode,
-            userSig: window.genTestUserSig("xxpw" + this.userData.userCode)
+            userID:  this.userData.userCode,
+            userSig: window.genTestUserSig(  this.userData.userCode)
               .userSig,
             sdkAppID: window.genTestUserSig("").SDKAppID,
           });

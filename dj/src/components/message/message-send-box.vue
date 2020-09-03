@@ -14,51 +14,7 @@
         <i class="iconfont icon-smile" slot="reference" title="发表情"></i>
       </el-popover>
       <i class="iconfont icon-tupian" title="发图片" @click="handleSendImageClick"></i>
-      <!-- <i class="el-icon-camera" title="发视频" @click="handleSendVideoClick"></i> -->
-      <!-- <i class="iconfont icon-wenjian" title="发文件" @click="handleSendFileClick"></i> -->
-      <!-- <i class="iconfont icon-zidingyi" title="发自定义消息" @click="sendCustomDialogVisible = true"></i> -->
-      <!-- <i class="iconfont icon-diaocha" title="小调查" @click="surveyDialogVisible = true"></i> -->
-      <!-- <i class="el-icon-video-camera" v-if="currentConversationType === 'C2C'&& toAccount !== userID" title="视频通话" @click="videoCall"></i> -->
     </div>
-    <el-dialog title="发自定义消息" :visible.sync="sendCustomDialogVisible" width="30%">
-      <el-form label-width="100px">
-        <el-form-item label="data">
-          <el-input v-model="form.data"></el-input>
-        </el-form-item>
-        <el-form-item label="description">
-          <el-input v-model="form.description"></el-input>
-        </el-form-item>
-        <el-form-item label="extension">
-          <el-input v-model="form.extension"></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="sendCustomDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="sendCustomMessage">确 定</el-button>
-      </span>
-    </el-dialog>
-    <el-dialog title="对IM Web demo的建议和使用感受" :visible.sync="surveyDialogVisible" width="30%">
-      <el-form label-width="100px">
-        <el-form-item label="评分">
-          <div class="block">
-            <el-rate v-model="rate" :colors="colors" show-text></el-rate>
-          </div>
-        </el-form-item>
-        <el-form-item label="建议">
-          <el-input
-            type="textarea"
-            :rows="2"
-            placeholder="请输入内容"
-            resize="none"
-            v-model="suggestion"
-          ></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="surveyDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="sendSurvey">确 定</el-button>
-      </span>
-    </el-dialog>
     <el-popover
       trigger="manual"
       v-model="showAtGroupMember"
@@ -108,20 +64,11 @@
       @change="sendImage"
       style="display:none"
     />
-    <input type="file" id="filePicker" ref="filePicker" @change="sendFile" style="display:none" />
-    <input
-      type="file"
-      id="videoPicker"
-      ref="videoPicker"
-      @change="sendVideo"
-      style="display:none"
-      accept=".mp4"
-    />
   </div>
 </template>
 
 <script>
-import { mapGetters, mapState ,mapMutations} from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 import {
   Form,
   FormItem,
@@ -131,7 +78,6 @@ import {
   RadioGroup,
   Radio,
   Tooltip,
-  Rate,
 } from "element-ui";
 import { emojiMap, emojiName, emojiUrl } from "../../utils/emojiMap";
 
@@ -147,22 +93,16 @@ export default {
     ElRadioGroup: RadioGroup,
     ElRadio: Radio,
     ElTooltip: Tooltip,
-    ElRate: Rate,
   },
   data() {
     return {
       colors: ["#99A9BF", "#F7BA2A", "#FF9900"],
       messageContent: "",
-      isSendCustomMessage: false,
-      sendCustomDialogVisible: false,
-      surveyDialogVisible: false,
       form: {
         data: "",
         description: "",
         extension: "",
       },
-      rate: 5, // 评分
-      suggestion: "", // 建议
       file: "",
       emojiMap: emojiMap,
       emojiName: emojiName,
@@ -173,11 +113,16 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["toAccount", "currentConversationType"]),
-    ...mapState({
-      memberList: (state) => state.group.currentMemberList,
-      userID: (state) => state.user.userID,
-    }),
+    ...mapGetters([
+      "toAccount",
+      "currentConversationType",
+      "memberList",
+      "userID",
+    ]),
+    // ...mapState({
+    //   memberList: state => state.group.currentMemberList,
+    //   userID: state => state.user.userID
+    // })
   },
   mounted() {
     this.$refs["text-input"].addEventListener("paste", this.handlePaste);
@@ -187,8 +132,9 @@ export default {
     this.$refs["text-input"].removeEventListener("paste", this.handlePaste);
   },
   methods: {
-     ...mapMutations({
-      showMessage: "user/showMessage",
+    ...mapMutations({
+      pushCurrentMessageList: "conversation/pushCurrentMessageList",
+      showMessage: "imInfo/showMessage",
     }),
     reEditMessage(payload) {
       this.messageContent = payload;
@@ -250,12 +196,12 @@ export default {
           this.$set(message, "progress", percent); // 手动给message 实例加个响应式属性: progress
         },
       });
-      this.$store.commit("pushCurrentMessageList", message);
+      this.pushCurrentMessageList(message);
 
       // 2. 发送消息
       let promise = this.tim.sendMessage(message);
       promise.catch((error) => {
-        this.showMessage({
+        this.showMessage( {
           type: "error",
           message: error.message,
         });
@@ -288,14 +234,14 @@ export default {
           },
         });
       }
-      this.$store.commit("pushCurrentMessageList", message);
+      this.pushCurrentMessageList(message);
       this.tim
         .sendMessage(message)
         .then(() => {
           this.$refs.videoPicker.value = null;
         })
         .catch((imError) => {
-          this.showMessage({
+          this.showMessage( {
             message: imError.message,
             type: "error",
           });
@@ -307,8 +253,7 @@ export default {
         this.messageContent.trim().length === 0
       ) {
         this.messageContent = "";
-
-        this.showMessage({
+        this.showMessage( {
           message: "不能发送空消息哦！",
           type: "info",
         });
@@ -319,100 +264,25 @@ export default {
         conversationType: this.currentConversationType,
         payload: { text: this.messageContent },
       });
-      this.$store.commit("pushCurrentMessageList", message);
+      this.pushCurrentMessageList(message);
       this.$bus.$emit("scroll-bottom");
       this.tim.sendMessage(message).catch((error) => {
-        this.showMessage({
+        this.showMessage( {
           type: "error",
           message: error.message,
         });
       });
       this.messageContent = "";
     },
-    sendCustomMessage() {
-      if (
-        this.form.data.length === 0 &&
-        this.form.description.length === 0 &&
-        this.form.extension.length === 0
-      ) {
-        this.showMessage({
-          message: "不能发送空消息",
-          type: "info",
-        });
-        return;
-      }
-      const message = this.tim.createCustomMessage({
-        to: this.toAccount,
-        conversationType: this.currentConversationType,
-        payload: {
-          data: this.form.data,
-          description: this.form.description,
-          extension: this.form.extension,
-        },
-      });
-      this.$store.commit("pushCurrentMessageList", message);
-      this.tim.sendMessage(message).catch((error) => {
-        this.showMessage({
-          type: "error",
-          message: error.message,
-        });
-      });
-      Object.assign(this.form, {
-        data: "",
-        description: "",
-        extension: "",
-      });
-      this.sendCustomDialogVisible = false;
-    },
     random(min, max) {
       return Math.floor(Math.random() * (max - min + 1) + min);
     },
-    sendSurvey() {
-      const message = this.tim.createCustomMessage({
-        to: this.toAccount,
-        conversationType: this.currentConversationType,
-        payload: {
-          data: "survey",
-          description: String(this.rate),
-          extension: this.suggestion,
-        },
-      });
-      this.$store.commit("pushCurrentMessageList", message);
-      Object.assign(this.form, {
-        data: "",
-        description: "",
-        extension: "",
-      });
-      this.tim
-        .sendMessage(message)
-        .then(() => {
-          Object.assign(this, {
-            rate: 5,
-            suggestion: "",
-          });
-        })
-        .catch((error) => {
-          this.showMessage({
-            type: "error",
-            message: error.message,
-          });
-        });
-      this.surveyDialogVisible = false;
-    },
+
     chooseEmoji(item) {
       this.messageContent += item;
     },
     handleSendImageClick() {
       this.$refs.imagePicker.click();
-    },
-    handleSendFileClick() {
-      this.$refs.filePicker.click();
-    },
-    handleSendVideoClick() {
-      this.$refs.videoPicker.click();
-    },
-    videoCall() {
-      this.$bus.$emit("video-call");
     },
     sendImage() {
       const message = this.tim.createImageMessage({
@@ -425,62 +295,14 @@ export default {
           this.$set(message, "progress", percent); // 手动给message 实例加个响应式属性: progress
         },
       });
-      this.$store.commit("pushCurrentMessageList", message);
+      this.pushCurrentMessageList(message);
       this.tim
         .sendMessage(message)
         .then(() => {
           this.$refs.imagePicker.value = null;
         })
         .catch((imError) => {
-          this.showMessage({
-            message: imError.message,
-            type: "error",
-          });
-        });
-    },
-    sendFile() {
-      const message = this.tim.createFileMessage({
-        to: this.toAccount,
-        conversationType: this.currentConversationType,
-        payload: {
-          file: document.getElementById("filePicker"), // 或者用event.target
-        },
-        onProgress: (percent) => {
-          this.$set(message, "progress", percent); // 手动给message 实例加个响应式属性: progress
-        },
-      });
-      this.$store.commit("pushCurrentMessageList", message);
-      this.tim
-        .sendMessage(message)
-        .then(() => {
-          this.$refs.filePicker.value = null;
-        })
-        .catch((imError) => {
-          this.showMessage({
-            message: imError.message,
-            type: "error",
-          });
-        });
-    },
-    sendVideo() {
-      const message = this.tim.createVideoMessage({
-        to: this.toAccount,
-        conversationType: this.currentConversationType,
-        payload: {
-          file: document.getElementById("videoPicker"), // 或者用event.target
-        },
-        onProgress: (percent) => {
-          this.$set(message, "progress", percent); // 手动给message 实例加个响应式属性: progress
-        },
-      });
-      this.$store.commit("pushCurrentMessageList", message);
-      this.tim
-        .sendMessage(message)
-        .then(() => {
-          this.$refs.videoPicker.value = null;
-        })
-        .catch((imError) => {
-          this.showMessage({
+          this.showMessage( {
             message: imError.message,
             type: "error",
           });
@@ -525,7 +347,7 @@ export default {
 }
 
 .send-header-bar i:hover {
-  color: $black;
+  color: #000000;
 }
 
 textarea {
@@ -554,7 +376,7 @@ textarea {
   .btn-send {
     cursor: pointer;
     position: absolute;
-    color: $primary;
+    color: #2d8cf0;
     font-size: 30px;
     right: 0;
     bottom: -5px;

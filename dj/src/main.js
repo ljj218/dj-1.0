@@ -17,6 +17,7 @@ import VueQriously from 'vue-qriously'
 import TIM from 'tim-js-sdk';
 import tim from './tim'
 import { MessageBox, Row, Col, Button, Input, Loading, Dialog, Dropdown, DropdownMenu, DropdownItem } from 'element-ui'
+
 import Avatar from './components/avatar.vue'
 import './assets/icon/iconfont.css'
 import './assets/icon/tim.css'

@@ -169,7 +169,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import MessageStatusIcon from './message-status-icon.vue'
 import MessageHeader from './message-header'
 import MessageFooter from './message-footer'
@@ -213,10 +213,8 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      currentConversation: state => state.conversation.currentConversation,
-      currentUserProfile: state => state.user.currentUserProfile
-    }),
+    ...mapGetters([ "currentConversation", "currentUserProfile"]),
+
     // 是否显示头像，群提示消息不显示头像
     showAvatar() {
       if (this.currentConversation.type === 'C2C' && !this.message.isRevoked) { // C2C且没有撤回的消息

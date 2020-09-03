@@ -15,7 +15,7 @@
       <div class="price-info">
         <p class="price">
           <span>¥</span>
-          <span v-if="type==1" class="fs36">{{(info.riftPrice/100).toFixed(2)}}</span>
+          <span v-if="gametype==1" class="fs36">{{(info.riftPrice/100).toFixed(2)}}</span>
           <span v-else class="fs36">{{(info.tacticsPrice/100).toFixed(2)}}</span>
         </p>
         <p class="sub flex align-items justify-content">
@@ -64,7 +64,7 @@
         </div>
       </div>-->
       <div class="btn-wrap clearfix unselect">
-        <div class="btn fl btnclick">取消</div>
+        <div class="btn fl btnclick" @click="cancel">取消</div>
         <div class="btn paym lr btnclick" @click="isPayEnd">付款</div>
       </div>
     </div>
@@ -103,7 +103,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["type", "userData", "balance"]),
+    ...mapGetters(["gametype", "userData", "balance"]),
   },
   created() {},
   mounted() {},
@@ -143,11 +143,11 @@ export default {
     //   }
     // },
     isPayEnd() {
-      let price = this.type == 1 ? this.info.riftPrice : this.info.tacticsPrice;
+      let price = this.gametype == 1 ? this.info.riftPrice : this.info.tacticsPrice;
       if (this.balance >= price) {
         sessionStorage.setItem("_info", JSON.stringify(this.info));
         this.$router.openPage(
-          "/order??type=" + this.type + "&id=" + this.info.userId
+          "/order??type=" + this.gametype + "&id=" + this.info.userId
         );
       } else {
         this.cancel();
@@ -182,7 +182,7 @@ export default {
       this.payMethod = num;
     },
     needMoney() {
-      let price = this.type == 1 ? this.info.riftPrice : this.info.tacticsPrice;
+      let price = this.gametype == 1 ? this.info.riftPrice : this.info.tacticsPrice;
       return ((price - this.balance) / 100).toFixed(2);
     },
   },

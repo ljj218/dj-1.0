@@ -108,6 +108,7 @@ export default {
       setLoginFlag: "user/SET_LOGIN_FLAG",
       setUserData: "user/SET_USER_DATA",
       setUserInfo: "user/SET_USER_INFO",
+      toggleIsLogin: "imInfo/toggleIsLogin",
       startComputeCurrent: "user/startComputeCurrent",
     }),
     changeType(num) {

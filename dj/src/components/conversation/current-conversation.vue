@@ -15,7 +15,7 @@
           <div class="more" v-if="!isCompleted">
             <el-button
               type="text"
-              @click="$store.dispatch('getMessageList', currentConversation.conversationID)"
+              @click="getMessageList(currentConversation.conversationID)"
             >查看更多</el-button>
           </div>
           <div class="no-more" v-else>没有更多了</div>
@@ -30,19 +30,24 @@
     <div class="profile" v-if="showConversationProfile" >
       <conversation-profile/>
     </div>
+    <!-- 群成员资料组件 -->
+    <member-profile-card />
   </div>
 </template>
 
 <script>
-import { mapGetters, mapState ,mapMutations} from 'vuex'
+import { mapGetters, mapState,mapActions } from 'vuex'
 import MessageSendBox from '../message/message-send-box'
 import MessageItem from '../message/message-item'
 import ConversationProfile from './conversation-profile.vue'
+import MemberProfileCard from '../group/member-profile-card'
 export default {
   name: 'CurrentConversation',
   components: {
     MessageSendBox,
-    MessageItem
+    MessageItem,
+    ConversationProfile,
+    MemberProfileCard
   },
   data() {
     return {
@@ -108,7 +113,9 @@ export default {
     }
   },
   methods: {
-  
+    ...mapActions({
+      getMessageList:'conversation/getMessageList'
+    }),
     onScroll({ target: { scrollTop } }) {
       let messageListNode = this.$refs['message-list']
       if (!messageListNode) {
@@ -161,8 +168,8 @@ export default {
 /* 当前会话的骨架屏 */
 .current-conversation-wrapper
   height $height
-  background-color $background-light
-  color $base
+  background-color #f5f5f5
+  color #1c2438
   display flex
   .current-conversation
     display: flex;
@@ -173,7 +180,7 @@ export default {
     height: $height;
     overflow-y: scroll;
     width 220px
-    border-left 1px solid $border-base
+    border-left 1px solid #e7e7e7
     flex-shrink 0
   .more
     display: flex;
@@ -182,21 +189,21 @@ export default {
   .no-more
     display: flex;
     justify-content: center;
-    color: $secondary;
+    color: #a5b5c1;
     font-size: 12px;
     padding: 10px 10px;
 
 .header
-  border-bottom 1px solid $border-base
+  border-bottom 1px solid #e7e7e7
   height 50px
   position relative
   .name
     padding 0 20px
-    color $base
+    color #1c2438
     font-size 18px
     font-weight bold
     line-height 50px
-    text-shadow $font-dark 0 0 0.1em
+    text-shadow #76828c 0 0 0.1em
   .btn-more-info
     position absolute
     top 10px
@@ -212,17 +219,17 @@ export default {
       content ""
       width: 15px
       height: 30px
-      border: 1px solid $border-base
+      border: 1px solid #e7e7e7
       border-radius: 0 100% 100% 0/50%
       border-left: none
-      background-color $background-light
+      background-color #f5f5f5
     &::after
       content ""
       width: 8px;
       height: 8px;
       transition: transform 0.8s;
-      border-top: 2px solid $secondary;
-      border-right: 2px solid $secondary;
+      border-top: 2px solid #a5b5c1;
+      border-right: 2px solid #a5b5c1;
       float:right;
       position:relative;
       top: 11px;
@@ -231,10 +238,10 @@ export default {
     &.left-arrow
       transform rotate(180deg)
       &::before
-        background-color $white
+        background-color #ffffff
     &:hover
       &::after
-        border-color $light-primary
+        border-color #5cadff
 .content
   display: flex;
   flex 1
@@ -259,11 +266,11 @@ export default {
     font-size: 12px;
     text-align: center;
     border-radius: 10px;
-    border: $border-light 1px solid;
-    background-color: $white;
-    color: $primary;
+    border: #e9eaec 1px solid;
+    background-color: #ffffff;
+    color: #2d8cf0;
 .footer
-  border-top: 1px solid $border-base;
+  border-top: 1px solid #e7e7e7;
 .show-more {
   text-align: right;
   padding: 10px 20px 0 0;

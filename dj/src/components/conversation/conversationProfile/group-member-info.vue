@@ -52,59 +52,56 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
-import { Popover } from "element-ui";
-import { getFullDate } from "../../../utils/date";
+import { mapGetters ,mapActions,mapMutations} from 'vuex'
+import { Popover } from 'element-ui'
+import { getFullDate } from '../../../utils/date'
 export default {
   components: {
-    ElPopover: Popover,
+    ElPopover: Popover
   },
-  props: ["member"],
+  props: ['member'],
   data() {
     return {
-      muteTime: "",
+      muteTime: '',
       popoverVisible: false,
       nameCardPopoverVisible: false,
-      nameCard: this.member.nameCard,
-    };
+      nameCard: this.member.nameCard
+    }
   },
   computed: {
-    ...mapState({
-      currentConversation: (state) => state.conversation.currentConversation,
-      currentUserProfile: (state) => state.user.currentUserProfile,
-      current: (state) => state.current,
-    }),
+  
+     ...mapGetters(['current','currentConversation','currentUserProfile']),
     // 是否显示踢出群成员按钮
     showKickout() {
-      return (this.isOwner || this.isAdmin) && !this.isMine;
+      return (this.isOwner || this.isAdmin) && !this.isMine
     },
     isOwner() {
-      return this.currentConversation.groupProfile.selfInfo.role === "Owner";
+      return this.currentConversation.groupProfile.selfInfo.role === 'Owner'
     },
     isAdmin() {
-      return this.currentConversation.groupProfile.selfInfo.role === "Admin";
+      return this.currentConversation.groupProfile.selfInfo.role === 'Admin'
     },
     isMine() {
-      return this.currentUserProfile.userID === this.member.userID;
+      return this.currentUserProfile.userID === this.member.userID
     },
     canChangeRole() {
       return (
         this.isOwner &&
-        ["ChatRoom", "Public"].includes(this.currentConversation.subType)
-      );
+        ['ChatRoom', 'Public'].includes(this.currentConversation.subType)
+      )
     },
     changeRoleTitle() {
       if (!this.canChangeRole) {
-        return "";
+        return ''
       }
-      return this.isOwner && this.member.role === "Admin"
-        ? "设为：Member"
-        : "设为：Admin";
+      return this.isOwner && this.member.role === 'Admin'
+        ? '设为：Member'
+        : '设为：Admin'
     },
     // 是否显示禁言时间
     showMuteUntil() {
       // 禁言时间小于当前时间
-      return this.member.muteUntil * 1000 > this.current;
+      return this.member.muteUntil * 1000 > this.current
     },
     // 是否显示取消禁言按钮
     showCancelBan() {
@@ -113,82 +110,82 @@ export default {
         this.currentConversation.type === this.TIM.TYPES.CONV_GROUP &&
         !this.isMine
       ) {
-        return this.isOwner || this.isAdmin;
+        return this.isOwner || this.isAdmin
       }
-      return false;
+      return false
     },
     // 是否显示禁言按钮
     showBan() {
       if (this.currentConversation.type === this.TIM.TYPES.CONV_GROUP) {
-        return this.isOwner || this.isAdmin;
+        return this.isOwner || this.isAdmin
       }
-      return false;
+      return false
     },
     // 是否显示编辑群名片按钮
     showEditNameCard() {
-      return this.isOwner || this.isAdmin;
+      return this.isOwner || this.isAdmin
     },
     // 日期格式化后的禁言时间
     muteUntil() {
-      return getFullDate(new Date(this.member.muteUntil * 1000));
-    },
+      return getFullDate(new Date(this.member.muteUntil * 1000))
+    }
   },
   methods: {
-    ...mapMutations({
-      showMessage: "user/showMessage",
+        ...mapMutations({
+       showMessage: "imInfo/showMessage",
     }),
     kickoutGroupMember() {
       this.tim
         .deleteGroupMember({
           groupID: this.currentConversation.groupProfile.groupID,
-          reason: "我要踢你出群",
-          userIDList: [this.member.userID],
+          reason: '我要踢你出群',
+          userIDList: [this.member.userID]
         })
         .then(() => {
-          this.$store.commit("deleteGroupMemeber", this.member.userID);
+          this.$store.commit('deleteGroupMemeber', this.member.userID)
         })
-        .catch((error) => {
-          this.showMessage({
-            type: "error",
-            message: error.message,
-          });
-        });
+        .catch(error => {
+          this.showMessage( {
+            type: 'error',
+            message: error.message
+          })
+        })
     },
     changeMemberRole() {
       if (!this.canChangeRole) {
-        return;
+        return
       }
-      let currentRole = this.member.role;
+      let currentRole = this.member.role
       this.tim
         .setGroupMemberRole({
           groupID: this.currentConversation.groupProfile.groupID,
           userID: this.member.userID,
-          role: currentRole === "Admin" ? "Member" : "Admin",
+          role: currentRole === 'Admin' ? 'Member' : 'Admin'
         })
-        .catch((error) => {
-          this.showMessage({
-            type: "error",
-            message: error.message,
-          });
-        });
+        .catch(error => {
+          this.showMessage( {
+            type: 'error',
+            message: error.message
+          })
+        })
     },
     setGroupMemberMuteTime() {
       this.tim
         .setGroupMemberMuteTime({
           groupID: this.currentConversation.groupProfile.groupID,
           userID: this.member.userID,
-          muteTime: Number(this.muteTime),
+          muteTime: Number(this.muteTime)
         })
         .then(() => {
-          this.muteTime = "";
-          this.popoverVisible = false;
+          this.muteTime = ''
+          this.popoverVisible = false
         })
-        .catch((error) => {
-          this.showMessage({
-            type: "error",
-            message: error.message,
-          });
-        });
+        .catch(error => {
+          this.showMessage( {
+            type: 'error',
+            message: error.message
+          })
+        })
     },
     // 取消禁言
     cancelMute() {
@@ -196,48 +193,47 @@ export default {
         .setGroupMemberMuteTime({
           groupID: this.currentConversation.groupProfile.groupID,
           userID: this.member.userID,
-          muteTime: 0,
+          muteTime: 0
         })
         .then(() => {
-          this.muteTime = "";
+          this.muteTime = ''
         })
-        .catch((error) => {
-          this.showMessage({
-            type: "error",
-            message: error.message,
-          });
-        });
+        .catch(error => {
+          this.showMessage( {
+            type: 'error',
+            message: error.message
+          })
+        })
     },
     setGroupMemberNameCard() {
       if (this.nameCard.trim().length === 0) {
-        this.showMessage({
-          message: "不能设置空的群名片",
-          type: "warning",
-        });
-        return;
+        this.showMessage( {
+          message: '不能设置空的群名片',
+          type: 'warning'
+        })
+        return
       }
       this.tim
         .setGroupMemberNameCard({
           groupID: this.currentConversation.groupProfile.groupID,
           userID: this.member.userID,
-          nameCard: this.nameCard,
+          nameCard: this.nameCard
         })
         .then(() => {
-          this.nameCardPopoverVisible = false;
-
-          this.showMessage({
-            message: "修改成功",
-          });
+          this.nameCardPopoverVisible = false
+          this.showMessage( {
+            message: '修改成功'
+          })
         })
-        .catch((error) => {
-          this.showMessage({
-            type: "error",
-            message: error.message,
-          });
-        });
-    },
-  },
-};
+        .catch(error => {
+          this.showMessage( {
+            type: 'error',
+            message: error.message
+          })
+        })
+    }
+  }
+}
 </script>
 
 <style lang="stylus" scoped>

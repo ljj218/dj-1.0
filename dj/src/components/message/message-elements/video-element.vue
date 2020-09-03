@@ -1,6 +1,11 @@
 <template>
-  <message-bubble :isMine="isMine" :message="message">
-    <video :src="payload.videoUrl" controls class="video" @error="videoError"></video>
+  <message-bubble :isMine=isMine :message=message>
+    <video
+      :src="payload.videoUrl"
+      controls
+      class="video"
+      @error="videoError"
+    ></video>
     <el-progress
       v-if="showProgressBar"
       :percentage="percentage"
@@ -10,55 +15,51 @@
 </template>
 
 <script>
-import MessageBubble from "../message-bubble";
-import { Progress } from "element-ui";
-import { mapState, mapMutations } from "vuex";
+import MessageBubble from '../message-bubble'
+import { Progress } from 'element-ui'
+import { mapState ,mapActions,mapMutations} from 'vuex'
 
 export default {
-  name: "VideoElement",
+  name: 'VideoElement',
   components: {
     MessageBubble,
-    ElProgress: Progress,
+    ElProgress: Progress
   },
   props: {
     payload: {
       type: Object,
-      required: true,
+      required: true
     },
     message: {
       type: Object,
-      required: true,
+      required: true
     },
     isMine: {
-      type: Boolean,
-    },
+      type: Boolean
+    }
   },
 
   computed: {
     showProgressBar() {
-      return this.message.status === "unSend";
+      return this.message.status === 'unSend'
     },
     percentage() {
-      return Math.floor((this.$parent.message.progress || 0) * 100);
-    },
+      return Math.floor((this.$parent.message.progress || 0) * 100)
+    }
   },
   methods: {
     ...mapMutations({
-      showMessage: "user/showMessage",
+       showMessage: "imInfo/showMessage",
     }),
     videoError(e) {
-      this.showMessage({
-        type: "error",
-        message: "视频出错，错误原因：" + e.target.error.message,
-      });
+      this.showMessage( { type: 'error', message: '视频出错，错误原因：' + e.target.error.message })
     },
-  },
-};
+  }
+}
 </script>
 
 <style lang="stylus" scoped>
-.video {
-  width: 100%;
-  max-height: 300px;
-}
+.video
+  width 100%
+  max-height 300px
 </style>

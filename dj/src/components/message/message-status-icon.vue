@@ -7,51 +7,51 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState ,mapActions,mapMutations} from 'vuex'
 
 export default {
-  name: "MessageStatusIcon",
+  name: 'MessageStatusIcon',
   props: {
     message: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   computed: {
     messageIconClass() {
       switch (this.message.status) {
-        case "unSend":
-          return "el-icon-loading";
-        case "fail":
-          return "message-send-fail";
+        case 'unSend':
+          return 'el-icon-loading'
+        case 'fail':
+          return 'message-send-fail'
         default:
-          return "";
+          return ''
       }
-    },
+    }
   },
   methods: {
     ...mapMutations({
-      showMessage: "user/showMessage",
+       showMessage: "imInfo/showMessage",
     }),
     handleIconClick() {
-      if (this.messageIconClass === "message-send-fail") {
-        this.tim.resendMessage(this.message).catch((imError) => {
-          this.showMessage({
+      if (this.messageIconClass === 'message-send-fail') {
+        this.tim.resendMessage(this.message).catch(imError => {
+          this.showMessage( {
             message: imError.message,
-            type: "error",
-          });
-        });
+            type: 'error'
+          })
+        })
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style lang="stylus" scoped>
 .message-send-fail {
   margin-right: 8px;
   background-color: #f35f5f;
-  color: $white;
+  color: #ffffff;
   border-radius: 50%;
   text-align: center;
   line-height: 16px;

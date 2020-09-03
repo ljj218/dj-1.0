@@ -1,7 +1,7 @@
 <template>
   <div class="side-bar-wrapper">
     <div class="bar-left">
-      <!-- <my-profile /> -->
+      <my-profile />
       <div class="tab-items" @click="handleClick">
         <div
           id="conversation-list"
@@ -14,106 +14,144 @@
             <template v-else>{{totalUnreadCount}}</template>
           </sup>
         </div>
+        <div
+          id="friend-list"
+          class="iconfont icon-contact"
+          :class="{ active: showFriendList }"
+          title="好友列表"
+        ></div>
+        <div
+          id="black-list"
+          class="iconfont icon-blacklist"
+          :class="{ active: showBlackList }"
+          title="黑名单列表"
+        ></div>
       </div>
+      <!-- <div class="bottom">
+        <div class="iconfont icon-tuichu" @click="$store.dispatch('logout')" title="退出"></div>
+      </div> -->
     </div>
     <div class="bar-right">
       <conversation-list v-show="showConversationList" />
+      <friend-list v-show="showFriendList" />
+      <black-list v-show="showBlackList" />
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters,mapMutations } from "vuex";
-import MyProfile from "../my-profile";
-import ConversationList from "../conversation/conversation-list";
+import { mapGetters ,mapActions,mapMutations} from 'vuex'
+
+import MyProfile from '../my-profile'
+import ConversationList from '../conversation/conversation-list'
+import FriendList from '../friend/friend-list'
+import BlackList from '../blacklist/blacklist'
 
 const activeName = {
-  CONVERSATION_LIST: "conversation-list",
-};
+  CONVERSATION_LIST: 'conversation-list',
+  FRIEND_LIST: 'friend-list',
+  BLACK_LIST: 'black-list'
+}
 export default {
-  name: "SideBar",
+  name: 'SideBar',
   components: {
     MyProfile,
     ConversationList,
+    FriendList,
+    BlackList
   },
   data() {
     return {
       active: activeName.CONVERSATION_LIST,
-      activeName: activeName,
-    };
+      activeName: activeName
+    }
   },
   computed: {
-    ...mapGetters(["totalUnreadCount"]),
+    ...mapGetters(['totalUnreadCount']),
     showConversationList() {
-      return this.active === activeName.CONVERSATION_LIST;
+      return this.active === activeName.CONVERSATION_LIST
     },
+    showFriendList() {
+      return this.active === activeName.FRIEND_LIST
+    },
+    showBlackList() {
+      return this.active === activeName.BLACK_LIST
+    },
+    showAddButton() {
+      return [activeName.CONVERSATION_LIST, activeName.GROUP_LIST].includes(
+        this.active
+      )
+    }
   },
   methods: {
-     ...mapMutations({
-      showMessage: "user/showMessage",
+        ...mapMutations({
+       showMessage: "imInfo/showMessage",
     }),
     checkoutActive(name) {
-      this.active = name;
+      this.active = name
     },
     handleClick(event) {
       switch (event.target.id) {
         case activeName.CONVERSATION_LIST:
-          this.checkoutActive(activeName.CONVERSATION_LIST);
-          break;
+          this.checkoutActive(activeName.CONVERSATION_LIST)
+          break
+        case activeName.GROUP_LIST:
+          this.checkoutActive(activeName.GROUP_LIST)
+          break
+        case activeName.FRIEND_LIST:
+          this.checkoutActive(activeName.FRIEND_LIST)
+          break
+        case activeName.BLACK_LIST:
+          this.checkoutActive(activeName.BLACK_LIST)
+          break
       }
     },
     handleRefresh() {
       switch (this.active) {
         case activeName.CONVERSATION_LIST:
-          this.tim.getConversationList().catch((error) => {
-            this.showMessage({
-              type: "error",
-              message: error.message,
-            });
-          });
-          break;
+          this.tim.getConversationList().catch(error => {
+            this.showMessage( {
+              type: 'error',
+              message: error.message
+            })
+          })
+          break
+        case activeName.FRIEND_LIST:
+          this.getFriendList()
+          break
+        case activeName.BLACK_LIST:
+          this.$store.dispatch('getBlacklist')
+          break
       }
     },
-    getGroupList() {
-      this.tim
-        .getGroupList()
-        .then(({ data: groupList }) => {
-          this.$store.dispatch("updateGroupList", groupList);
-        })
-        .catch((error) => {
-         this.showMessage({
-              type: "error",
-              message: error.message,
-            });
-        });
-    },
+
     getFriendList() {
       this.tim
         .getFriendList()
         .then(({ data: friendList }) => {
-          this.$store.commit("upadteFriendList", friendList);
+          this.$store.commit('upadteFriendList', friendList)
         })
-        .catch((error) => {
-         this.showMessage({
-              type: "error",
-              message: error.message,
-            });
+        .catch(error => {
+          this.showMessage( {
+            type: 'error',
+            message: error.message
+          })
         })
-        .catch((error) => {
-         this.showMessage({
-              type: "error",
-              message: error.message,
-            });
-        });
-    },
-  },
-};
+        .catch(error => {
+          this.showMessage( {
+            type: 'error',
+            message: error.message
+          })
+        })
+    }
+  }
+}
 </script>
 
 <style lang="stylus" scoped>
 .side-bar-wrapper {
   height: 100%;
-  color: $black;
+  color: #000000;
   display: flex;
   width: 100%;
   overflow: hidden;
@@ -124,7 +162,7 @@ export default {
     flex-direction: column;
     width: 80px;
     height: $height;
-    background-color: $background-deep-dark;
+    background-color: #303841;
 
     .tab-items {
       display: flex;
@@ -139,14 +177,14 @@ export default {
         text-align: center;
         font-size: 30px;
         cursor: pointer;
-        color: $first;
+        color: #a5b5c1;
         user-select: none;
         -moz-user-select: none;
       }
 
       .active {
-        color: $white;
-        background-color: $background-dark;
+        color: #ffffff;
+        background-color: #363e47;
 
         &::after {
           content: ' ';
@@ -155,8 +193,8 @@ export default {
           top: 0;
           z-index: 0;
           height: 70px;
-          // border-left 4px solid $border-highlight
-          border-left: 4px solid $light-primary;
+          // border-left 4px solid #55d48b
+          border-left: 4px solid #5cadff;
         }
       }
 
@@ -174,7 +212,7 @@ export default {
         text-align: center;
         white-space: nowrap;
         border-radius: 10px;
-        background-color: $danger;
+        background-color: #f35f5f;
       }
     }
 
@@ -190,7 +228,7 @@ export default {
         height: 70px;
         line-height: 70px;
         font-size: 30px;
-        color: $first;
+        color: #a5b5c1;
         text-align: center;
         cursor: pointer;
       }
@@ -201,7 +239,7 @@ export default {
         text-align: center;
         font-size: 30px;
         cursor: pointer;
-        color: $first;
+        color: #a5b5c1;
         user-select: none;
         -moz-user-select: none;
       }
@@ -212,7 +250,7 @@ export default {
     }
 
     .btn-more:hover {
-      color: $white;
+      color: #ffffff;
     }
   }
 
@@ -223,7 +261,7 @@ export default {
     min-width: 0;
     height: $height;
     position: relative;
-    background-color: $background-dark;
+    background-color: #363e47;
   }
 }
 </style>

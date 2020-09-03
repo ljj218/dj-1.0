@@ -1,5 +1,5 @@
 <template>
-  <message-bubble :isMine="false" :message="message">
+  <message-bubble :isMine="false" :message=message>
     <div class="group-system-element-wrapper">
       {{ text }}
       <el-button v-if="isJoinGroupRequest" type="text" @click="showDialog = true">处理</el-button>
@@ -31,22 +31,22 @@
 </template>
 
 <script>
-import { Dialog, Form, FormItem, RadioGroup, Radio } from "element-ui";
-import MessageBubble from "../message-bubble";
-import { translateGroupSystemNotice } from "../../../utils/common";
-import { mapState, mapMutations } from "vuex";
+import { Dialog, Form, FormItem, RadioGroup, Radio } from 'element-ui'
+import MessageBubble from '../message-bubble'
+import { translateGroupSystemNotice } from '../../../utils/common'
+import { mapState ,mapActions,mapMutations} from 'vuex'
 
 export default {
-  name: "GroupSystemNoticeElement",
+  name: 'GroupSystemNoticeElement',
   props: {
     payload: {
       type: Object,
-      required: true,
+      required: true
     },
     message: {
       type: Object,
-      required: false,
-    },
+      required: false
+    }
   },
   components: {
     ElDialog: Dialog,
@@ -54,56 +54,56 @@ export default {
     ElFormItem: FormItem,
     ElRadioGroup: RadioGroup,
     ElRadio: Radio,
-    MessageBubble,
+    MessageBubble
   },
   data() {
     return {
       showDialog: false,
       form: {
-        handleAction: "Agree",
-        handleMessage: "",
-      },
-    };
+        handleAction: 'Agree',
+        handleMessage: ''
+      }
+    }
   },
   computed: {
     text() {
-      return translateGroupSystemNotice(this.message);
+      return translateGroupSystemNotice(this.message)
     },
     title() {
       if (this.message.type === this.TIM.TYPES.MSG_GRP_SYS_NOTICE) {
-        return "群系统通知";
+        return '群系统通知'
       }
-      return "系统通知";
+      return '系统通知'
     },
     isJoinGroupRequest() {
-      return this.payload.operationType === 1;
-    },
+      return this.payload.operationType === 1
+    }
   },
   methods: {
     ...mapMutations({
-      showMessage: "user/showMessage",
+       showMessage: "imInfo/showMessage",
     }),
     handleGroupApplication() {
       this.tim
         .handleGroupApplication({
           handleAction: this.form.handleAction,
           handleMessage: this.form.handleMessage,
-          message: this.message,
+          message: this.message
         })
         .then(() => {
-          this.showDialog = false;
-          this.$store.commit("removeMessage", this.message);
+          this.showDialog = false
+          this.$store.commit('removeMessage', this.message)
         })
-        .catch((error) => {
-          this.showMessage({
-            type: "error",
-            message: error.message,
-          });
-          this.showDialog = false;
-        });
-    },
-  },
-};
+        .catch(error => {
+          this.showMessage( {
+            type: 'error',
+            message: error.message
+          })
+          this.showDialog = false
+        })
+    }
+  }
+}
 </script>
 
 <style lang="stylus" scoped>

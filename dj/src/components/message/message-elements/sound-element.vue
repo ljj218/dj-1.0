@@ -8,9 +8,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
-
 import MessageBubble from '../message-bubble'
+import { mapState ,mapActions,mapMutations} from 'vuex'
+
 export default {
   name: 'SoundElement',
   props: {
@@ -46,8 +46,8 @@ export default {
     }
   },
   methods: {
-     ...mapMutations({
-      showMessage: "user/showMessage",
+    ...mapMutations({
+       showMessage: "imInfo/showMessage",
     }),
     play() {
       // 目前移动端的语音消息采用 aac 格式，以前用 amr 格式。默认先用 audio 标签播放，若无法播放则尝试 amr 格式播放。
@@ -64,11 +64,10 @@ export default {
         const isIE = /MSIE|Trident|Edge/.test(window.navigator.userAgent)
         // amr 播放组件库在 IE 不支持
         if (isIE) {
-    
-          this.showMessage({
-          message: '您的浏览器不支持该格式的语音消息播放，请尝试更换浏览器，建议使用：谷歌浏览器',
+          this.showMessage( {
+            message: '您的浏览器不支持该格式的语音消息播放，请尝试更换浏览器，建议使用：谷歌浏览器',
             type: 'warning'
-        });
+          })
           return
         }
         // 动态插入 amr 播放组件库
@@ -82,10 +81,10 @@ export default {
         }
         this.playAMR()
       } catch (error) {
-         this.showMessage({
+        this.showMessage( {
           message: '您的浏览器不支持该格式的语音消息播放，请尝试更换浏览器，建议使用：谷歌浏览器',
-            type: 'warning'
-        });
+          type: 'warning'
+        })
       }
     },
     playAMR() {

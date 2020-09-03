@@ -1,6 +1,6 @@
 <template>
   <div class="my-profile-wrapper">
-    <el-dialog title="编辑个人资料" :visible.sync="showEditMyProfile" width="30%">
+    <!-- <el-dialog title="编辑个人资料" :visible.sync="showEditMyProfile" width="30%">
       <el-form v-model="form" label-width="100px">
         <el-form-item label="头像">
           <el-input v-model="form.avatar" placeholder="头像地址(URL)" />
@@ -20,10 +20,10 @@
         <el-button @click="showEditMyProfile = false">取 消</el-button>
         <el-button type="primary" @click="editMyProfile">确 定</el-button>
       </span>
-    </el-dialog>
+    </el-dialog>-->
     <el-popover :width="200" trigger="click" placement="right" class="popover">
       <profile-card :profile="currentUserProfile" />
-      <i class="el-icon-setting edit-my-profile" @click="handleEdit"></i>
+      <!-- <i class="el-icon-setting edit-my-profile" @click="handleEdit"></i> -->
       <avatar slot="reference" :src="currentUserProfile.avatar" class="my-avatar" />
     </el-popover>
   </div>
@@ -31,7 +31,7 @@
 
 <script>
 import { Popover, Form, FormItem, RadioGroup, Radio } from "element-ui";
-import { mapState, mapMutations } from "vuex";
+import { mapGetters ,mapMutations} from "vuex";
 import ProfileCard from "./profile-card";
 export default {
   name: "MyProfile",
@@ -50,10 +50,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      currentUserProfile: (state) => state.user.currentUserProfile,
-      currentConversation: (state) => state.conversation.currentConversation,
-    }),
+    ...mapGetters(["currentUserProfile", "currentConversation"]),
     gender() {
       switch (this.currentUserProfile.gender) {
         case this.TIM.TYPES.GENDER_MALE:
@@ -67,11 +64,11 @@ export default {
   },
   methods: {
     ...mapMutations({
-      showMessage: "user/showMessage",
+       showMessage: "imInfo/showMessage",
     }),
     editMyProfile() {
       if (this.form.avatar && this.form.avatar.indexOf("http") === -1) {
-        this.showMessage({
+        this.showMessage( {
           message: "头像应该是 Url 地址",
           type: "warning",
         });
@@ -88,13 +85,13 @@ export default {
       this.tim
         .updateMyProfile(options)
         .then(() => {
-          this.showMessage({
+          this.showMessage( {
             message: "修改成功",
           });
           this.showEditMyProfile = false;
         })
         .catch((imError) => {
-          this.showMessage({
+          this.showMessage( {
             message: imError.message,
             type: "error",
           });

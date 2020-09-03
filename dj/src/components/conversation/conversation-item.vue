@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import { isToday, getDate, getTime } from "../../utils/date";
 export default {
   name: "conversation-item",
@@ -133,11 +133,7 @@ export default {
       }
       return this.conversation.lastMessage.messageForShow;
     },
-    ...mapState({
-      currentConversation: (state) => state.conversation.currentConversation,
-      currentUserProfile: (state) => state.user.currentUserProfile,
-    }),
-    ...mapGetters(["toAccount"]),
+    ...mapGetters(["toAccount", "currentConversation", "currentUserProfile"]),
   },
   mounted() {
     this.$bus.$on("new-messsage-at-me", (event) => {
@@ -151,18 +147,18 @@ export default {
     });
   },
   methods: {
-    ...mapMutations({
-      showMessage: "user/showMessage",
+        ...mapMutations({
+       showMessage: "imInfo/showMessage",
+    }),
+    ...mapActions({
+      checkoutConversation: "conversation/checkoutConversation",
     }),
     selectConversation() {
       if (
         this.conversation.conversationID !==
         this.currentConversation.conversationID
       ) {
-        this.$store.dispatch(
-          "checkoutConversation",
-          this.conversation.conversationID
-        );
+        this.checkoutConversation(this.conversation.conversationID);
       }
     },
     deleteConversation(event) {
@@ -171,7 +167,7 @@ export default {
       this.tim
         .deleteConversation(this.conversation.conversationID)
         .then(() => {
-          this.showMessage({
+          this.showMessage( {
             message: `会话【${this.conversationName}】删除成功!`,
             type: "success",
           });
@@ -179,7 +175,7 @@ export default {
           this.$store.commit("resetCurrentConversation");
         })
         .catch((error) => {
-          this.showMessage({
+          this.showMessage( {
             message: `会话【${this.conversationName}】删除失败!, error=${error.message}`,
             type: "error",
           });
@@ -211,7 +207,7 @@ export default {
   // &:first-child
   // padding-top 30px
   &:hover {
-    background-color: $background;
+    background-color: #404953;
 
     .close-btn {
       right: 3px;
@@ -222,11 +218,11 @@ export default {
     position: absolute;
     right: -20px;
     top: 3px;
-    color: $font-dark;
+    color: #76828c;
     transition: all 0.2s ease;
 
     &:hover {
-      color: $danger;
+      color: #f35f5f;
     }
   }
 
@@ -252,7 +248,7 @@ export default {
       line-height: 21px;
 
       .name {
-        color: $font-light;
+        color: #f7f7f8;
         flex: 1;
         min-width: 0px;
       }
@@ -260,12 +256,12 @@ export default {
       .unread-count {
         padding-left: 10px;
         flex-shrink: 0;
-        color: $font-dark;
+        color: #76828c;
         font-size: 12px;
 
         .badge {
           vertical-align: bottom;
-          background-color: $danger;
+          background-color: #f35f5f;
           border-radius: 10px;
           color: #FFF;
           display: inline-block;
@@ -289,10 +285,10 @@ export default {
         flex: 1;
         overflow: hidden;
         min-width: 0px;
-        color: $secondary;
+        color: #a5b5c1;
 
         .remind {
-          color: $danger;
+          color: #f35f5f;
         }
       }
 
@@ -300,19 +296,19 @@ export default {
         padding-left: 10px;
         flex-shrink: 0;
         text-align: right;
-        color: $font-dark;
+        color: #76828c;
       }
     }
   }
 }
 
 .choose {
-  background-color: $background;
+  background-color: #404953;
 }
 
 .context-menu-button {
   padding: 10px;
-  border: 2px solid $primary;
+  border: 2px solid #2d8cf0;
   border-radius: 8px;
 }
 </style>

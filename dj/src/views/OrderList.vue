@@ -18,7 +18,7 @@
               </div>
               <div class="detail clearfix">
                 <div class="host fl">
-                  <img src="../assets/img/public/wh.jpg" class="head fl" />
+                  <img :src="item.headImg" class="head fl" />
                   <div class="about fl">
                     <p>陪玩昵称:{{item.nickName}}</p>
                     <p>服务名称:{{item.orderType==1?'英雄联盟':'云顶之弈'}}</p>
@@ -399,7 +399,7 @@ export default {
   font-size: 30px;
 }
 .login .content {
-  height: 300px;
+  min-height: 200px;
   padding: 20px;
   border-radius: 6px;
   background-color: #fff;
@@ -411,7 +411,7 @@ export default {
   .wechatImg{
     display: block;
     width: 220px;
-    height: 220px;
+    height: auto;
     margin:10px auto 0;
   }
 }

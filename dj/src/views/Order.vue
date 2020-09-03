@@ -153,7 +153,7 @@ export default {
           userId: this.userData.userId, //
           source: "", //
           remark: this.remark,
-          isNew:this.userInfo.isNew||''
+          isNew:this.userInfo.isNew||'0'
         });
         if (res.resultCode == "0000") {
           this.$Message.success("下单成功");

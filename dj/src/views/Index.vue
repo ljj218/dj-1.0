@@ -7,15 +7,15 @@
       </bjImage>
       <div class="main">
         <ul class="tab clearfix unselect">
-          <li class="tab-item" :class="{active:type==1}" @click="setType(1)">英雄联盟</li>
-          <li class="tab-item" :class="{active:type==2}" @click="setType(2)">云顶之弈</li>
+          <li class="tab-item" :class="{active:gametype==1}" @click="setType(1)">英雄联盟</li>
+          <li class="tab-item" :class="{active:gametype==2}" @click="setType(2)">云顶之弈</li>
         </ul>
         <div class="content">
           <div class="icon">
             <img src="../assets/img/public/log-1.png" class="img" alt="小熊陪玩" />
             <p>小熊陪玩</p>
           </div>
-          <ul class="list flex justify-content" :class="{iswidth:type==2}">
+          <ul class="list flex justify-content" :class="{iswidth:gametype==2}">
             <li class="item unselect">
               <Dropdown trigger="click" @on-visible-change="rotate=!rotate">
                 <a href="javascript:void(0)" class="select flex align-items justify-content one-text">
@@ -53,7 +53,7 @@
                 >{{ item.label }}</Option>
               </Select>
             </li>
-            <li class="item" v-if="type==1">
+            <li class="item" v-if="gametype==1">
               <Select v-model="position" style="width:103px" placeholder="位置选择">
                 <Option
                   v-for="item in posPlayer"
@@ -140,7 +140,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["type"]),
+    ...mapGetters(["gametype"]),
     newSoundList() {
       let arr = [];
       if (this.haveSoundList.length > 0) {
@@ -196,7 +196,7 @@ export default {
     },
     async toQuerPlayerSpeed() {
       let data = {
-        type: this.type,
+        type: this.gametype,
         pageNo: this.pageNo,
         pageSize: 100,
         position: this.position,

@@ -5,75 +5,71 @@
 </template>
 
 <script>
-import { Input } from "element-ui";
-import { mapState, mapMutations } from "vuex";
+import { Input } from 'element-ui'
+import { mapState ,mapActions,mapMutations} from 'vuex'
+
 export default {
   components: {
-    ElInput: Input,
+    ElInput: Input
   },
   data() {
     return {
-      userID: "",
-    };
+      userID: ''
+    }
   },
   computed: {
     ...mapState({
-      currentConversation: (state) => state.conversation.currentConversation,
-    }),
+      currentConversation: state => state.conversation.currentConversation
+    })
   },
   methods: {
-    ...mapMutations({
-      showMessage: "user/showMessage",
+        ...mapMutations({
+       showMessage: "imInfo/showMessage",
     }),
     addGroupMember() {
-      const groupID = this.currentConversation.conversationID.replace(
-        "GROUP",
-        ""
-      );
+      const groupID = this.currentConversation.conversationID.replace('GROUP', '')
       this.tim
         .addGroupMember({
           groupID,
-          userIDList: [this.userID],
+          userIDList: [this.userID]
         })
         .then((imResponse) => {
           const {
             successUserIDList,
             failureUserIDList,
-            existedUserIDList,
-          } = imResponse.data;
+            existedUserIDList
+          } = imResponse.data
           if (successUserIDList.length > 0) {
-            this.showMessage({
-              message: `群成员：${successUserIDList.join(",")}，加群成功`,
-              type: "success",
-            });
-            this.tim
-              .getGroupMemberProfile({ groupID, userIDList: successUserIDList })
-              .then(({ data: { memberList } }) => {
-                this.$store.commit("updateCurrentMemberList", memberList);
-              });
+            this.showMessage( {
+              message: `群成员：${successUserIDList.join(',')}，加群成功`,
+              type: 'success'
+            })
+            this.tim.getGroupMemberProfile({groupID, userIDList: successUserIDList})
+            .then(({ data: { memberList }}) => {
+              this.$store.commit('updateCurrentMemberList', memberList)
+            })
           }
           if (failureUserIDList.length > 0) {
-            this.showMessage({
-              message: `群成员：${failureUserIDList.join(",")}，添加失败！`,
-              type: "error",
-            });
+            this.showMessage( {
+              message: `群成员：${failureUserIDList.join(',')}，添加失败！`,
+              type: 'error'
+            })
           }
           if (existedUserIDList.length > 0) {
-             this.showMessage({
-              message: `群成员：${existedUserIDList.join(",")}，已在群中`,
-            });
+            this.showMessage( {
+              message: `群成员：${existedUserIDList.join(',')}，已在群中`
+            })
           }
         })
-        .catch((error) => {
-     
-           this.showMessage({
-             type: "error",
-            message: error.message,
-            });
-        });
-    },
-  },
-};
+        .catch(error => {
+          this.showMessage( {
+            type: 'error',
+            message: error.message
+          })
+        })
+    }
+  }
+}
 </script>
 
 <style lang="stylus" scoped></style>

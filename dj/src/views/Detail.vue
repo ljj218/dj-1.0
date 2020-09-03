@@ -55,10 +55,10 @@
         </div>
         <div class="gamms lr">
           <div class="nav unselect">
-            <div class="nav-item" :class="{active:type==1}" @click="type=1">
+            <div class="nav-item" :class="{active:type==1}" @click="type=1" v-if="info.riftRank">
               <span>英雄联盟</span>
             </div>
-            <div class="nav-item" :class="{active:type==2}" @click="type=2">
+            <div class="nav-item" :class="{active:type==2}" @click="type=2" v-if="info.tacticsRank">
               <span>云顶之弈</span>
             </div>
           </div>
@@ -216,6 +216,9 @@ export default {
           this.info = res.data;
           this.imgList = res.data.photo ? res.data.photo.split("@") : [];
           this.imgSrc = this.imgList.length > 0 ? this.imgList[0] : "";
+          if(this.info.tacticsRank&&!this.info.riftRank){
+            this.type=2;
+          }
         }
       } catch (error) {}
     },
