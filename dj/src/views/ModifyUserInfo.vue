@@ -148,7 +148,7 @@ export default {
           this.src = res.data.headImg;
           this.nickName = res.data.nickName;
           this.sex = res.data.sex || "";
-          this.date = res.data.birthDate ? new Date(res.data.birthDate) : "";
+          this.date = res.data.birthDate ? new Date(res.data.birthDate.split(' ')[0]) : "";
           if (res.data.birthDate) {
             this.slectYear(res.data.birthDate);
           }
@@ -192,14 +192,15 @@ export default {
       } catch (error) {}
     },
     slectYear(e) {
-      console.log(e);
       let time = new Date(e);
       let m =
         time.getMonth() + 1 > 9
           ? time.getMonth() + 1
           : "0" + (time.getMonth() + 1);
       let d = time.getDate() > 9 ? time.getDate() : "0" + time.getDate();
+
       this.birthDate = `${time.getFullYear()}-${m}-${d}`;
+
     },
   },
   watch: {
